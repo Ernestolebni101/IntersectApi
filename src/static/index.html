@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+   <title>Intersect Sockets</title>
+ </head>
+ <body>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+   <script>
+     
+     window.s = io('https://intersect-restfull.herokuapp.com/', {
+       query: {
+         token: '22ElDR1jt6eT1ON2X1TQw4ohr8A2',
+       },
+     });
+   
+    // s.emit('events', { event: 'events', data: { test: true } });
+    //  s.on('events', (response) => {
+    //    console.log(response);
+    //  });
+
+     if(navigator.onLine){
+      console.log("HAY IONTE");
+     }else console.log("NO HAY");
+    s.on('onDisconnect',(msg) => console.log(msg));
+    // let socket = io('http://localhost:3000',{
+    //     query:{ 
+    //       token: '123',
+    //     }
+    // });
+    // socket.emit('connection','eamnfpaef');
+    s.on('connection',data => console.log(data));
+    // socket.on('onChat', data => console.log(data));
+    // socket.emit('msgToClient','22ElDR1jt6eT1ON2X1TQw4ohr8A2');
+    // socket.on('msgToClient',(data) => console.log(data));
+   </script>
+ </body>
+</html>
