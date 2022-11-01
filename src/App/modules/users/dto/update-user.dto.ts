@@ -6,7 +6,6 @@ export class UpdateUserDto {
   public profilePic: string;
   public email: string;
   public nickName: string;
-  public password: string;
   public group?: string;
   public token: string;
   public onlineStatus: boolean;

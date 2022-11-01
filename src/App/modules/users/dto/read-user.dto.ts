@@ -14,8 +14,6 @@ export class UserDto {
   @ApiProperty()
   public readonly nickName: string;
   @ApiProperty()
-  public readonly password: string;
-  @ApiProperty()
   public token: string;
   @ApiProperty()
   public readonly groups?: Array<string> = new Array<string>();

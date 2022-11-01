@@ -3,18 +3,20 @@ import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implemen
 import { UserDto } from '../dto/read-user.dto';
 import { UsersService } from '../users.service';
 import { createMock } from '@golevelup/ts-jest';
+import { firebaseProvider } from '../../../Database/database-providers/firebase.provider';
+import { ConfigModule } from '@nestjs/config';
 describe('UsersService', () => {
   let userService: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        {
-          provide: UnitOfWorkAdapter,
-          useValue: createMock<UnitOfWorkAdapter>(),
-        },
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: '.env',
+          isGlobal: true,
+        }),
       ],
+      providers: [...firebaseProvider, UnitOfWorkAdapter, UsersService],
     }).compile();
 
     userService = module.get<UsersService>(UsersService);
@@ -30,6 +32,3 @@ describe('UsersService', () => {
     });
   });
 });
-// it('should be defined', () => {
-//   expect(service).toBeDefined();
-// });\

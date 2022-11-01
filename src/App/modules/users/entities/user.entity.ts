@@ -11,7 +11,7 @@ export class User {
   public email: string;
   public nickName: string;
   public token: string;
-  public password: string;
+  // public password: string;
   public onlineStatus = false;
   public groups: Array<string> = new Array<string>();
 }
