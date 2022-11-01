@@ -4,7 +4,7 @@ import { MessageDto, newMessageDto } from '../dto/read-message.dto';
 import { Message } from '../entities/message.entity';
 import { Bucket } from '@google-cloud/storage';
 import { plainToClass } from 'class-transformer';
-import { File } from 'src/Utility/utility-createFile';
+import { File } from '../../../../Utility/utility-createFile';
 
 export interface IMessageRepository {
   addMessage(

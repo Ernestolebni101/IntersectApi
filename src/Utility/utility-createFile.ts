@@ -1,9 +1,9 @@
 /* eslint-disable prefer-const */
 import { Bucket } from '@google-cloud/storage';
-import { ImageAnnotatorClient } from '@google-cloud/vision';
-import * as path from 'path';
-import { restrictions } from 'src/common/constants/constants';
-import * as os from 'os';
+// import { ImageAnnotatorClient } from '@google-cloud/vision';
+// import * as path from 'path';
+// // import { restrictions } from 'src/common/constants/constants';
+// import * as os from 'os';
 
 export class File {
   public static async submitFile(
@@ -82,29 +82,29 @@ export class File {
       .catch((err) => console.error(`Failed to remove photo, error: ${err}`));
   }
 
-  public static async validateImageContent(
-    file: any,
-    fileRoot: string,
-    bucket: Bucket,
-  ) {
-    try {
-      const visionClient = new ImageAnnotatorClient();
-      const tmpDirectory = path.join(os.tmpdir(), file.originalname);
-      const normalized = fileRoot.split('/').slice(-1).toString();
-      const response = bucket.file(normalized);
-      await response.download({
-        destination: tmpDirectory,
-      });
-    } catch (e) {
-      console.error(`Error al escanear la imagen: ${e}`);
-      throw new Error(e);
-    }
-  }
-  public static resultValidate(result: any) {
-    return (
-      result !== restrictions.POSSIBLE &&
-      result !== restrictions.LIKELY &&
-      result !== restrictions.VERY_LIKELY
-    );
-  }
+  // public static async validateImageContent(
+  //   file: any,
+  //   fileRoot: string,
+  //   bucket: Bucket,
+  // ) {
+  //   try {
+  //     const visionClient = new ImageAnnotatorClient();
+  //     const tmpDirectory = path.join(os.tmpdir(), file.originalname);
+  //     const normalized = fileRoot.split('/').slice(-1).toString();
+  //     const response = bucket.file(normalized);
+  //     await response.download({
+  //       destination: tmpDirectory,
+  //     });
+  //   } catch (e) {
+  //     console.error(`Error al escanear la imagen: ${e}`);
+  //     throw new Error(e);
+  //   }
+  // }
+  // public static resultValidate(result: any) {
+  //   return (
+  //     result !== restrictions.POSSIBLE &&
+  //     result !== restrictions.LIKELY &&
+  //     result !== restrictions.VERY_LIKELY
+  //   );
+  // }
 }

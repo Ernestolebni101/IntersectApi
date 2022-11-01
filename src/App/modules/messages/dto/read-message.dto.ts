@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
+import { UserDto } from '../../users/dto/read-user.dto';
 export class MessageDto {
   @ApiProperty()
   public id: string;
