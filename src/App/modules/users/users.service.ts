@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/read-user.dto';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
+import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { IUserRepository } from './repository/user.repository';
 import { Bucket } from '@google-cloud/storage';
 import { IGroupsRepository } from '../groups/repository/groups.repository';
@@ -29,10 +29,18 @@ export class UsersService {
    * @WriteOperations => Segmento de Operaciones de Escritura(Mutablidad)
    */
 
+  /**
+   * *Registra un Nuevo Usuario en la Base de Datos
+   */
   public async create(payload: CreateUserDto): Promise<void> {
     await this.userRepository.createOne(payload);
   }
-
+  /**
+   *
+   * @param file hace referencia a la foto de perfil
+   * @param updateUserDto modelo para actualizar los datos del usuario
+   * @returns
+   */
   public async update(
     file: any,
     updateUserDto: UpdateUserDto,
@@ -49,5 +57,5 @@ export class UsersService {
   }
 
   public getOwnGroups = async (uid: string) =>
-    await this.groupRepository.getGroupAsyncByParams(uid, '.l.');
+    await this.groupRepository.getGroupAsyncByParams(uid, '');
 }

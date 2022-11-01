@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { UserPartialDto } from 'src/App/modules/users/dto/read-user.dto';
+import { UserPartialDto } from '../../users/dto/read-user.dto';
 import { IGroupEntity } from 'src/App/shared/strategys/istrategy.interface';
-import { Time } from 'src/Utility/utility-time-zone';
+import { Time } from '../../../../Utility/utility-time-zone';
 import { Group } from '../entities/group.entity';
 import { GroupSettings } from './create-group.dto';
 

@@ -9,18 +9,18 @@ import { Group } from '../../modules/groups/entities/group.entity';
 import {
   IMessageRepository,
   MessageRepository,
-} from 'src/App/modules/messages/repository/message.repository';
+} from '../../modules/messages/repository/message.repository';
 import { Message } from '../../modules/messages/entities/message.entity';
 import {
   IWaitListRepository,
   WaitListRepository,
-} from 'src/App/modules/groups/waiting-list/repository/waiting-list-repository';
-import { WaitingList } from 'src/App/modules/groups/waiting-list/entities/waiting-list.entity';
+} from '../../modules/groups/waiting-list/repository/waiting-list-repository';
+import { WaitingList } from '../../modules/groups/waiting-list/entities/waiting-list.entity';
 import {
   ChatRepository,
   IChatRepository,
-} from 'src/App/modules/chats/repository/chat-repository';
-import { Chat } from 'src/App/modules/chats/entities/chat.entity';
+} from '../../modules/chats/repository/chat-repository';
+import { Chat } from '../../modules/chats/entities/chat.entity';
 
 export class UnitOfWorkRepository implements IUnitOfWorkRepository {
   public readonly userRepository: UsersRepository;

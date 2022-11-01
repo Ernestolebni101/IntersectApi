@@ -67,6 +67,7 @@
     "winston-syslog": "^2.6.0"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.3.4",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",

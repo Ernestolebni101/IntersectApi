@@ -1,5 +1,5 @@
 import { Collection } from 'fireorm';
-import { Time } from 'src/Utility/utility-time-zone';
+import { Time } from '../../../../Utility/utility-time-zone';
 @Collection('Messages')
 export class Message {
   public id: string;
