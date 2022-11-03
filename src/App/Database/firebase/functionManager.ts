@@ -74,8 +74,7 @@ export class FunctionsManagerService {
     const user = await this.retrieveByUid(uid);
     const userRef = this.db.collection('Users').doc(user.id);
     await userRef.update({ onlineStatus: false });
-    delete user.password,
-      delete user.groups,
+    delete user.groups,
       delete user.email,
       delete user.profilePic,
       delete user.phoneNumber;

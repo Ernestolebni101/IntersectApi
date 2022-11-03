@@ -18,10 +18,10 @@ export class UsersService {
     this.bucket = _adapter.getBucket();
   }
 
-  public findAllAsync = async (): Promise<Array<UserDto>> =>
+  public findAllAsync? = async (): Promise<Array<UserDto>> =>
     await this.userRepository.getAllAsync();
 
-  public async findOne(id: string): Promise<UserDto> {
+  public async findOne?(id: string): Promise<UserDto> {
     return await this.userRepository.getUserbyId(id);
   }
 

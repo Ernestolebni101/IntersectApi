@@ -5,9 +5,9 @@ import { UsersService } from '../users.service';
 import { createMock } from '@golevelup/ts-jest';
 import { firebaseProvider } from '../../../Database/database-providers/firebase.provider';
 import { ConfigModule } from '@nestjs/config';
-describe('UsersService', () => {
+declare type users = Array<UserDto>;
+describe('*******UsersService Read Methods********', () => {
   let userService: UsersService;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -22,13 +22,31 @@ describe('UsersService', () => {
     userService = module.get<UsersService>(UsersService);
   });
 
-  describe('findOne', () => {
-    it('must failed when set unknown uid', async () => {
-      jest
-        .spyOn(userService, 'findOne')
-        .mockImplementation(() =>
-          Promise.resolve([{ name: 'example' }] as unknown as Promise<UserDto>),
-        );
+  describe('findOne and findAllAsync Method', () => {
+    it('must return null when set unknown uid', async () => {
+      const userId = '22ElDR1jt6eT1ON2X1TQw4ohr8A2ff';
+      const foundUser = await userService.findOne(userId);
+      expect(foundUser).toBeNull();
+      console.log(foundUser);
+    });
+    it('must return user when set correct uid', async () => {
+      const userId = '22ElDR1jt6eT1ON2X1TQw4ohr8A2';
+      const foundUser = await userService.findOne(userId);
+      expect(foundUser instanceof UserDto).toBeTruthy();
+      console.log(foundUser);
+    });
+    it('must return an array of user if the database contains data', async () => {
+      const foundUsers: UserDto[] = await userService.findAllAsync();
+      expect(foundUsers != null).toBeTruthy();
+      expect(foundUsers).toBe((user: UserDto) => user instanceof UserDto);
     });
   });
+  // describe('findAllAsync Method', () => {
+  //   it('must return null when set unknown uid', async () => {
+  //     const expectedResponse = {} as UserDto[];
+  //     const foundUsers = await userService.findAllAsync();
+  //     expect(foundUsers).toEqual<UserDto[]>(expectedResponse);
+  //     console.log(foundUsers);
+  //   });
+  // });
 });

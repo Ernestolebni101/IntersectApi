@@ -23,10 +23,12 @@ export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
     this._transaction = this._db.batch();
     this.Repositories = new UnitOfWorkRepository();
   }
-
+  /**
+   * ! Se deshabilitaron las configuraciones de  la base de datos por la ejecucion de las pruebas
+   */
   private initDataContext() {
     this._db = this.app.firestore();
-    this._db.settings(SETTINGS);
+    // this._db.settings(SETTINGS);
     fireorm.initialize(this._db);
   }
   public commitChanges = async (): Promise<void> => {

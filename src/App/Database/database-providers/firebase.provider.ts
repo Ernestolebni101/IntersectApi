@@ -13,11 +13,13 @@ export type firebaseClient = app.App;
 export const firebaseProvider: Provider[] = [
   {
     useFactory: (config: ConfigService): firebaseClient => {
-      return firebase.initializeApp({
-        credential: firebase.credential.cert(creds as ServiceAccount),
-        databaseURL: config.get('DB_URL'),
-        storageBucket: config.get('BUCKET_URL'),
-      });
+      return !firebase.apps.length
+        ? firebase.initializeApp({
+            credential: firebase.credential.cert(creds as ServiceAccount),
+            databaseURL: config.get('DB_URL'),
+            storageBucket: config.get('BUCKET_URL'),
+          })
+        : firebase.app();
     },
     provide: FIREBASE_APP_CLIENT,
     inject: [ConfigService],
