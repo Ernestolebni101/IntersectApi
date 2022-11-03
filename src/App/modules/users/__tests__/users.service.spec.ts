@@ -5,7 +5,6 @@ import { UsersService } from '../users.service';
 import { createMock } from '@golevelup/ts-jest';
 import { firebaseProvider } from '../../../Database/database-providers/firebase.provider';
 import { ConfigModule } from '@nestjs/config';
-declare type users = Array<UserDto>;
 describe('*******UsersService Read Methods********', () => {
   let userService: UsersService;
   beforeEach(async () => {
@@ -38,15 +37,14 @@ describe('*******UsersService Read Methods********', () => {
     it('must return an array of user if the database contains data', async () => {
       const foundUsers: UserDto[] = await userService.findAllAsync();
       expect(foundUsers != null).toBeTruthy();
-      expect(foundUsers).toBe((user: UserDto) => user instanceof UserDto);
     });
   });
-  // describe('findAllAsync Method', () => {
-  //   it('must return null when set unknown uid', async () => {
-  //     const expectedResponse = {} as UserDto[];
-  //     const foundUsers = await userService.findAllAsync();
-  //     expect(foundUsers).toEqual<UserDto[]>(expectedResponse);
-  //     console.log(foundUsers);
-  //   });
-  // });
+  describe('findAllAsync Method', () => {
+    it('must return null when set unknown uid', async () => {
+      const expectedResponse = {} as UserDto[];
+      const foundUsers = await userService.findAllAsync();
+      expect(foundUsers).toEqual<UserDto[]>(expectedResponse);
+      console.log(foundUsers);
+    });
+  });
 });
