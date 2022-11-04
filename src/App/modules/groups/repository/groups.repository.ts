@@ -1,7 +1,7 @@
-import { CreateGroupDto } from '../dto/create-group.dto';
+import { CreateGroupDto, GroupSettings } from '../dto/create-group.dto';
 import { GroupDto } from '../dto/read-group.dto';
 import { BaseFirestoreRepository, CustomRepository } from 'fireorm';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { Group } from '../entities/group.entity';
 import { Bucket } from '@google-cloud/storage';
 import { MemberOpt, UpdateGroupDto } from '../dto/update-group.dto';
@@ -103,12 +103,16 @@ export class GroupsRepository
   /**
    * created Date: 12/08/2022  **********
    * modified Date: 12/08/2022
+   * ! Se debe configurar el groupSettings cuando el usuario no exista en el grupo, de lo contrario, habrá App Crashing
    * *descripcion:  este metodo se encarga de crear un grupo, solo mantiene esta responsabilidad
    * @param payload carga util con informacion del grupo
    */
   public async createGroup(payload: CreateGroupDto): Promise<Group> {
     const transResult = await this.runTransaction(async (executeTran) => {
       const groupData = plainToInstance(Group, payload);
+      groupData.groupSettings.push(
+        instanceToPlain(new GroupSettings(payload.createdBy, true)),
+      );
       groupData.users.push(payload.createdBy);
       const tranResult = await executeTran.create(groupData);
       return tranResult;
@@ -126,7 +130,7 @@ export class GroupsRepository
    * a dos escenarios, cuando se actualiza la foto de perfil y cuando no hay actualización de la misma
    */
   public updateGroup = async (
-    file: any = undefined,
+    file: Express.Multer.File = undefined,
     payload: UpdateGroupDto,
     bucket: Bucket,
     eventEmitter: EventEmitter2,

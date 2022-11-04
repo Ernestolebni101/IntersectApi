@@ -42,8 +42,8 @@ export class UsersService {
    * @param updateUserDto modelo para actualizar los datos del usuario
    * @returns
    */
-  public async update(
-    file: any,
+  public async update?(
+    file: Express.Multer.File,
     updateUserDto: UpdateUserDto,
   ): Promise<string> {
     return await this.userRepository.updateUser(

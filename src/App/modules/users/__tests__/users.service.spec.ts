@@ -75,9 +75,7 @@ describe('*******UsersService Read Methods********', () => {
         token: randomUUID(),
         onlineStatus: false,
       } as UpdateUserDto;
-      expect(await userService.update().toEqual(
-        userResponse.userExist,
-      );
+      expect(await userService.update(undefined, mockUpdateUser)).toBeNull();
     });
   });
 });

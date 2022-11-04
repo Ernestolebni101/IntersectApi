@@ -30,6 +30,7 @@ export class UsersRepository
   constructor(private readonly logger: Logger) {
     super(User);
   }
+
   public getUsersByUids = async (uids: string[]): Promise<User[]> => {
     const users = await this.find();
     const selectedUsers = new Array<User>();
@@ -80,16 +81,35 @@ export class UsersRepository
     }
   }
   public async helperPatch(payload: UpdateUserDto, bucket: Bucket = null) {
-    const foundUser = plainToClass(User, await this.getUserbyId(payload.uid));
-    if (bucket != null) await File.removeFile(foundUser.profilePic, bucket);
-    foundUser.firstName = payload.firstName ?? foundUser.firstName;
-    foundUser.lastName = payload.lastName ?? foundUser.lastName;
-    foundUser.email = payload.email ?? foundUser.email;
-    foundUser.profilePic = payload.profilePic ?? foundUser.profilePic;
-    foundUser.token = payload.token ?? foundUser.token;
-    foundUser.onlineStatus = payload.onlineStatus ?? foundUser.onlineStatus;
-    if (payload.group != null) foundUser.groups.push(payload.group);
-    await this.update(foundUser);
+    try {
+      this.logger.log(
+        '******Update Proceess started******',
+        UsersRepository.name,
+      );
+      const foundUser = plainToClass(User, await this.getUserbyId(payload.uid));
+      if (foundUser) {
+        this.logger.warn(
+          'User Was not Found.. Proceed to return null value for Operation',
+          UsersRepository.name,
+        );
+        return null;
+      }
+      if (bucket != null) await File.removeFile(foundUser.profilePic, bucket);
+      foundUser.firstName = payload.firstName ?? foundUser.firstName;
+      foundUser.lastName = payload.lastName ?? foundUser.lastName;
+      foundUser.email = payload.email ?? foundUser.email;
+      foundUser.profilePic = payload.profilePic ?? foundUser.profilePic;
+      foundUser.token = payload.token ?? foundUser.token;
+      foundUser.onlineStatus = payload.onlineStatus ?? foundUser.onlineStatus;
+      if (payload.group != null) foundUser.groups.push(payload.group);
+      await this.update(foundUser);
+      this.logger.log(
+        '******Update Proceess ended******',
+        UsersRepository.name,
+      );
+    } catch (error) {
+      this.logger.error('Unexpected Error', error, UsersRepository.name);
+    }
   }
 
   public async createOne(payload: CreateUserDto): Promise<userResponse> {

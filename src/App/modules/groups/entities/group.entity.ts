@@ -20,7 +20,9 @@ export class Group {
   public isWriting = false;
   public whosWriting = '';
   public inheritOwner = '';
-  public groupSettings: Array<any> = new Array<any>();
+  public groupSettings: Array<Record<string, unknown>> = new Array<
+    Record<string, unknown>
+  >();
 }
 
 // declare global {

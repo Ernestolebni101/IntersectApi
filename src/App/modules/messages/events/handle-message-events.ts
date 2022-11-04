@@ -15,10 +15,11 @@ import { UpdateChatDto } from 'src/App/modules/chats/dto/update-chat.dto';
 import { MessagesService } from '../services/messages.service';
 import { plainToInstance } from 'class-transformer';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
+import { messageException } from '../constants/messages.exceptions';
 
 @Injectable()
 export class MessageHandleEvents {
-  // Incrustar repositorio de usuarios y servicio de Notificaciones
+
   constructor(
     private readonly notification: Notification,
     private readonly groupService: GroupsService,
@@ -53,14 +54,14 @@ export class MessageHandleEvents {
     group: Group,
   ) {
     try {
+    receptors == undefined && messageException['missingReceptors']();
     const settings = plainToInstance(GroupSettings,group.groupSettings);
+    settings.length == 0 && messageException['missingSettings']();
     const upgradeModel = new UpdateGroupDto();
     upgradeModel.id = group.id;
     upgradeModel.flag = new Date().getTime(); 
     upgradeModel.modifiedDate = Time.getCustomDate(new Date(), 'T');
     upgradeModel.lastMessage = `${payload.nickName}: ${payload.messageContent}`;
-    if(receptors == undefined)
-      throw new Error("Tokens its an empty array")
     const tokens = receptors.flatMap((t) => t.token);
     let mss: messaging.Message;
     const imageUrl = payload.messageType === 'image' ? payload.mediaUrl[0].toString() : '';
@@ -84,7 +85,6 @@ export class MessageHandleEvents {
         );
         await this.notification.sendMessage(mss);
       }
-      
     });
     await this.groupService.updateGroupData(undefined, upgradeModel);
     } catch (error) {
