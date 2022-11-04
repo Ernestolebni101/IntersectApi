@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { firebaseProvider } from './Database/database-providers/firebase.provider';
 import { AppService } from './app.service';
@@ -13,6 +13,11 @@ import { IntersectGateway } from './app.gateway';
 import { RealtimeModule } from './shared/realtime.module';
 import { FunctionsManagerService } from './Database/firebase/functionManager';
 import { LoggerModule } from 'nestjs-pino';
+import {
+  CorrelationMiddleware,
+  CORRELATION_ID_HEADER,
+} from './Middlewares/correlation.middleware';
+import { Request } from 'express';
 @Global()
 @Module({
   imports: [
@@ -25,6 +30,16 @@ import { LoggerModule } from 'nestjs-pino';
           },
         },
         messageKey: 'message',
+        customProps: (req: Request) => {
+          return {
+            correlationId: req[CORRELATION_ID_HEADER],
+          };
+        },
+        autoLogging: true,
+        // serializers: {
+        //   req: () => undefined,
+        //   res: () => undefined,
+        // },
       },
     }),
     ConfigModule.forRoot({
@@ -53,4 +68,8 @@ import { LoggerModule } from 'nestjs-pino';
     IntersectGateway,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+}

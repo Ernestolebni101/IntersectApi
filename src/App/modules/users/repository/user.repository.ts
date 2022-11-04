@@ -6,6 +6,8 @@ import { plainToClass } from 'class-transformer';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { Bucket } from '@google-cloud/storage';
 import { File } from '../../../../Utility/utility-createFile';
+import { userResponse } from '../constants/user.restrictions';
+import { Logger } from '@nestjs/common';
 
 export interface IUserRepository {
   createOne(payload: CreateUserDto): Promise<number>;
@@ -13,7 +15,7 @@ export interface IUserRepository {
   getUserbyId(uid: string): Promise<UserDto>;
   getUsersByUids(uids: string[]): Promise<User[]>;
   updateUser(
-    file: any,
+    file: Express.Multer.File,
     bucket: Bucket,
     payload: UpdateUserDto,
   ): Promise<string>; // ===> esto debe ser mediante un trigger
@@ -25,6 +27,9 @@ export class UsersRepository
   extends BaseFirestoreRepository<User>
   implements IUserRepository
 {
+  constructor(private readonly logger: Logger) {
+    super(User);
+  }
   public getUsersByUids = async (uids: string[]): Promise<User[]> => {
     const users = await this.find();
     const selectedUsers = new Array<User>();
@@ -43,20 +48,19 @@ export class UsersRepository
   public getAllAsync = async (): Promise<UserDto[]> =>
     (await this.find()).map((user: User) => plainToClass(UserDto, user));
 
-  public ifExist = async (nickName: string): Promise<number> => {
+  public ifExist = async (nickName: string): Promise<userResponse> => {
     const user = await this.whereEqualTo(
       (u) => u.nickName,
       nickName.trim(),
     ).findOne();
-    const number: number = user != null ? 404 : 201;
-    return number;
+    return user == null ? userResponse.notExist : userResponse.userExist;
   };
 
   /**
    * @WriteOperations => Segmento de Operaciones de Escritura(Mutablidad)
    */
   public async updateUser(
-    file: any = undefined,
+    file: Express.Multer.File = undefined,
     bucket: Bucket = undefined,
     payload: UpdateUserDto,
   ): Promise<string> {
@@ -64,7 +68,7 @@ export class UsersRepository
       if (!file || file === undefined || file === null) {
         await this.helperPatch(payload);
         return Promise.resolve(
-          'No hay imagen para actualizar! se actualizan los demás componentes',
+          'No hay imagen para actualizar! se actualizan los demás campos',
         );
       } else {
         payload.profilePic = await File.submitFile(file, bucket);
@@ -88,15 +92,27 @@ export class UsersRepository
     await this.update(foundUser);
   }
 
-  public async createOne(payload: CreateUserDto): Promise<number> {
-    let flag = await this.ifExist(payload.nickName);
-    if (flag != 400) {
-      flag = await this.runTransaction(async (tran) => {
+  public async createOne(payload: CreateUserDto): Promise<userResponse> {
+    try {
+      this.logger.log('Validating if user Exist', UsersRepository.name);
+      const flag = await this.ifExist(payload.nickName);
+      this.logger.log('Validating Process ended', UsersRepository.name);
+      if (flag == userResponse.userExist) {
+        this.logger.warn(
+          'The Nickname Already Exists... Proceed to kill the process',
+          UsersRepository.name,
+        );
+        return userResponse.userExist;
+      }
+      await this.runTransaction(async (tran) => {
         const model = plainToClass(User, payload);
-        await tran.create(model);
-        return flag;
+        const newUser = await tran.create(model);
+        return newUser;
       });
-      return flag;
-    } else return flag;
+      this.logger.log('The user Was Created, Process Ended Succesfully...');
+      return userResponse.userCreated;
+    } catch (error) {
+      this.logger.error(error, UsersRepository.name);
+    }
   }
 }

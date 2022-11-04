@@ -42,5 +42,5 @@ export class CreateGroupDto implements IGroupEntity {
 }
 
 export class GroupSettings {
-  constructor(public userId: string, public isNotify: boolean) {}
+  constructor(public userId?: string, public isNotify?: boolean) {}
 }

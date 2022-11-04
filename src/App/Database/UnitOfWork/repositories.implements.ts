@@ -21,6 +21,7 @@ import {
   IChatRepository,
 } from '../../modules/chats/repository/chat-repository';
 import { Chat } from '../../modules/chats/entities/chat.entity';
+import { Logger } from '@nestjs/common';
 
 export class UnitOfWorkRepository implements IUnitOfWorkRepository {
   public readonly userRepository: UsersRepository;
@@ -29,7 +30,7 @@ export class UnitOfWorkRepository implements IUnitOfWorkRepository {
   public readonly waitListRepository: IWaitListRepository;
   public readonly chatRepository: IChatRepository;
   constructor() {
-    this.userRepository = new UsersRepository(User);
+    this.userRepository = new UsersRepository(new Logger());
     this.groupsRepository = new GroupsRepository(Group);
     this.messageRepository = new MessageRepository(Message);
     this.waitListRepository = new WaitListRepository(WaitingList);

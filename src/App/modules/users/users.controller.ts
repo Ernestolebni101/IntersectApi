@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Put,
+  Logger,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,11 +20,15 @@ import { error, success } from 'src/common/response';
 import * as Exp from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { getKey, userCtrlresponse } from './constants/user.restrictions';
 
 @ApiTags('Módulo de Usuarios')
 @Controller('users/v1')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly logger: Logger,
+  ) {}
 
   /**
    * ====================== @WriteOperations => Controladores de Escritura
@@ -35,10 +40,13 @@ export class UsersController {
     @Request() req,
     @Response() res,
   ) {
-    return await this.usersService
-      .create(payload)
-      .then(() => success(req, res, 'Usuario Creado Exitosamente', 201))
-      .catch((e) => error(req, res, 'Unexpected Error', e));
+    try {
+      this.logger.log('Create User Request Starting');
+      const response = await this.usersService.create(payload);
+      success(req, res, userCtrlresponse[getKey(response)], response);
+    } catch (error) {
+      this.logger.error('Error de Servidor', error, UsersController.name);
+    }
   }
 
   @Put()
@@ -105,6 +113,16 @@ export class UsersController {
         if (data) success(req, res, data, 200);
         else success(req, res, data, 404);
       })
-      .catch((e) => error(req, res, 'Unexpected Error', e));
+      .catch((e) =>
+        error(
+          req,
+          res,
+          'Unexpected Error',
+          e,
+          500,
+          this.logger.error,
+          UsersController.name,
+        ),
+      );
   }
 }

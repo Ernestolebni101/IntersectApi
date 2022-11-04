@@ -6,6 +6,7 @@ import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements'
 import { IUserRepository } from './repository/user.repository';
 import { Bucket } from '@google-cloud/storage';
 import { IGroupsRepository } from '../groups/repository/groups.repository';
+import { userResponse } from './constants/user.restrictions';
 
 @Injectable()
 export class UsersService {
@@ -32,9 +33,9 @@ export class UsersService {
   /**
    * *Registra un Nuevo Usuario en la Base de Datos
    */
-  public async create(payload: CreateUserDto): Promise<void> {
+  public create = async (payload: CreateUserDto): Promise<userResponse> =>
     await this.userRepository.createOne(payload);
-  }
+
   /**
    *
    * @param file hace referencia a la foto de perfil
