@@ -29,7 +29,7 @@ export class FunctionsManagerService {
   /**
    *
    * @param collection Coleccion a la que se va afectar
-   * @param searchParam parametro de busqueda
+   * @param searchParam parametros de busqueda
    * @param docId id del documento
    * @returns boolean
    */
