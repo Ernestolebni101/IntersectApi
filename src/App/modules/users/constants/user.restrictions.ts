@@ -1,7 +1,7 @@
 export enum userResponse {
-  notExist = 201,
+  notExist = 404,
   userExist = 400,
-  userCreated = 202,
+  userCreated = 201,
 }
 
 export const userCtrlresponse = {
