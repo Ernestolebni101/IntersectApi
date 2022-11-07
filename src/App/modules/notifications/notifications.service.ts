@@ -46,7 +46,10 @@ export class NotificationsService {
         console.log('Error sending message:', error);
       });
   }
-
+  /**
+   * * Send Multiple Notifications Via RPC(Remote Procedure Call)
+   * * More Efficient than sendMessage method
+   */
   public async sendToDevices({
     groupNotify,
     settings,
