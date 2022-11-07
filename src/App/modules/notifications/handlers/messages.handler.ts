@@ -1,7 +1,6 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
-import { messaging } from 'firebase-admin';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
 import { messageException } from '../../messages/constants/messages.exceptions';
 import { GroupNotification } from '../events/fcmModels';
