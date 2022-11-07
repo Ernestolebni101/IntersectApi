@@ -1,5 +1,5 @@
 import { Controller, Get, Request, Response, Query, Res } from '@nestjs/common';
-import { success, error } from 'src/common/response';
+import { success, error } from '../../../../common/response';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MultimediaService } from '../services/multimedia.service';
 import { MultimediaParams } from '../constants/messages.constants';

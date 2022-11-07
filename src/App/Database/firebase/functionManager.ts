@@ -5,9 +5,9 @@ import { Group } from '../../modules/groups/entities/group.entity';
 import { plainToInstance } from 'class-transformer';
 import { database } from 'firebase-admin';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/App/modules/users/entities/user.entity';
+import { User } from '../../modules/users/entities/user.entity';
 import { Bucket } from '@google-cloud/storage';
-import { MultimediaService } from 'src/App/modules/messages/services/multimedia.service';
+import { MultimediaService } from '../../modules/messages/services/multimedia.service';
 import * as functions from 'firebase-functions';
 
 @Injectable()

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
-import { UserPartialDto } from 'src/App/modules/users/dto/read-user.dto';
-import { IUserRepository } from 'src/App/modules/users/repository/user.repository';
+import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
+import { UserPartialDto } from '../../users/dto/read-user.dto';
+import { IUserRepository } from '../../users/repository/user.repository';
 import { CreateWaitingListDto } from './dto/create-waiting-list.dto';
 import { WaitingListDto } from './dto/read-group-dto';
 import { UpdateWaitingListDto } from './dto/update-waiting-list.dto';

@@ -1,11 +1,8 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-import { firebaseClient } from 'src/App/Database/database-providers/firebase.provider';
-import {
-  FIREBASE_APP_CLIENT,
-  GPATH,
-} from 'src/App/Database/database.constants';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
+import { firebaseClient } from '../../Database/database-providers/firebase.provider';
+import { FIREBASE_APP_CLIENT, GPATH } from '../../Database/database.constants';
+import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from './entities/group.entity';
 import {

@@ -2,7 +2,7 @@ import {
   IUnitOfWorkAdapter,
   IUnitOfWorkRepository,
 } from '../IUnitOfWork/interfaces.unitofWork';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Scope } from '@nestjs/common';
 import * as firebase from 'firebase-admin';
 import * as fireorm from 'fireorm';
 import { UnitOfWorkRepository } from './repositories.implements';
@@ -10,7 +10,7 @@ import { FIREBASE_APP_CLIENT, SETTINGS } from '../database.constants';
 import { firebaseClient } from '../database-providers/firebase.provider';
 import { Bucket } from '@google-cloud/storage';
 
-@Injectable()
+@Injectable({ scope: Scope.TRANSIENT })
 export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
   public Repositories: IUnitOfWorkRepository;
   public _transaction: firebase.firestore.WriteBatch;

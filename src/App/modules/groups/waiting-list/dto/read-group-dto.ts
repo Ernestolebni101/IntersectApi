@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserPartialDto } from 'src/App/modules/users/dto/read-user.dto';
+import { UserPartialDto } from '../../../users/dto/read-user.dto';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { WaitingList } from '../entities/waiting-list.entity';
 

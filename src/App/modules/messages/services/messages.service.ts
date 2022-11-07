@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { plainToClass } from 'fireorm/node_modules/class-transformer';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
+import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
 import { UserDto } from '../../users/dto/read-user.dto';
 import { IUserRepository } from '../../users/repository/user.repository';
 import { CreateMessageDto } from '../dto/create-message.dto';

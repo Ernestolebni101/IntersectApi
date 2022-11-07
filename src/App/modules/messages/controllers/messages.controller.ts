@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { MessagesService } from '../services/messages.service';
 import { CreateMessageDto } from '../dto/create-message.dto';
-import { success, error } from 'src/common/response';
+import { success, error } from '../../../../common/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 

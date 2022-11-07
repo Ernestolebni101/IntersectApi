@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { UsersService } from 'src/App/modules/users/users.service';
+import { UsersService } from '../../users/users.service';
 import { Notification } from '../../messages/messaging/notifications';
 import {
   DataModel,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { UsersService } from 'src/App/modules/users/users.service';
+import { UsersService } from '../../../users/users.service';
 import { GroupsService } from '../../groups.service';
 import { WaitingListService } from '../waiting-list.service';
 import { UpdateWaitingListDto } from '../dto/update-waiting-list.dto';
@@ -9,11 +9,11 @@ import {
   DataModel,
   FcmModel,
   GroupNotification,
-} from 'src/App/modules/messages/messaging/fcmModels';
-import { Notification } from 'src/App/modules/messages/messaging/notifications';
+} from '../../../messages/messaging/fcmModels';
+import { Notification } from '../../../messages/messaging/notifications';
 import { CreateWaitingListDto } from '../dto/create-waiting-list.dto';
 import { GroupDto } from '../../dto/read-group.dto';
-import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
+import { UserDto } from '../../../users/dto/read-user.dto';
 
 @Injectable()
 export class WaitListEventHandlers {

@@ -79,22 +79,20 @@ export const onMessageGroups = functions.firestore
   });
 
 //#region Firebase Authentication
-//export const AuthTracking = functions.auth.user().beforeSignIn(,)
-//#endregion
+// export const AuthTracking = functions.auth.user().beforeSignIn(,)
 
-//#region pruebas manuales
-// const getUserConnections = async () => {
-//   const userRef = (await fManager).rDb
-//     .ref('/Users')
-//     .child('status')
-//     .child('vfF9uaBFowgL3OnzF0ldyD9EREx2');
-//   // userRef.update({ uid: 'nemnm' });
-//   const singleUser: User = (await userRef.get()).val();
-//   // const single: User = users.find(
-//   //   (x: any) => x.uid === 'vfF9uaBFowgL3OnzF0ldyD9EREx2',
-//   // );
-//   return singleUser;
-// };
+const getUserConnections = async () => {
+  const userRef = (await fManager).rDb
+    .ref('/Users')
+    .child('status')
+    .child('vfF9uaBFowgL3OnzF0ldyD9EREx2');
+  // userRef.update({ uid: 'nemnm' });
+  const singleUser: User = (await userRef.get()).val();
+  // const single: User = users.find(
+  //   (x: any) => x.uid === 'vfF9uaBFowgL3OnzF0ldyD9EREx2',
+  // );
+  return singleUser;
+};
 
 const getRealtimeConnections = async () => {
   const realtimeDb = (await fManager).rDb;

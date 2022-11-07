@@ -1,6 +1,6 @@
-import { Message } from 'src/App/modules/messages/entities/message.entity';
-import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
-import { Time } from 'src/Utility/utility-time-zone';
+import { Message } from '../../messages/entities/message.entity';
+import { UserDto } from '../../users/dto/read-user.dto';
+import { Time } from '../../../../Utility/utility-time-zone';
 import { User } from '../../users/entities/user.entity';
 
 export class ChatDto {

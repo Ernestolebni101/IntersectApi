@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
+import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { IMessageRepository } from '../messages/repository/message.repository';
 import { IUserRepository } from '../users/repository/user.repository';
 import { CreateChatDto } from './dto/create-chat.dto';

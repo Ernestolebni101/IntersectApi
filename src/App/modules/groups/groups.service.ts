@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
+import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { UserPartialDto } from '../users/dto/read-user.dto';
 import { IUserRepository } from '../users/repository/user.repository';
 import { GroupDto } from './dto/read-group.dto';
@@ -104,7 +104,7 @@ export class GroupsService {
    * @returns
    */
   public updateGroupData = async (
-    file: any,
+    file: Express.Multer.File,
     payload: UpdateGroupDto,
   ): Promise<string> => {
     const str = await this.groupsRepository.updateGroup(

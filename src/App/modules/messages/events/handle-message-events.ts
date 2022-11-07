@@ -9,9 +9,9 @@ import { Group } from '../../groups/entities/group.entity';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { ChatsService } from '../../chats/chats.service';
-import { UpdateGroupDto } from 'src/App/modules/groups/dto/update-group.dto';
-import { Time } from 'src/Utility/utility-time-zone';
-import { UpdateChatDto } from 'src/App/modules/chats/dto/update-chat.dto';
+import { UpdateGroupDto } from '../../../modules/groups/dto/update-group.dto';
+import { Time } from '../../../../Utility/utility-time-zone';
+import { UpdateChatDto } from '../../../modules/chats/dto/update-chat.dto';
 import { MessagesService } from '../services/messages.service';
 import { plainToInstance } from 'class-transformer';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
@@ -72,6 +72,7 @@ export class MessageHandleEvents {
       group.isPrivate,
     );
     const dataModel = new DataModel(null, notification)
+    
     tokens.forEach(async (t, idx) => {
       if(settings[idx].isNotify){
         mss = FcmModel.fcmPayload(

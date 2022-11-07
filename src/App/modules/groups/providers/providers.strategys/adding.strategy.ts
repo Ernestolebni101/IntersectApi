@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { instanceToPlain } from 'class-transformer';
-import { firebaseClient } from 'src/App/Database/database-providers/firebase.provider';
+import { firebaseClient } from '../../../../Database/database-providers/firebase.provider';
 import {
   FIREBASE_APP_CLIENT,
   GPATH,
-} from 'src/App/Database/database.constants';
+} from '../../../../Database/database.constants';
 import {
   IGroupEntity,
   IGroupStrategy,

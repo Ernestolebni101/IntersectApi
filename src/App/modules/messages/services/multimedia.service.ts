@@ -4,9 +4,9 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { MultimediaDto } from '../dto/read-multimedia.dto';
 import { Message } from '../entities/message.entity';
 import { Multimedia } from '../entities/multimedia';
-import { UnitOfWorkAdapter } from 'src/App/Database/UnitOfWork/adapter.implements';
-import { FIREBASE_APP_CLIENT } from 'src/App/Database/database.constants';
-import { firebaseClient } from 'src/App/Database/database-providers/firebase.provider';
+import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
+import { FIREBASE_APP_CLIENT } from '../../../Database/database.constants';
+import { firebaseClient } from '../../../Database/database-providers/firebase.provider';
 
 @Injectable()
 export class MultimediaService {
