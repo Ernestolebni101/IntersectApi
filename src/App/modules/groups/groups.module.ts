@@ -13,6 +13,8 @@ import { WaitListEventHandlers } from './waiting-list/events/handle-waitList-Eve
 import { WaitingListController } from './waiting-list/waiting-list.controller';
 import { UsersModule } from '../users/users.module';
 import { MessagesModule } from '../messages/messages.module';
+import { RequestingStrategy } from './providers/providers.strategys/requesting.strategy';
+import { AddingStrategy } from './providers/providers.strategys/adding.strategy';
 
 @Module({
   imports: [
@@ -28,14 +30,15 @@ import { MessagesModule } from '../messages/messages.module';
   ],
   controllers: [GroupsController, WaitingListController],
   providers: [
-    ...groupProvider,
     GroupContext,
+    RequestingStrategy,
+    AddingStrategy,
     GroupsService,
     Notification,
     GroupHandleEvents,
     WaitingListService,
     WaitListEventHandlers,
   ],
-  exports: [...groupProvider, GroupContext, GroupsService],
+  exports: [RequestingStrategy, AddingStrategy, GroupContext, GroupsService],
 })
 export class GroupsModule {}

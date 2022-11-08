@@ -87,7 +87,7 @@ export class UsersRepository
         UsersRepository.name,
       );
       const foundUser = plainToClass(User, await this.getUserbyId(payload.uid));
-      if (foundUser) {
+      if (!foundUser) {
         this.logger.warn(
           'User Was not Found.. Proceed to return null value for Operation',
           UsersRepository.name,

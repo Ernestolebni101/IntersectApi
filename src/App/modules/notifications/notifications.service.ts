@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { messaging } from 'firebase-admin';
 import { firebaseClient } from '../../Database/database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT } from '../../Database/database.constants';
-import { GroupSettings } from '../groups/dto/create-group.dto';
-import { DataModel, FcmModel, GroupNotification } from './events/fcmModels';
-import { GroupMessageCreated } from './events/messageEvents/message-created';
+import { DataModel } from './events/fcmModels';
+
+import { senderObject } from './helpers/sender.helper';
 
 @Injectable()
 export class NotificationsService {
@@ -46,40 +46,39 @@ export class NotificationsService {
         console.log('Error sending message:', error);
       });
   }
-
+  /**
+   * * Dispatch notification to all devices group
+   */
   public async sendToDevices({
-    groupNotify,
-    settings,
-    messageGroupEvent,
+    notificationBody,
+    settings = null,
+    messageEvent,
+    typeNotify = 1,
   }): Promise<void> {
-    const dataModel = new DataModel(undefined, groupNotify);
+    const dataModel =
+      typeNotify == notificationType.groupNotification
+        ? new DataModel(undefined, notificationBody)
+        : new DataModel(notificationBody, undefined);
     const imageUrl =
-      messageGroupEvent.payloadMessage.messageType === 'image'
-        ? messageGroupEvent.payloadMessage.mediaUrl[0].toString()
+      messageEvent.payloadMessage.messageType === 'image'
+        ? messageEvent.payloadMessage.mediaUrl[0].toString()
         : '';
-    const notifications: messaging.Message[] = messageGroupEvent.tokens.map(
-      (t: string, idx: number) => {
-        if (settings[idx].isNotify) {
-          return FcmModel.fcmPayload(
-            t,
-            messageGroupEvent.group.groupName,
-            `${messageGroupEvent.payloadMessage.nickName}:`,
-            messageGroupEvent.payloadMessage.messageContent,
-            dataModel,
-            imageUrl,
-            messageGroupEvent.group.groupProfile,
-          );
-        }
-      },
-    );
-    await this.messagingService
-      .sendAll(notifications, false)
-      .then(function (response) {
-        console.log('Successfully sent message:', response);
-      })
-      .catch(function (error) {
-        console.log('Error sending message:', error);
-      });
+    if (typeNotify == notificationType.groupNotification) {
+      await senderObject['groupNotification'](
+        this.messagingService,
+        settings,
+        imageUrl,
+        dataModel,
+        messageEvent,
+      );
+    } else {
+      await senderObject['directNotification'](
+        this.messagingService,
+        imageUrl,
+        dataModel,
+        messageEvent,
+      );
+    }
   }
 
   public async sendMessage(payload: messaging.Message) {
@@ -96,4 +95,9 @@ export class NotificationsService {
     };
     return options;
   }
+}
+
+export enum notificationType {
+  groupNotification = 1,
+  directNotification = 2,
 }

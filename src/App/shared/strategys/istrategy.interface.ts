@@ -1,4 +1,5 @@
-import { Group } from 'src/App/modules/groups/entities/group.entity';
+import { CreateGroupDto } from 'src/App/modules/groups/dto/create-group.dto';
+import { Group } from '../../modules/groups/entities/group.entity';
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface IGroupEntity {
@@ -13,7 +14,7 @@ export interface IStrategy {
 }
 
 export interface IGroupStrategy {
-  Execute<TModel extends IGroupEntity>(
+  Execute<TModel extends CreateGroupDto>(
     model: TModel,
     group: Group,
   ): Promise<any>;

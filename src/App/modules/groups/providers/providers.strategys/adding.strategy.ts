@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { instanceToPlain } from 'class-transformer';
 import { firebaseClient } from '../../../../Database/database-providers/firebase.provider';
@@ -13,6 +13,7 @@ import {
 import { Group } from '../.././entities/group.entity';
 
 export const IaddingToken = Symbol('AddingStrategy');
+Injectable();
 export class AddingStrategy implements IGroupStrategy {
   private readonly db: FirebaseFirestore.Firestore;
   constructor(
@@ -30,10 +31,12 @@ export class AddingStrategy implements IGroupStrategy {
     const collection = this.db.collection(GPATH);
     foundGroup.users.push(createdBy);
     collection.doc(foundGroup.id).update(instanceToPlain(foundGroup));
-    await this.eventEmitter.emitAsync(
-      'onAddMember',
-      foundGroup.author,
-      foundGroup.id,
+    return Promise.resolve(
+      await this.eventEmitter.emitAsync(
+        'onAddMember',
+        foundGroup.author,
+        foundGroup.id,
+      ),
     );
   }
 }

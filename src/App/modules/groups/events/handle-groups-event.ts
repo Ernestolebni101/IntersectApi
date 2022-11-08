@@ -26,7 +26,7 @@ export class GroupHandleEvents {
    */
   @OnEvent('onChangedOwner', { async: true })
   public async handleOwnerChange(newAuthor: string, groupId: string) {
-    const sender = 'AVISO';
+    const sender = '';
     const group = await this.groupService.findOneAsync(groupId);
     const owner = group.users.find((x) => x.uid === newAuthor);
     const notification = new GroupNotification(
@@ -55,7 +55,7 @@ export class GroupHandleEvents {
   @OnEvent('onExit', { async: true })
   public async handleExitUser(author: string, userId: string, groupId: string) {
     try {
-      const sender = 'AVISO';
+      const sender = '';
       const group = await this.groupService.findOneAsync(groupId);
       const owner = await this.userService.findOne(author);
       const user = await this.userService.findOne(userId);

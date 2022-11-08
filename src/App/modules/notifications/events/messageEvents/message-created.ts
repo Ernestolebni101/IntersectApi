@@ -3,6 +3,7 @@ import { UpdateGroupDto } from '../../../../modules/groups/dto/update-group.dto'
 import { Time } from '../../../../../Utility/utility-time-zone';
 import { CreateMessageDto } from '../../../../modules/messages/dto/create-message.dto';
 import { Group } from '../../../../modules/groups/entities/group.entity';
+import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
 /**
  *
  */
@@ -17,7 +18,7 @@ export class ChatMessageCreated extends MessageCreatedEvent {
   constructor(
     public payloadMessage: CreateMessageDto,
     public fn: (payload: UpdateChatDto) => Promise<void>,
-    public token: string,
+    public user: UserDto,
   ) {
     super();
     this.payloadMessage = payloadMessage;
@@ -38,6 +39,7 @@ export class GroupMessageCreated extends MessageCreatedEvent {
   constructor(
     public payloadMessage: CreateMessageDto,
     public group: Group,
+    public tokens: string[],
     public fn: (
       file: Express.Multer.File,
       payload: UpdateGroupDto,
