@@ -91,7 +91,7 @@ export class GroupsController {
     payload.createdBy = author
     return await this.groupContext
       .executeFirstStrategy(payload)
-      .then((data) => success(req, res, data, 200))
+      .then((data) => success(req, res, data, data['operationType'] as number))
       .catch((e) => error(req, res, 'Unexpected Error Try again Later', e));
   }
 

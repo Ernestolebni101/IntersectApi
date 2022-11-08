@@ -3,8 +3,11 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
 import { messageException } from '../../messages/constants/messages.exceptions';
-import { GroupNotification } from '../events/fcmModels';
-import { GroupMessageCreated } from '../events/messageEvents/message-created';
+import { DirectNotification, GroupNotification } from '../events/fcmModels';
+import {
+  ChatMessageCreated,
+  GroupMessageCreated,
+} from '../events/messageEvents/message-created';
 import { NotificationsService } from '../notifications.service';
 
 @Injectable({ scope: Scope.REQUEST })
@@ -34,11 +37,41 @@ export class MessageListener {
         messageGroupEvent.group.isPrivate,
       );
       await this.notificationSvc.sendToDevices({
-        groupNotify: notification,
-        messageGroupEvent: messageGroupEvent,
+        notificationBody: notification,
+        messageEvent: messageGroupEvent,
         settings: settings,
       });
       await messageGroupEvent.executeFunction();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  /**
+   * *
+   * @Author => Ernesto Lebni Miranda Escobar
+   * @ModifiedDate => 2/24/2022
+   * @Description  => Notificación push al enviar mensajes en grupos;
+   * @Status => Estable
+   */
+  @OnEvent('message.chatmessage', { async: true })
+  public async handleChatMessages(messageChatEvent: ChatMessageCreated) {
+    try {
+      const notification = new DirectNotification(
+        messageChatEvent.payloadMessage.fromGroup,
+        [
+          messageChatEvent.payloadMessage.messageFrom,
+          messageChatEvent.user.uid,
+        ],
+        [
+          messageChatEvent.payloadMessage.profilePic,
+          messageChatEvent.user.profilePic,
+        ],
+      );
+      await this.notificationSvc.sendToDevices({
+        notificationBody: notification,
+        messageEvent: messageChatEvent,
+      });
+      await messageChatEvent.executeFunction();
     } catch (error) {
       console.log(error);
     }

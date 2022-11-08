@@ -41,7 +41,7 @@ export class MessageHandleEvents {
   }
 
   /**
-   * *
+   * !Revisado
    * @Author => Ernesto Lebni Miranda Escobar
    * @ModifiedDate => 2/24/2022
    * @Description  => Notificación push al enviar mensajes en grupos;
@@ -95,7 +95,7 @@ export class MessageHandleEvents {
   }
 
   /**
-   * *
+   * !revisado
    * @Author => Ernesto Lebni Miranda Escobar
    * @ModifiedDate => 27/07/2022
    * @Description  => Notificación push al enviar mensajes directos;

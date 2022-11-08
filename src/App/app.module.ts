@@ -18,6 +18,8 @@ import {
   CORRELATION_ID_HEADER,
 } from './Middlewares/correlation.middleware';
 import { Request } from 'express';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Global()
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { Request } from 'express';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot({ global: true }),
+    NotificationsModule,
     UsersModule,
     GroupsModule,
     MessagesModule,

@@ -15,16 +15,14 @@ import {
 } from './providers/providers.strategys/requesting.strategy';
 import { IGroupsRepository } from './repository/groups.repository';
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class GroupContext {
   private readonly db: FirebaseFirestore.Firestore;
   private readonly groupRepo: IGroupsRepository;
   constructor(
     @Inject(FIREBASE_APP_CLIENT)
     private readonly managerServices: firebaseClient,
-    @Inject(IREQUEST)
     private readonly requestingStrategy: RequestingStrategy,
-    @Inject(IaddingToken)
     private readonly addingStrategy: AddingStrategy,
     private readonly adapter: UnitOfWorkAdapter,
   ) {
@@ -43,8 +41,9 @@ export class GroupContext {
    */
   public executeFirstStrategy = async (
     payload: CreateGroupDto,
-  ): Promise<any> => {
+  ): Promise<object> => {
     try {
+      const record = {};
       const collection = this.db.collection(GPATH);
       const foundDoc =
         (await collection.where('groupName', '==', payload.groupName).get())
@@ -52,35 +51,32 @@ export class GroupContext {
       const opt = this.helperFunction(foundDoc, payload.createdBy);
       switch (opt) {
         case groupEnum.add:
-          this.addingStrategy.Execute(
+          await this.addingStrategy.Execute(
             payload,
             plainToInstance(Group, foundDoc.data()),
           );
-          return {
-            groupData: foundDoc.data(),
-            operationType: groupEnum.add,
-          };
+          record['groupData'] = foundDoc.data();
+          record['operationType'] = groupEnum.add;
+          break;
         case groupEnum.createNew:
           const inserted = await this.groupRepo.createGroup(payload);
-          return instanceToPlain({
-            groupData: inserted,
-            operationType: groupEnum.createNew,
-          });
+          record['groupData'] = inserted;
+          record['operationType'] = groupEnum.createNew;
+          break;
         case groupEnum.request:
           await this.requestingStrategy.Execute(
             payload,
             plainToInstance(Group, foundDoc.data()),
           );
-          return {
-            groupData: plainToInstance(Group, foundDoc.data()),
-            operationType: groupEnum.request,
-          };
+          record['groupData'] = plainToInstance(Group, foundDoc.data());
+          record['operationType'] = groupEnum.request;
+          break;
         case groupEnum.redirect:
-          return {
-            groupData: foundDoc.data(),
-            operationType: groupEnum.redirect,
-          };
+          record['groupData'] = foundDoc.data();
+          record['operationType'] = groupEnum.redirect;
+          break;
       }
+      return record;
     } catch (error) {
       console.error(error);
     }

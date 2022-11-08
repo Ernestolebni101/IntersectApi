@@ -7,5 +7,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   imports: [EventEmitterModule.forRoot({ global: true })],
   controllers: [NotificationsController],
   providers: [NotificationsService],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

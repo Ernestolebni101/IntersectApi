@@ -11,7 +11,8 @@ import { ChatsService } from '../chats/chats.service';
 import { MultimediaService } from './services/multimedia.service';
 import { MultimediaController } from './controllers/multimedia.controller';
 import { GroupContext } from '../groups/group.context';
-import { groupProvider } from '../groups/providers/group.providers';
+import { RequestingStrategy } from '../groups/providers/providers.strategys/requesting.strategy';
+import { AddingStrategy } from '../groups/providers/providers.strategys/adding.strategy';
 
 @Module({
   imports: [
@@ -28,11 +29,13 @@ import { groupProvider } from '../groups/providers/group.providers';
     MessagesService,
     Notification,
     MessageHandleEvents,
-    ...groupProvider,
     GroupContext,
     GroupsService,
     ChatsService,
     MultimediaService,
+    RequestingStrategy,
+    AddingStrategy,
+    // NotificationsService,
   ],
   exports: [Notification, MessageHandleEvents, MultimediaService],
 })
