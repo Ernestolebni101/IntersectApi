@@ -24,7 +24,6 @@ export class WaitListEventHandlers {
     private readonly userService: UsersService,
     private readonly waitlistService: WaitingListService,
   ) {}
-
   @OnEvent('onDeniedOrBanned', { async: true })
   public async handleDeniedOrBannedRequest(payload: UpdateWaitingListDto) {
     try {
@@ -89,16 +88,14 @@ export class WaitListEventHandlers {
    * @Note Se ha añadido el bloqueo de notificaciones una vez que los grupos están cerrados
    */
   @OnEvent('onRequestToJoin', { async: true })
-  public async handleRequest(
-    payload: string,
-    id: string, //=> el payload es el uid del usuario y el id es del grupo
-  ) {
+  public async handleRequest(payload: string, id: string) {
     try {
-      const isBanned = (
-        await this.waitlistService.fetchBannedUsers(id)
-      ).flatMap((x) => x.user.uid);
-      const group = await this.groupService.findOneAsync(id);
-      const applicant = await this.userService.findOne(payload);
+      const [bannedList, group, applicant] = await Promise.all([
+        await this.waitlistService.fetchBannedUsers(id),
+        await this.groupService.findOneAsync(id),
+        await this.userService.findOne(payload),
+      ]);
+      const isBanned = bannedList?.flatMap((x) => x.user.uid);
       if (!isBanned.includes(payload)) {
         await this.waitlistService.create(
           new CreateWaitingListDto({
@@ -131,7 +128,6 @@ export class WaitListEventHandlers {
       console.error(
         `Error encontrado al desatar el evento onRequestToJoin: ${e}`,
       );
-      throw new Error(e);
     }
   }
   /**

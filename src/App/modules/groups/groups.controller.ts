@@ -87,12 +87,15 @@ export class GroupsController {
     @Body() payload: CreateGroupDto,
     @Param('author') author: string,
   ) {
-    payload.author = author;
-    payload.createdBy = author
-    return await this.groupContext
-      .executeFirstStrategy(payload)
-      .then((data) => success(req, res, data, data['operationType'] as number))
-      .catch((e) => error(req, res, 'Unexpected Error Try again Later', e));
+    try{
+      payload.author = author;
+      payload.createdBy = author
+    const response = await this.groupContext.executeFirstStrategy(payload);
+    return success(req,res,response, 200);
+    }
+    catch(e){
+      return error(req, res, 'Unexpected Error Try again Later', e)
+    }
   }
 
   @Put()

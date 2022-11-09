@@ -13,7 +13,8 @@ export interface IWaitListRepository {
   ): Promise<void>;
   fetchAllAsync(): Promise<Array<WaitingList>>;
   fetchRequestsAsync(groupId: string): Promise<Array<WaitingList>>;
-  fetchBannedUsers(groupId: string): Promise<Array<WaitingList>>;
+  fetchBannedUsers?(groupId: string): Promise<Array<WaitingList>>;
+  fetchAllByGroups(groupId: string): Promise<Array<WaitingList>>;
 }
 
 @CustomRepository(WaitingList)
@@ -21,6 +22,9 @@ export class WaitListRepository
   extends BaseFirestoreRepository<WaitingList>
   implements IWaitListRepository
 {
+  public fetchAllByGroups = async (groupId: string): Promise<WaitingList[]> =>
+    await this.whereEqualTo((w) => w.groupId, groupId).find();
+
   public async fetchAllAsync(): Promise<WaitingList[]> {
     throw new Error('Method not implemented.');
   }
@@ -43,13 +47,20 @@ export class WaitListRepository
       throw new Error(e);
     }
   }
-
-  public fetchBannedUsers = async (
+  /**
+   * *
+   * @param groupId identificador de Grupo
+   * @returns  Listas de Espera
+   */
+  public fetchBannedUsers? = async (
     groupId: string,
   ): Promise<Array<WaitingList>> => {
     try {
-      const model = await this.whereEqualTo((w) => w.groupId, groupId).find();
-      return model.filter((x) => x.isBanned === true && x.groupId === groupId);
+      const qBuilder = this.whereEqualTo((w) => w.groupId, groupId);
+      const foundElements = await qBuilder.find();
+      return foundElements.filter(
+        (x) => x.isBanned === true && x.groupId === groupId,
+      );
     } catch (error) {
       throw new Error(error);
     }

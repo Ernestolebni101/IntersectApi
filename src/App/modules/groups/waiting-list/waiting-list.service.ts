@@ -39,9 +39,10 @@ export class WaitingListService {
   public fetchBannedUsers = async (
     groupId: string,
   ): Promise<Array<WaitingListDto>> => {
-    const modelCollection = await this.waitListRepository.fetchBannedUsers(
+    const modelCollection = await this.waitListRepository.fetchAllByGroups(
       groupId,
     );
+    if (modelCollection.length == 0) return new Array<WaitingListDto>();
     const mappedElements = await Promise.all(
       modelCollection
         .map(async (w: WaitingList) => ({

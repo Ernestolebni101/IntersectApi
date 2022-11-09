@@ -37,11 +37,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
             correlationId: req[CORRELATION_ID_HEADER],
           };
         },
-        autoLogging: true,
-        // serializers: {
-        //   req: () => undefined,
-        //   res: () => undefined,
-        // },
+        autoLogging: false,
+        serializers: {
+          req: () => undefined,
+          res: () => undefined,
+        },
       },
     }),
     ConfigModule.forRoot({

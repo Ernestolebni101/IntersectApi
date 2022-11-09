@@ -1,18 +1,12 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { Inject, Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { firebaseClient } from '../../Database/database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT, GPATH } from '../../Database/database.constants';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from './entities/group.entity';
-import {
-  AddingStrategy,
-  IaddingToken,
-} from './providers/providers.strategys/adding.strategy';
-import {
-  IREQUEST,
-  RequestingStrategy,
-} from './providers/providers.strategys/requesting.strategy';
+import { AddingStrategy } from './providers/providers.strategys/adding.strategy';
+import { RequestingStrategy } from './providers/providers.strategys/requesting.strategy';
 import { IGroupsRepository } from './repository/groups.repository';
 
 @Injectable()
@@ -55,7 +49,7 @@ export class GroupContext {
             payload,
             plainToInstance(Group, foundDoc.data()),
           );
-          record['groupData'] = foundDoc.data();
+          record['groupData'] = plainToInstance(Group, foundDoc.data());
           record['operationType'] = groupEnum.add;
           break;
         case groupEnum.createNew:
@@ -63,12 +57,12 @@ export class GroupContext {
           record['groupData'] = inserted;
           record['operationType'] = groupEnum.createNew;
           break;
-        case groupEnum.request:
+        case groupEnum.request: //* Verificado
           await this.requestingStrategy.Execute(
             payload,
             plainToInstance(Group, foundDoc.data()),
           );
-          record['groupData'] = plainToInstance(Group, foundDoc.data());
+          record['groupData'] = 'is private';
           record['operationType'] = groupEnum.request;
           break;
         case groupEnum.redirect:

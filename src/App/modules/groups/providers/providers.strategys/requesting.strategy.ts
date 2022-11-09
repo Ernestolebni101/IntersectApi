@@ -12,6 +12,12 @@ export class RequestingStrategy implements IGroupStrategy {
     model: TModel,
     group: Group,
   ): Promise<any> {
-    await this.eventEmitter.emitAsync('onRequestToJoin', model, group.id);
+    return await Promise.all(
+      await this.eventEmitter.emitAsync(
+        'onRequestToJoin',
+        model.author,
+        group.id,
+      ),
+    );
   }
 }
