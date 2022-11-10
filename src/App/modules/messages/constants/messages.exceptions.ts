@@ -1,10 +1,19 @@
+import { Logger } from '@nestjs/common';
+import { MessageListener } from '../../notifications/handlers/messages.handler';
+
 export const messageException = {
   missingReceptors: () => {
-    throw new Error('Tokens Indefinidos');
+    const logger = new Logger();
+    logger.warn(
+      'El grupo no contiene receptores para la notificación de mensaje',
+      MessageListener.name,
+    );
   },
   missingSettings: () => {
-    throw new Error(
-      'El grupo no contiene Configuraciones de usuario Indefinidos',
+    const logger = new Logger();
+    logger.warn(
+      'El grupo no contiene configuraciones por usuario',
+      MessageListener.name,
     );
   },
 };

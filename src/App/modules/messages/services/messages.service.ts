@@ -11,6 +11,7 @@ import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IChatRepository } from '../../chats/repository/chat-repository';
 import { Params } from '../constants/messages.constants';
+import { GroupMessageCreated } from '../../notifications/events/messageEvents/message-created';
 
 @Injectable()
 export class MessagesService {
@@ -27,7 +28,7 @@ export class MessagesService {
     this.groupsRepository = adapter.Repositories.groupsRepository;
     this.chatRepository = adapter.Repositories.chatRepository;
   }
-  //#region  Find Message
+
   /**
    * @Note Aparentemente hay una mezcla desordenada de usuarios y mensajes
    * mejorarlo comparando uno por uno
@@ -47,89 +48,9 @@ export class MessagesService {
     }
     return messageDto;
   };
-  //#endregion
-  //#region  Groups
-  /**
-   * Metodo empleado para el envio de mensajes multimedia
-   * @param file Archivo multimedia
-   * @param load Parametro de tipo CreatseMessageDTO
-   * @returns MessageDTO
-   */
-  public addMessage = async (
-    file: any,
-    load: CreateMessageDto,
-  ): Promise<MessageDto> => {
-    try {
-      const [sender, group] = await Promise.all([
-        this.userRepository.getUserbyId(load.messageFrom),
-        this.groupsRepository.getById(load.fromGroup),
-      ]);
-      if (group.users.includes(load.messageFrom)) {
-        load.nickName = sender.nickName;
-        load.profilePic = sender.profilePic;
-        group.users = group.users.filter((x) => x !== load.messageFrom);
-        const receptors = await group.users.reduce(async (acc, uid) => {
-          const collection: Array<UserDto> = await acc;
-          collection.push(await this.userRepository.getUserbyId(uid));
-          return collection;
-        }, Promise.resolve(new Array<UserDto>()));
-        const model: MessageDto = await this.messageRepository.addMessage(
-          file,
-          load,
-          await this.adapter.getBucket(),
-        );
-        await this.emitter.emitAsync('onGroupMessages', receptors, group, load);
-        return model;
-      }
-      console.log(
-        'El usuario que intentó mandar el mensaje no está en el grupo',
-      );
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  //#endregion
-  //#region  obsolete direct method
-  /**
-   * Metodo empleado para el envio de mensajes multimedia directos uno a uno
-   * @param file Archivo multimedia
-   * @param load Parametro de tipo CreateMessageDTO
-   * @returns MessageDTO
-   */
-  public addDirectMessage = async (
-    file: any,
-    load: CreateMessageDto,
-  ): Promise<MessageDto> => {
-    try {
-      const sender = await this.userRepository.getUserbyId(load.messageFrom);
-      load.nickName = sender.nickName;
-      load.profilePic = sender.profilePic;
-      const chat = await this.chatRepository.getChatAsync(load.fromGroup);
-      const uid = chat.users.filter((x) => x !== sender.uid).toString();
-      const receptor = await this.userRepository.getUserbyId(uid);
-      const model: MessageDto = await this.messageRepository.addMessage(
-        file,
-        load,
-        await this.adapter.getBucket(),
-      );
-      await this.emitter.emitAsync(
-        'onUserMessages',
-        sender,
-        receptor,
-        load,
-        chat.id,
-      );
-      return model;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  //#endregion
 
   /**
-   * TODO: Completar la opcion para enviar mensajes de grupos
-   * * Se elimino la busqueda innecesaria del usuario que envía el mensaje y
-   * *   se cambiaron los parámetros en el evento !onUserMessage
+   * TODO: Refactorizar el Switch case, lleva demasiado codigo y no se entiende bien
    * @param files Archivos de mensajes
    * @param payload carga de los datos
    * @param params  parametros, para identificar si a mensajes directos o para grupos
@@ -181,12 +102,13 @@ export class MessagesService {
             payload,
             await this.adapter.getBucket(),
           );
-          await this.emitter.emitAsync(
-            'onGroupMessages',
+          const messageEvent = new GroupMessageCreated(
             payload,
-            receptors,
             group,
+            receptors.flatMap((r) => r.token),
+            this.groupsRepository.updateGroup,
           );
+          await this.emitter.emitAsync('message.groupMessage', messageEvent);
           break;
       }
       return responseMessage;
@@ -194,7 +116,6 @@ export class MessagesService {
       console.error(error);
     }
   };
-  //#region  Delete Method
   /**
    * Este metodo elimina mensajes segun el id
    * @param id identificador unico del mensaje
@@ -207,5 +128,4 @@ export class MessagesService {
       throw new Error(e);
     }
   }
-  //#endregion
 }

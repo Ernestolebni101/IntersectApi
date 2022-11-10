@@ -7,7 +7,7 @@ import { MessageListener } from './handlers/messages.handler';
 @Module({
   imports: [EventEmitterModule.forRoot({ global: true })],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
+  providers: [NotificationsService, MessageListener],
   exports: [NotificationsService, MessageListener],
 })
 export class NotificationsModule {}

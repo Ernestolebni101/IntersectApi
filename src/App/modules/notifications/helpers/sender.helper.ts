@@ -9,14 +9,14 @@ import {
 export const senderObject = {
   groupNotification: async (
     mSvc: messaging.Messaging,
-    settings: GroupSettings,
+    settings: GroupSettings[],
     imageUrl: string,
     dataModel: DataModel,
     messageEvent: GroupMessageCreated,
   ) => {
     const notifications: messaging.Message[] = messageEvent.tokens.map(
       (t: string, idx: number) => {
-        if (settings[idx].isNotify) {
+        if (settings.length == 0 || settings[idx].isNotify) {
           return FcmModel.fcmPayload(
             t,
             messageEvent.group.groupName,

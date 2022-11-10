@@ -14,6 +14,8 @@ import { GroupContext } from '../groups/group.context';
 import { RequestingStrategy } from '../groups/providers/providers.strategys/requesting.strategy';
 import { AddingStrategy } from '../groups/providers/providers.strategys/adding.strategy';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { MessageListener } from '../notifications/handlers/messages.handler';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Module({
   imports: [
@@ -37,7 +39,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
     MultimediaService,
     RequestingStrategy,
     AddingStrategy,
-    // NotificationsService,
+    MessageListener,
+    NotificationsService,
   ],
   exports: [Notification, MessageHandleEvents, MultimediaService],
 })

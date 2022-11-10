@@ -36,12 +36,14 @@ export class MessageListener {
         messageGroupEvent.group.groupProfile,
         messageGroupEvent.group.isPrivate,
       );
-      await this.notificationSvc.sendToDevices({
-        notificationBody: notification,
-        messageEvent: messageGroupEvent,
-        settings: settings,
-      });
-      await messageGroupEvent.executeFunction();
+      await Promise.all([
+        await this.notificationSvc.sendToDevices({
+          notificationBody: notification,
+          messageEvent: messageGroupEvent,
+          settings: settings,
+        }),
+        await messageGroupEvent.executeFunction(),
+      ]);
     } catch (error) {
       console.log(error);
     }

@@ -21,7 +21,7 @@ export interface IGroupsRepository {
     opt: string,
   ): Promise<Array<GroupDto>>;
   updateGroup(
-    file: any,
+    file: Express.Multer.File,
     payload: UpdateGroupDto,
     bucket: Bucket,
     eventEmitter: EventEmitter2,

@@ -4,11 +4,13 @@ import { Time } from '../../../../../Utility/utility-time-zone';
 import { CreateMessageDto } from '../../../../modules/messages/dto/create-message.dto';
 import { Group } from '../../../../modules/groups/entities/group.entity';
 import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
+import { Bucket } from '@google-cloud/storage';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
 /**
  *
  */
 export abstract class MessageCreatedEvent {
-  payloadMessage: CreateMessageDto;
   abstract executeFunction(): Promise<unknown>;
 }
 /**
@@ -21,7 +23,6 @@ export class ChatMessageCreated extends MessageCreatedEvent {
     public user: UserDto,
   ) {
     super();
-    this.payloadMessage = payloadMessage;
   }
   public async executeFunction(): Promise<unknown> {
     const chatPayload = new UpdateChatDto();
@@ -43,10 +44,11 @@ export class GroupMessageCreated extends MessageCreatedEvent {
     public fn: (
       file: Express.Multer.File,
       payload: UpdateGroupDto,
+      bucket: Bucket,
+      eventEmitter: EventEmitter2,
     ) => Promise<unknown>,
   ) {
     super();
-    this.payloadMessage = payloadMessage;
   }
 
   public async executeFunction(): Promise<unknown> {
@@ -55,6 +57,6 @@ export class GroupMessageCreated extends MessageCreatedEvent {
     upgradeModel.flag = new Date().getTime();
     upgradeModel.modifiedDate = Time.getCustomDate(new Date(), 'T');
     upgradeModel.lastMessage = `${this.payloadMessage.nickName}: ${this.payloadMessage.messageContent}`;
-    return await this.fn(undefined, upgradeModel);
+    return await this.fn(undefined, upgradeModel, undefined, undefined);
   }
 }
