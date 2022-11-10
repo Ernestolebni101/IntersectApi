@@ -41,7 +41,7 @@ export class IntersectGateway
 
   public async handleDisconnect(client: AuthenticatedSocket) {
     try {
-      client.broadcast.disconnectSockets(true);
+      client.disconnect(true);
       await this.dbManager.onDisconnect(client.auth.userId);
     } catch (error) {
       console.error(error);

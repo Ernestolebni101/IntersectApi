@@ -63,19 +63,19 @@ describe('*******UsersService Read Methods********', () => {
         userResponse.userExist,
       );
     });
-    it('**** updated Method **** must failed when set unknown UID', async () => {
-      const mockUpdateUser = {
-        uid: randomUUID(),
-        firstName: 'Vladimir',
-        lastName: 'Putin',
-        phoneNumber: '8472-5561',
-        profilePic: '',
-        email: 'vladimir@gmail.com',
-        nickName: 'Elune',
-        token: randomUUID(),
-        onlineStatus: false,
-      } as UpdateUserDto;
-      expect(await userService.update(undefined, mockUpdateUser)).toBeNull();
-    });
+    // it('**** updated Method **** must failed when set unknown UID', async () => {
+    //   const mockUpdateUser = {
+    //     uid: randomUUID(),
+    //     firstName: 'Vladimir',
+    //     lastName: 'Putin',
+    //     phoneNumber: '8472-5561',
+    //     profilePic: '',
+    //     email: 'vladimir@gmail.com',
+    //     nickName: 'Elune',
+    //     token: randomUUID(),
+    //     onlineStatus: false,
+    //   } as UpdateUserDto;
+    //   expect(await userService.update(undefined, mockUpdateUser)).toBeNull();
+    // });
   });
 });
