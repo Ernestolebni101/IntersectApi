@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
@@ -10,7 +10,7 @@ import {
 } from '../events/messageEvents/message-created';
 import { NotificationsService } from '../notifications.service';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class MessageListener {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private readonly notificationSvc: NotificationsService) {}

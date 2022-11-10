@@ -13,10 +13,12 @@ import { MultimediaController } from './controllers/multimedia.controller';
 import { GroupContext } from '../groups/group.context';
 import { RequestingStrategy } from '../groups/providers/providers.strategys/requesting.strategy';
 import { AddingStrategy } from '../groups/providers/providers.strategys/adding.strategy';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     EventEmitterModule.forRoot({ global: true }),
+    NotificationsModule,
     MulterModule.register({
       storage: Multer.memoryStorage(),
       limits: {
