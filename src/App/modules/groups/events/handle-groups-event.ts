@@ -83,7 +83,7 @@ export class GroupHandleEvents {
   @OnEvent('onAddMember', { async: true })
   public async handleAddedMember(payload: string, id: string) {
     try {
-      const sender = 'AVISO';
+      const sender = '';
       const group = await this.groupService.findOneAsync(id);
       const owner = group.author;
       const applicant = await this.userService.findOne(payload);
@@ -111,7 +111,7 @@ export class GroupHandleEvents {
   @OnEvent('onAccess', { async: true })
   public async handleAccess(userId: string, groupId: string) {
     try {
-      const sender = 'AVISO';
+      const sender = '';
       const group = await this.groupService.findOneAsync(groupId);
       const applicant = await this.userService.findOne(userId);
       const owner = group.author;

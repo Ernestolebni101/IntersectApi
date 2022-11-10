@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+import { MemberOpt, UpdateGroupDto } from './dto/update-group.dto';
 import { success, error } from '../../../common/response';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -107,6 +107,7 @@ export class GroupsController {
     @UploadedFile() file,
     @Body() payload: UpdateGroupDto,
   ) {
+    payload.memberOption = Number(payload.memberOption) ;
     return this.groupsService
       .updateGroupData(file, payload)
       .then((data) => success(req, res, data, 204))

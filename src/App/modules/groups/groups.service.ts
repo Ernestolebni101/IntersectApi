@@ -23,6 +23,7 @@ export class GroupsService {
     this.groupsRepository = this.adapter.Repositories.groupsRepository;
     this.usersRepository = this.adapter.Repositories.userRepository;
     this.messageRepository = this.adapter.Repositories.messageRepository;
+    this.bucket = this.adapter.getBucket();
   }
   /**
    * @ReadOperations => Segmento de Operaciones de  Lectura

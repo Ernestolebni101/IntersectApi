@@ -14,9 +14,9 @@ export class UsersService {
   private readonly groupRepository: IGroupsRepository;
   private readonly bucket: Promise<Bucket>;
   constructor(private readonly _adapter: UnitOfWorkAdapter) {
-    this.userRepository = _adapter.Repositories.userRepository;
-    this.groupRepository = _adapter.Repositories.groupsRepository;
-    this.bucket = _adapter.getBucket();
+    this.userRepository = this._adapter.Repositories.userRepository;
+    this.groupRepository = this._adapter.Repositories.groupsRepository;
+    this.bucket = this._adapter.getBucket();
   }
 
   public findAllAsync? = async (): Promise<Array<UserDto>> =>

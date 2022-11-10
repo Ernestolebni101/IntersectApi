@@ -148,7 +148,7 @@ export class GroupsRepository
       }
     } catch (e) {
       console.error(`Error encontrado: ${e}`);
-      throw new Error(e);
+      // throw new Error(e);
     }
   };
   /**
