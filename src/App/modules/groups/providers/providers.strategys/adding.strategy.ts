@@ -34,7 +34,7 @@ export class AddingStrategy implements IGroupStrategy {
     return Promise.resolve(
       await this.eventEmitter.emitAsync(
         'onAddMember',
-        foundGroup.author,
+        createdBy,
         foundGroup.id,
       ),
     );
