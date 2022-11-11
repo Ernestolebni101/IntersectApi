@@ -8,6 +8,7 @@ import {
   GroupNotification,
 } from '../../messages/messaging/fcmModels';
 import { GroupsService } from '../groups.service';
+import e from 'connect-timeout';
 
 @Injectable()
 export class GroupHandleEvents {
@@ -26,24 +27,28 @@ export class GroupHandleEvents {
    */
   @OnEvent('onChangedOwner', { async: true })
   public async handleOwnerChange(newAuthor: string, groupId: string) {
-    const sender = '';
-    const group = await this.groupService.findOneAsync(groupId);
-    const owner = group.users.find((x) => x.uid === newAuthor);
-    const notification = new GroupNotification(
-      group.id,
-      group.author.uid,
-      group.groupProfile,
-      group.isPrivate,
-    );
-    const mss = `Ahora tu eres el nuevo Owner!!`;
-    const fcmModel = FcmModel.fcmPayload(
-      owner.token,
-      group.groupName,
-      sender,
-      mss,
-      new DataModel(null, notification),
-    );
-    await this.notification.sendMessage(fcmModel);
+    try {
+      const sender = '';
+      const group = await this.groupService.findOneAsync(groupId);
+      const owner = group.users.find((x) => x.uid === newAuthor);
+      const notification = new GroupNotification(
+        group.id,
+        group.author.uid,
+        group.groupProfile,
+        group.isPrivate,
+      );
+      const mss = `Ahora tu eres el nuevo Owner!!`;
+      const fcmModel = FcmModel.fcmPayload(
+        owner.token,
+        group.groupName,
+        sender,
+        mss,
+        new DataModel(null, notification),
+      );
+      await this.notification.sendMessage(fcmModel);
+    } catch (error) {
+      console.error(`Error de evento: ${e}`);
+    }
   }
 
   /**
