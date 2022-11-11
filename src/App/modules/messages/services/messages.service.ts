@@ -108,7 +108,12 @@ export class MessagesService {
             receptors.flatMap((r) => r.token),
             this.groupsRepository.updateGroup,
           );
-          await this.emitter.emitAsync('message.groupMessage', messageEvent);
+          await this.emitter.emitAsync(
+            'onGroupMessages',
+            payload,
+            receptors,
+            group,
+          );
           break;
       }
       return responseMessage;

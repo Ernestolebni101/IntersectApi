@@ -25,9 +25,8 @@ export class MessageListener {
   @OnEvent('message.groupMessage', { async: true })
   public async handleGroupMessages(messageGroupEvent: GroupMessageCreated) {
     try {
-      const settings = plainToInstance(
-        GroupSettings,
-        messageGroupEvent.group.groupSettings,
+      const settings = messageGroupEvent.group.groupSettings.map((settings) =>
+        plainToInstance(GroupSettings, settings),
       );
       settings.length == 0 && messageException['missingSettings']();
       const notification = new GroupNotification(

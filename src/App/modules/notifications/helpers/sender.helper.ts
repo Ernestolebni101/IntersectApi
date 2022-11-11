@@ -15,18 +15,16 @@ export const senderObject = {
     messageEvent: GroupMessageCreated,
   ) => {
     const notifications: messaging.Message[] = messageEvent.tokens.map(
-      (t: string, idx: number) => {
-        if (settings.length == 0 || settings[idx].isNotify) {
-          return FcmModel.fcmPayload(
-            t,
-            messageEvent.group.groupName,
-            `${messageEvent.payloadMessage.nickName}:`,
-            messageEvent.payloadMessage.messageContent,
-            dataModel,
-            imageUrl,
-            messageEvent.group.groupProfile,
-          );
-        }
+      (t: string) => {
+        return FcmModel.fcmPayload(
+          t,
+          messageEvent.group.groupName,
+          `${messageEvent.payloadMessage.nickName}:`,
+          messageEvent.payloadMessage.messageContent,
+          dataModel,
+          imageUrl,
+          messageEvent.group.groupProfile,
+        );
       },
     );
     await mSvc

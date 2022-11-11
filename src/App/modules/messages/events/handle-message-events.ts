@@ -72,21 +72,27 @@ export class MessageHandleEvents {
       group.isPrivate,
     );
     const dataModel = new DataModel(null, notification)
-    
-    tokens.forEach(async (t, idx) => {
-      if(settings[idx].isNotify){
-        mss = FcmModel.fcmPayload(
-          t,
-          group.groupName,
-          `${payload.nickName}:`,
-          payload.messageContent,
-          dataModel,
-          imageUrl,
-          group.groupProfile,
-        );
-        await this.notification.sendMessage(mss);
-      }
-    });
+    await this.notification.sendToDevices(tokens.map(t =>  FcmModel.fcmPayload(
+      t,
+      group.groupName,
+      `${payload.nickName}:`,
+      payload.messageContent,
+      dataModel,
+      imageUrl,
+      group.groupProfile,
+    )));
+    // tokens.forEach(async (t) => {
+    //     mss = FcmModel.fcmPayload(
+    //       t,
+    //       group.groupName,
+    //       `${payload.nickName}:`,
+    //       payload.messageContent,
+    //       dataModel,
+    //       imageUrl,
+    //       group.groupProfile,
+    //     );
+    //     await this.notification.sendMessage(mss);
+    // });
     await this.groupService.updateGroupData(undefined, upgradeModel);
     } catch (error) {
       console.log(error);
