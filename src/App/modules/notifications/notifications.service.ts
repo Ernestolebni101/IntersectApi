@@ -12,7 +12,7 @@ export class NotificationsService {
   constructor(
     @Inject(FIREBASE_APP_CLIENT) private readonly app: firebaseClient,
   ) {
-    this.messagingService = app.messaging();
+    this.messagingService = this.app.messaging();
   }
 
   public async subscribeTopic(registrationToken: string, topic: string) {
