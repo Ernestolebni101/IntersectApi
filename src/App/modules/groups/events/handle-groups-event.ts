@@ -8,7 +8,6 @@ import {
   GroupNotification,
 } from '../../messages/messaging/fcmModels';
 import { GroupsService } from '../groups.service';
-import e from 'connect-timeout';
 
 @Injectable()
 export class GroupHandleEvents {
@@ -47,7 +46,7 @@ export class GroupHandleEvents {
       );
       await this.notification.sendMessage(fcmModel);
     } catch (error) {
-      console.error(`Error de evento: ${e}`);
+      console.error(`Error de evento: ${error}`);
     }
   }
 
