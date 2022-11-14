@@ -6,7 +6,7 @@ import * as Multer from 'multer';
 import { Notification } from './messaging/notifications';
 import { GroupsService } from '../groups/groups.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { MessageHandleEvents } from './events/handle-message-events';
+import { MessageHandleEvents } from './handlers/message.listener';
 import { ChatsService } from '../chats/chats.service';
 import { MultimediaService } from './services/multimedia.service';
 import { MultimediaController } from './controllers/multimedia.controller';

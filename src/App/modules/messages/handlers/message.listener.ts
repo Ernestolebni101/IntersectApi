@@ -9,16 +9,16 @@ import { Group } from '../../groups/entities/group.entity';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { ChatsService } from '../../chats/chats.service';
-import { UpdateGroupDto } from '../../../modules/groups/dto/update-group.dto';
+import { UpdateGroupDto } from '../../groups/dto/update-group.dto';
 import { Time } from '../../../../Utility/utility-time-zone';
-import { UpdateChatDto } from '../../../modules/chats/dto/update-chat.dto';
+import { UpdateChatDto } from '../../chats/dto/update-chat.dto';
 import { MessagesService } from '../services/messages.service';
 import { plainToInstance } from 'class-transformer';
 import { GroupSettings } from '../../groups/dto/create-group.dto';
 import { messageException } from '../constants/messages.exceptions';
 
 @Injectable()
-export class MessageHandleEvents {
+export class MessageListener {
 
   constructor(
     private readonly notification: Notification,
