@@ -10,7 +10,7 @@ import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { MiddlewaresModuleModule } from './Middlewares/middlewares-module.module';
 import { IntersectGateway } from './app.gateway';
-import { RealtimeModule } from './shared/realtime.module';
+import { SharedModule } from './shared/shared.module';
 import { FunctionsManagerService } from './Database/firebase/functionManager';
 import { LoggerModule } from 'nestjs-pino';
 import {
@@ -54,7 +54,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     GroupsModule,
     MessagesModule,
     ChatsModule,
-    RealtimeModule,
+    SharedModule,
     MiddlewaresModuleModule,
   ],
   controllers: [AppController],
