@@ -11,7 +11,10 @@ import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IChatRepository } from '../../chats/repository/chat-repository';
 import { Params } from '../constants/messages.constants';
-import { GroupMessageCreated } from '../../notifications/events/messageEvents/message-created';
+import {
+  ChatMessageCreated,
+  GroupMessageCreated,
+} from '../events/message.events';
 
 @Injectable()
 export class MessagesService {
@@ -81,7 +84,14 @@ export class MessagesService {
             payload,
             await this.adapter.getBucket(),
           );
-          await this.emitter.emitAsync('onUserMessages', payload, receptor);
+          await this.emitter.emitAsync(
+            'direct.messages',
+            new ChatMessageCreated(
+              payload,
+              this.chatRepository.updateChatAsync,
+              receptor,
+            ),
+          );
           break;
         case Params.GroupMessage:
           const group = await this.groupsRepository.getById(payload.fromGroup);
@@ -108,12 +118,7 @@ export class MessagesService {
             receptors.flatMap((r) => r.token),
             this.groupsRepository.updateGroup,
           );
-          await this.emitter.emitAsync(
-            'onGroupMessages',
-            payload,
-            receptors,
-            group,
-          );
+          await this.emitter.emitAsync('group.messages', messageEvent);
           break;
       }
       return responseMessage;

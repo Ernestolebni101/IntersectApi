@@ -18,7 +18,7 @@ import {
   CORRELATION_ID_HEADER,
 } from './Middlewares/correlation.middleware';
 import { Request } from 'express';
-import { NotificationsModule } from './modules/notifications/notifications.module';
+import { NotificationModule } from './shared/notification/notification.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 @Global()
 @Module({
@@ -49,7 +49,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
-    NotificationsModule,
+    NotificationModule,
     UsersModule,
     GroupsModule,
     MessagesModule,

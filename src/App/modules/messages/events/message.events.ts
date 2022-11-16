@@ -33,7 +33,7 @@ export class ChatMessageCreated extends MessageCreatedEvent {
 }
 /**
  * @class : GroupMessageCreated
- * * this model is dispatched when a message is sending in a group chat
+ * * this model is dispatched when a message is sending into a group chat
  */
 export class GroupMessageCreated extends MessageCreatedEvent {
   constructor(

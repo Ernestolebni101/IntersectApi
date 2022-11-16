@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { MemberOpt, UpdateGroupDto } from './dto/update-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 import { success, error } from '../../../common/response';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';

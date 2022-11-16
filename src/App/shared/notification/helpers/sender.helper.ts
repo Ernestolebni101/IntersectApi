@@ -1,7 +1,10 @@
 import { messaging } from 'firebase-admin';
 import { GroupSettings } from '../../../modules/groups/dto/create-group.dto';
-import { DataModel, FcmModel } from '../models/fcmModels';
-
+import { DataModel, FcmModel } from '../index';
+import {
+  ChatMessageCreated,
+  GroupMessageCreated,
+} from '../../../modules/messages/events/message.events';
 export const senderObject = {
   groupNotification: async (
     mSvc: messaging.Messaging,

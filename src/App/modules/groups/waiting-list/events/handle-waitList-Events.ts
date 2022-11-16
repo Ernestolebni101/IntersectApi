@@ -6,11 +6,11 @@ import { WaitingListService } from '../waiting-list.service';
 import { UpdateWaitingListDto } from '../dto/update-waiting-list.dto';
 import { MemberOpt, UpdateGroupDto } from '../../dto/update-group.dto';
 import {
-  DataModel,
-  FcmModel,
   GroupNotification,
-} from '../../../messages/messaging/fcmModels';
-import { Notification } from '../../../messages/messaging/notifications';
+  DataModel,
+  NotificationService,
+  FcmModel,
+} from '../../../../shared/notification/index';
 import { CreateWaitingListDto } from '../dto/create-waiting-list.dto';
 import { GroupDto } from '../../dto/read-group.dto';
 import { UserDto } from '../../../users/dto/read-user.dto';
@@ -19,7 +19,7 @@ import { UserDto } from '../../../users/dto/read-user.dto';
 export class WaitListEventHandlers {
   // Incrustar repositorio de usuarios y servicio de Notificaciones
   constructor(
-    private readonly notification: Notification,
+    private readonly notification: NotificationService,
     private readonly groupService: GroupsService,
     private readonly userService: UsersService,
     private readonly waitlistService: WaitingListService,
