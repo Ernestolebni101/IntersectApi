@@ -34,6 +34,6 @@ import { GroupListener } from './handlers/group.handler';
     WaitingListService,
     WaitListEventHandlers,
   ],
-  exports: [RequestingStrategy, AddingStrategy, GroupContext, GroupsService],
+  exports: [GroupsService],
 })
 export class GroupsModule {}

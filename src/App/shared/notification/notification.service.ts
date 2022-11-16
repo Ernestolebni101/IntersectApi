@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { messaging } from 'firebase-admin';
 import { firebaseClient } from 'src/App/Database/database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT } from 'src/App/Database/database.constants';
 import { DataModel, senderObject } from './index';
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class NotificationService {
   private messagingService: messaging.Messaging;
   constructor(

@@ -8,11 +8,7 @@ import { UsersModule } from '../../users/users.module';
 import { NotificationService } from '../../../shared/notification';
 
 @Module({
-  imports: [
-    EventEmitterModule.forRoot({ global: true }),
-    GroupsModule,
-    UsersModule,
-  ],
+  imports: [GroupsModule, UsersModule],
   controllers: [WaitingListController],
   providers: [WaitingListService, WaitListEventHandlers, NotificationService],
   exports: [WaitListEventHandlers],

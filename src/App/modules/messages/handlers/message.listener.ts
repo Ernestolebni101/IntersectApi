@@ -34,14 +34,13 @@ export class MessageListener {
         messageGroupEvent.group.groupProfile,
         messageGroupEvent.group.isPrivate,
       );
-      await Promise.all([
-        await this.notificationSvc.sendToDevices({
-          notificationBody: notification,
-          messageEvent: messageGroupEvent,
-          settings: settings,
-        }),
-        await messageGroupEvent.executeFunction(),
-      ]);
+      await this.notificationSvc.sendToDevices({
+        notificationBody: notification,
+        messageEvent: messageGroupEvent,
+        settings: settings,
+      });
+      await messageGroupEvent.executeFunction();
+
     } catch (error) {
       console.log(error);
     }
@@ -72,11 +71,11 @@ export class MessageListener {
           messageChatEvent.user.profilePic,
         ],
       );
-      await Promise.all([await this.notificationSvc.sendToDevices({
+      await this.notificationSvc.sendToDevices({
         notificationBody: notification,
         messageEvent: messageChatEvent,
-      }),
-      await messageChatEvent.executeFunction()]);
+        typeNotify: 2});
+      await messageChatEvent.executeFunction()
       
     } catch (error) {
       console.log(error);

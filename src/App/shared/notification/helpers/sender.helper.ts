@@ -50,6 +50,7 @@ export const senderObject = {
       imageUrl,
       messageEvent.payloadMessage.profilePic,
     );
-    await mSvc.send(mss);
+    const notificationResponse = await mSvc.send(mss);
+    console.log(notificationResponse);
   },
 };
