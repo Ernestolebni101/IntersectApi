@@ -44,7 +44,6 @@ export class MessageListener {
     } catch (error) {
       console.log(error);
     }
-    
   }
 
   /**
