@@ -3,7 +3,6 @@ import { MessagesService } from './services/messages.service';
 import { MessagesController } from './controllers/messages.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import * as Multer from 'multer';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MultimediaService } from './services/multimedia.service';
 import { MultimediaController } from './controllers/multimedia.controller';
 import { MessageListener } from './handlers/message.listener';
@@ -20,10 +19,10 @@ import { NotificationService } from '../../shared/notification';
   controllers: [MessagesController, MultimediaController],
   providers: [
     MessagesService,
-    MultimediaService,
     MessageListener,
     NotificationService,
+    MultimediaService,
   ],
-  exports: [MessageListener, MultimediaService],
+  exports: [MessageListener],
 })
 export class MessagesModule {}

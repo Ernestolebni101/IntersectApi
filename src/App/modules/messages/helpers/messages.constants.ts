@@ -5,6 +5,7 @@ export enum Params {
 
 export enum MultimediaParams {
   image = 'image',
+  multiple = 'multiple-images',
   file = 'file',
   all = 'all',
 }

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { messageException } from '../constants/messages.exceptions';
+import { messageException } from '../helpers/messages.exceptions';
 import { ChatMessageCreated, GroupMessageCreated } from '../index';
 import { GroupNotification, DirectNotification, NotificationService } from '../../../shared/notification/index';
 import { plainToInstance } from 'class-transformer';

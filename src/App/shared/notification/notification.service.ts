@@ -44,12 +44,8 @@ export class NotificationService {
       });
   }
   /**
-<<<<<<< HEAD
    * * Send Multiple Notifications Via RPC(Remote Procedure Call)
    * * More Efficient than sendMessage method
-=======
-   * * Dispatch notification to all devices group
->>>>>>> refactory
    */
   public async sendToDevices({
     notificationBody,

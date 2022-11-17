@@ -10,7 +10,7 @@ import { Message } from '../entities/message.entity';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IChatRepository } from '../../chats/repository/chat-repository';
-import { Params } from '../constants/messages.constants';
+import { Params } from '../helpers/messages.constants';
 import {
   ChatMessageCreated,
   GroupMessageCreated,

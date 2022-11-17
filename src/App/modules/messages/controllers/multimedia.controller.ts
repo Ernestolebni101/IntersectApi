@@ -2,7 +2,7 @@ import { Controller, Get, Request, Response, Query, Res } from '@nestjs/common';
 import { success, error } from '../../../../common/response';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MultimediaService } from '../services/multimedia.service';
-import { MultimediaParams } from '../constants/messages.constants';
+import { MultimediaParams } from '../helpers/messages.constants';
 
 @ApiTags('Módulo de Mensajes')
 @Controller('media/v1/')

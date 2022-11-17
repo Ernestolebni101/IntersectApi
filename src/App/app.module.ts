@@ -18,7 +18,6 @@ import {
   CORRELATION_ID_HEADER,
 } from './Middlewares/correlation.middleware';
 import { Request } from 'express';
-import { NotificationModule } from './shared/notification/notification.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 @Global()
 @Module({
