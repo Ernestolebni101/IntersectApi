@@ -42,6 +42,9 @@ export class Time {
           .toString()
           .trim();
         break;
+      case 'long':
+        localDate = new_date_instance.toDateString();
+        break;
       default:
         break;
     }

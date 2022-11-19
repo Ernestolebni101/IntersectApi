@@ -21,8 +21,7 @@ export class Group {
   public whosWriting = '';
   public inheritOwner = '';
   public groupSettings: Array<Record<string, unknown>> = new Array<
-    Record<string, unknown>
-  >();
+    Record<string, unknown>>();
 }
 
 // declare global {
