@@ -13,6 +13,7 @@ import { IntersectGateway } from './app.gateway';
 import { SharedModule } from './shared/shared.module';
 import { FunctionsManagerService } from './Database/firebase/functionManager';
 import { LoggerModule } from 'nestjs-pino';
+import { IntegrationModule } from './modules/integration/index';
 import {
   CorrelationMiddleware,
   CORRELATION_ID_HEADER,
@@ -49,6 +50,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     EventEmitterModule.forRoot({ global: true }),
     SharedModule,
+    IntegrationModule,
     UsersModule,
     GroupsModule,
     MessagesModule,
