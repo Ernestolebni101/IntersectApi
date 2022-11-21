@@ -47,7 +47,7 @@ export class MessageListener {
   }
 
   /**
-   * *revisado
+   * *revisado 
    * @Author => Ernesto Lebni Miranda Escobar
    * @ModifiedDate => 27/07/2022
    * @Description  => Notificación push al enviar mensajes directos;
@@ -70,12 +70,10 @@ export class MessageListener {
           messageChatEvent.user.profilePic,
         ],
       );
-      await this.notificationSvc.sendToDevices({
+      await Promise.all([await this.notificationSvc.sendToDevices({
         notificationBody: notification,
         messageEvent: messageChatEvent,
-        typeNotify: 2});
-      await messageChatEvent.executeFunction()
-      
+        typeNotify: 2}),await messageChatEvent.executeFunction()]);
     } catch (error) {
       console.log(error);
     }
