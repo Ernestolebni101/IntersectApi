@@ -1,0 +1,3 @@
+TODO: must to watch https://www.youtube.com/watch?v=c2b2yUNWFzI
+Ya se borraron las llaves a nivel de plataforma y backend
+Se registro el id oauth
