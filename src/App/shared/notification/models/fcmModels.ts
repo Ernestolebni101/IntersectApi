@@ -11,7 +11,6 @@ export class FcmModel {
     url = '',
     icon = 'https://s.hipertextual.com/wp-content/uploads/2019/07/hipertextual-llegaron-chicos-malos-the-boys-garth-ennis-llega-viernes-amazon-prime-2019678019.jpg',
   ): messaging.Message {
-    const model = new FcmModel();
     const body = `${sender} ${mss}`;
     const message: messaging.Message = {
       token: tokenId,
@@ -19,14 +18,14 @@ export class FcmModel {
         priority: 'high',
         notification: {
           title: title,
-          priority: 'max',
+          priority: 'high',
           body: body,
           channelId: 'intersect',
-          visibility: 'public',
+          visibility: 'private',
           defaultVibrateTimings: true,
           eventTimestamp: new Date(),
           vibrateTimingsMillis: [1000, 2000],
-          localOnly: true,
+          localOnly: false,
           icon: icon,
         },
         data: {

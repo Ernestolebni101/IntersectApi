@@ -7,8 +7,8 @@ import { database } from 'firebase-admin';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../../modules/users/entities/user.entity';
 import { Bucket } from '@google-cloud/storage';
-import { MultimediaService } from '../../modules/messages/services/multimedia.service';
 import * as functions from 'firebase-functions';
+import { MutimediaRepository } from '../../modules/messages/repository/multimedia.repository';
 
 @Injectable()
 export class FunctionsManagerService {
@@ -17,8 +17,7 @@ export class FunctionsManagerService {
   public readonly storage: Bucket;
   constructor(
     @Inject(FIREBASE_APP_CLIENT) private readonly app: firebaseClient,
-    private readonly config: ConfigService,
-    private readonly mediaService: MultimediaService,
+    private readonly config: ConfigService, // private readonly mediaService: MultimediaService,
   ) {
     this.db = this.app.firestore();
     this.storage = this.app
@@ -39,7 +38,6 @@ export class FunctionsManagerService {
     searchParam: string,
     docId: string,
   ): Promise<boolean> => {
-    // eslint-disable-next-line prefer-const
     let flag = false;
     const dbCollection = this.db.collection(collection);
     const docs = (
@@ -67,9 +65,7 @@ export class FunctionsManagerService {
     });
     batch.commit();
   };
-  public getGroupsByUser = async (uid: string, groupId: string) => {
-    const user: User = await this.retrieveByUid(uid);
-  };
+
   public onDisconnect = async (uid: string) => {
     const user = await this.retrieveByUid(uid);
     const userRef = this.db.collection('Users').doc(user.id);
@@ -83,8 +79,10 @@ export class FunctionsManagerService {
 
   public onMessageMultimedia = async (snapshot: any) => {
     try {
-      await this.mediaService.insertMultimedia(snapshot);
-      functions.logger.info('Operacion completadda correctamente');
+      functions.logger.info(`the snapshot structure is ${snapshot}`);
+      const repositorie = new MutimediaRepository();
+      const message = await repositorie.insertMultimedia(snapshot);
+      functions.logger.info(message);
     } catch (error) {
       functions.logger.error(error);
     }

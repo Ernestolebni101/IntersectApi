@@ -13,12 +13,12 @@ import { IntersectGateway } from './app.gateway';
 import { SharedModule } from './shared/shared.module';
 import { FunctionsManagerService } from './Database/firebase/functionManager';
 import { LoggerModule } from 'nestjs-pino';
+import { IntegrationModule } from './modules/integration/index';
 import {
   CorrelationMiddleware,
   CORRELATION_ID_HEADER,
 } from './Middlewares/correlation.middleware';
 import { Request } from 'express';
-import { NotificationsModule } from './modules/notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 @Global()
 @Module({
@@ -49,12 +49,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
-    NotificationsModule,
+    SharedModule,
+    IntegrationModule,
     UsersModule,
     GroupsModule,
     MessagesModule,
     ChatsModule,
-    SharedModule,
     MiddlewaresModuleModule,
   ],
   controllers: [AppController],

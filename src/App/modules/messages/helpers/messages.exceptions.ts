@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { MessageListener } from '../../notifications/handlers/messages.handler';
+import { MessageListener } from '../handlers/message.listener';
 
 export const messageException = {
   missingReceptors: () => {

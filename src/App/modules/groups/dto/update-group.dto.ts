@@ -4,6 +4,7 @@ import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { CreateGroupDto } from './create-group.dto';
 
 /**
+ * *
  * ! Es necesario actualizar el metodo update para los grupos.
  * TODO: Añadir un enumerable para identificar las acciones de Actualizacion
  * ! Observación: modificacion de miembros => agregar o quitar de la coleccion.

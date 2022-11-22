@@ -17,7 +17,7 @@ export class Message {
   /** Dates */
   public messageTime: string = Time.getCustomDate(new Date(), 'T'); // => DECORADOR
   public timeDecorator: number = Date.now();
-  public messageDate: string = Time.getCustomDate(new Date(), 'F');
+  public messageDate: string = Time.getCustomDate(new Date(), 'long');
   /** Replied Object */
   public repliedMessage: object;
 }

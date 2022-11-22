@@ -1,28 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/users.service';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Notification } from '../../messages/messaging/notifications';
 import {
+  NotificationService,
   DataModel,
-  FcmModel,
   GroupNotification,
-} from '../../messages/messaging/fcmModels';
+  FcmModel,
+} from '../../../shared/notification';
+import { UsersService } from '../../users/users.service';
 import { GroupsService } from '../groups.service';
 
 @Injectable()
-export class GroupHandleEvents {
-  // Incrustar repositorio de usuarios y servicio de Notificaciones
+export class GroupListener {
   constructor(
-    private readonly notification: Notification,
+    private readonly notification: NotificationService,
     private readonly groupService: GroupsService,
     private readonly userService: UsersService,
   ) {}
 
   /**
-   * @Author => Ernesto Lebni Miranda Escobar
-   * @ModifiedDate => 2/24/2022
-   * @Description  => Evento que se desencadena cada vez que el grupo cambia de Owner;
-   * @Status => Estable
+   * * this event its dispatched when the group change the owner
+   * * Modified Date: 16/11/22
+   * @
    */
   @OnEvent('onChangedOwner', { async: true })
   public async handleOwnerChange(newAuthor: string, groupId: string) {
@@ -59,7 +57,6 @@ export class GroupHandleEvents {
   @OnEvent('onExit', { async: true })
   public async handleExitUser(author: string, userId: string, groupId: string) {
     try {
-      const sender = '';
       const group = await this.groupService.findOneAsync(groupId);
       const owner = await this.userService.findOne(author);
       const user = await this.userService.findOne(userId);
@@ -70,14 +67,15 @@ export class GroupHandleEvents {
         group.groupProfile,
         group.isPrivate,
       );
-      const fcmModel = FcmModel.fcmPayload(
-        owner.token,
-        group.groupName,
-        sender,
-        mss,
-        new DataModel(null, notification),
+      await this.notification.sendMessage(
+        FcmModel.fcmPayload(
+          owner.token,
+          group.groupName,
+          '',
+          mss,
+          new DataModel(null, notification),
+        ),
       );
-      await this.notification.sendMessage(fcmModel);
     } catch (e) {
       console.error(`Error encontrado al desatar el evento onExit ${e}`);
       throw new Error(e);
@@ -87,7 +85,6 @@ export class GroupHandleEvents {
   @OnEvent('onAddMember', { async: true })
   public async handleAddedMember(payload: string, id: string) {
     try {
-      const sender = '';
       const group = await this.groupService.findOneAsync(id);
       const owner = group.author;
       const applicant = await this.userService.findOne(payload);
@@ -98,14 +95,15 @@ export class GroupHandleEvents {
         group.groupProfile,
         group.isPrivate,
       );
-      const fcmModel = FcmModel.fcmPayload(
-        owner.token,
-        group.groupName,
-        sender,
-        mss,
-        new DataModel(null, notification),
+      await this.notification.sendMessage(
+        FcmModel.fcmPayload(
+          owner.token,
+          group.groupName,
+          '',
+          mss,
+          new DataModel(null, notification),
+        ),
       );
-      await this.notification.sendMessage(fcmModel);
     } catch (e) {
       console.error(`Error encontrado al desatar el evento onAddMember ${e}`);
       throw new Error(e);
@@ -115,7 +113,6 @@ export class GroupHandleEvents {
   @OnEvent('onAccess', { async: true })
   public async handleAccess(userId: string, groupId: string) {
     try {
-      const sender = '';
       const group = await this.groupService.findOneAsync(groupId);
       const applicant = await this.userService.findOne(userId);
       const owner = group.author;
@@ -126,14 +123,15 @@ export class GroupHandleEvents {
         group.groupProfile,
         group.isPrivate,
       );
-      const fcmModel = FcmModel.fcmPayload(
-        applicant.token,
-        group.groupName,
-        sender,
-        mss,
-        new DataModel(null, notification),
+      await this.notification.sendMessage(
+        FcmModel.fcmPayload(
+          applicant.token,
+          group.groupName,
+          '',
+          mss,
+          new DataModel(null, notification),
+        ),
       );
-      await this.notification.sendMessage(fcmModel);
     } catch (e) {
       console.error(`Error encontrado al desatar el evento onAccess ${e}`);
       throw new Error(e);
