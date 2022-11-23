@@ -4,7 +4,7 @@ import { firebaseProvider } from './Database/database-providers/firebase.provide
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { UnitOfWorkAdapter } from './Database/UnitOfWork/adapter.implements';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GroupsModule } from 'src/App/modules/groups/groups.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';

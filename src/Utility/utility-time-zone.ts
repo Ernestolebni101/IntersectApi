@@ -55,4 +55,24 @@ export class Time {
     const formatted = array[1].toString().trim();
     return formatted;
   }
+  /**
+   * Date Time For Google Calendar
+   * @returns
+   */
+  public static dateTimeForCalendar = () => {
+    const current_date = new Date();
+    const utc_time =
+      current_date.getTime() + current_date.getTimezoneOffset() * 60000;
+    const event = new Date(utc_time + 3600000 * -6);
+
+    const startDate = event;
+    // Delay in end time is 1
+    const endDate = new Date(
+      new Date(startDate).setHours(startDate.getHours() + 1),
+    );
+    return {
+      start: startDate,
+      end: endDate,
+    };
+  };
 }

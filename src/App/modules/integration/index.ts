@@ -1,2 +1,2 @@
-export { IntegrationService } from './integration.service';
 export { IntegrationModule } from './integration.module';
+export { CalendarClient } from './client/calendar.client';

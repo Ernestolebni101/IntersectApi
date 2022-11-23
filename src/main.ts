@@ -110,12 +110,6 @@ const getRealtimeConnections = async () => {
     }
   });
 };
-
-// getRealtimeConnections()
-//   .then()
-//   .catch((e) => console.error(e));
-// // getUserConnections().then((u) => cvonsole.log(u));
-// //#endregion
 //#endregion
 const deleteFiles = async () => {
   const adminStorage = (await fManager).storage;
