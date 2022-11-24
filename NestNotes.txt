@@ -1,3 +1,8 @@
 TODO: must to watch https://www.youtube.com/watch?v=c2b2yUNWFzI
 Ya se borraron las llaves a nivel de plataforma y backend
 Se registro el id oauth
+
+https://developers.google.com/calendar/api/v3/reference/events#id
+https://search.brave.com/search?q=No+conference+data+is+received+when+adding+an+event+via+Calendar+API.&source=desktop
+https://issuetracker.google.com/issues/167260246?pli=1
+https://any-api.com/googleapis_com/calendar/docs/Definitions/ConferenceData

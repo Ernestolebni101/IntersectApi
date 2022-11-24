@@ -7,7 +7,6 @@ import {
   Response,
 } from '@nestjs/common';
 import { success } from 'src/common/response';
-import { Time } from 'src/Utility/utility-time-zone';
 import { CalendarClient } from './client/calendar.client';
 import { eventCall } from './events/new.meeting';
 
