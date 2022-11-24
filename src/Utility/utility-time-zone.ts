@@ -43,7 +43,12 @@ export class Time {
           .trim();
         break;
       case 'long':
-        localDate = new_date_instance.toDateString();
+        localDate = new_date_instance.toLocaleDateString('es-Es', {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
         break;
       default:
         break;

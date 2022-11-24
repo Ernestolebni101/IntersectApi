@@ -50,12 +50,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     EventEmitterModule.forRoot({ global: true }),
     SharedModule,
-    IntegrationModule,
     UsersModule,
     GroupsModule,
     MessagesModule,
     ChatsModule,
     MiddlewaresModuleModule,
+    IntegrationModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,39 +1,42 @@
 import { Injectable, Scope } from '@nestjs/common';
-
 import { google } from 'googleapis';
-import { AppModule } from 'src/App/app.module';
-
+import { AppModule } from '../../../app.module';
 Injectable();
 export class CalendarClient {
-  private googleAuth = new google.auth.JWT();
   private readonly calendar = google.calendar({ version: 'v3' });
-  constructor() {
-    this.initConfig();
+
+  public printKeys(): void {
+    console.log(AppModule.globalCalendar);
   }
-  private initConfig(): void {
-    const cred = AppModule.globalCalendar.calendarAccount;
-    this.googleAuth = new google.auth.JWT({
-      email: cred['client_email'],
-      key: cred['private_key'],
-      scopes: 'https://www.googleapis.com/auth/calendar',
-    });
-  }
+
   public newEvent = async (event: Record<string, unknown>) => {
     try {
-      const response = await this.calendar.events.insert({
-        auth: this.googleAuth,
-        calendarId: AppModule.globalCalendar.calendarId as string,
-        requestBody: event,
+      const cred = AppModule.globalCalendar.calendarAccount;
+      const googleAuth = new google.auth.JWT({
+        email: cred['client_email'],
+        key: cred['private_key'],
+        keyId: cred['private_key_id'],
+        scopes: 'https://www.googleapis.com/auth/calendar',
       });
-
+      const response = await Promise.all([
+        await this.calendar.events.insert({
+          auth: googleAuth,
+          calendarId: AppModule.globalCalendar.calendarId as string,
+          requestBody: event,
+        }),
+      ]);
+      const {
+        data: { conferenceData },
+      } = response[0];
+      const { uri } = conferenceData.entryPoints[0];
       if (response['status'] == 200 && response['statusText'] === 'OK') {
-        return 1;
+        return uri;
       } else {
-        return 0;
+        return 'Nothing';
       }
     } catch (error) {
       console.log(`Error at insertEvent --> ${error}`);
-      return 0;
+      return;
     }
   };
 }
