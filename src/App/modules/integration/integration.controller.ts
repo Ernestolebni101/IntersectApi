@@ -6,6 +6,7 @@ import {
   Request,
   Response,
 } from '@nestjs/common';
+import { success } from 'src/common/response';
 import { Time } from 'src/Utility/utility-time-zone';
 import { CalendarClient } from './client/calendar.client';
 import { eventCall } from './events/new.meeting';
@@ -15,13 +16,10 @@ export class IntegrationController {
   constructor(private readonly calendarClient: CalendarClient) {}
 
   @Post('calls')
-  async getUrlCalls(
-    @Request() req: Request,
-    @Response() res: Response,
-  ): Promise<string> {
+  async getUrlCalls(@Request() req, @Response() res): Promise<unknown> {
     try {
       const response = await this.calendarClient.newEvent(eventCall['events']);
-      return response;
+      return success(req, res, response, 200);
     } catch (error) {
       console.error(error);
     }

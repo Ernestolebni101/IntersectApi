@@ -5,6 +5,7 @@ export const eventCall = {
   events: {
     summary: 'THE MEET BRO',
     attendees: ['ernestolebni123@gmail.com'],
+    location: 'Virtual / Google Meet',
     description: 'This is the description.',
     start: {
       dateTime: Time.dateTimeForCalendar()['start'],
@@ -17,7 +18,7 @@ export const eventCall = {
     reminders: {
       useDefault: 'false',
       overrides: [
-        { method: 'email', minutes: 60 },
+        { method: 'email', minutes: 24 * 60 },
         { method: 'popup', minutes: 10 },
       ],
     },
