@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { calendar_v3, google } from 'googleapis';
+import { google } from 'googleapis';
 import { AppModule } from '../../../app.module';
 Injectable();
 export class CalendarClient {
