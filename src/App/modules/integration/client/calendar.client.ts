@@ -1,20 +1,20 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+
 import { google } from 'googleapis';
+import { AppModule } from 'src/App/app.module';
 
 Injectable();
 export class CalendarClient {
   private googleAuth = new google.auth.JWT();
   private readonly calendar = google.calendar({ version: 'v3' });
-  constructor(private config: ConfigService) {
-    this.initConfig(config);
+  constructor() {
+    this.initConfig();
   }
-  private initConfig(config: ConfigService): void {
-    const json = config.get<string>('CALENDAR_CREDENTIALS');
-    const cred = JSON.parse('{}');
+  private initConfig(): void {
+    const cred = AppModule.globalCalendar.calendarAccount;
     this.googleAuth = new google.auth.JWT({
-      email: cred.client_email,
-      key: cred.private_key,
+      email: cred['client_email'],
+      key: cred['private_key'],
       scopes: 'https://www.googleapis.com/auth/calendar',
     });
   }
@@ -22,7 +22,7 @@ export class CalendarClient {
     try {
       const response = await this.calendar.events.insert({
         auth: this.googleAuth,
-        calendarId: this.config.get<string>('CALENDAR_ID'),
+        calendarId: AppModule.globalCalendar.calendarId as string,
         requestBody: event,
       });
 

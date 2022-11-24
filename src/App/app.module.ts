@@ -72,8 +72,22 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     IntersectGateway,
   ],
 })
+/**
+ * TODO: Implementar Clases de configuración y Módulo de Base de Datos
+ */
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+  public static globalCalendar: Record<string, unknown> = {
+    calendarAccount: '',
+    calendarId: '',
+  };
+  constructor(private readonly configService: ConfigService) {
+    AppModule.globalCalendar.calendarAccount = JSON.parse(
+      this.configService.get<string>('CALENDAR_CREDENTIALS'),
+    );
+    AppModule.globalCalendar.calendarId =
+      this.configService.get<string>('CALENDAR_ID');
   }
 }
