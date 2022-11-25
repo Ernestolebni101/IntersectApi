@@ -28,6 +28,8 @@ export class CalendarClient {
         auth: googleAuth,
         calendarId: AppModule.globalCalendar.calendarId as string,
         requestBody: event,
+        supportsAttachments: true,
+        conferenceDataVersion: 1,
       });
       const response = await this.calendar.events.patch({
         auth: googleAuth,
@@ -39,7 +41,7 @@ export class CalendarClient {
           conferenceData: {
             createRequest: {
               conferenceSolutionKey: {
-                type: 'hangoutsMeet',
+                type: 'http://meet.google.com',
               },
               requestId: uuid(),
             },
