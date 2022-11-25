@@ -1,11 +1,11 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuid } from 'uuid';
 import { Time } from 'src/Utility/utility-time-zone';
 
 export const eventCall = {
   events: {
-    summary: 'THE MEET BRO',
+    summary: 'Salma Meet',
     attendees: ['ernestolebni123@gmail.com'],
-    location: 'Virtual / Google Meet',
+    location: 'Managua',
     description: 'This is the description.',
     start: {
       dateTime: Time.dateTimeForCalendar()['start'],
@@ -22,13 +22,45 @@ export const eventCall = {
         { method: 'popup', minutes: 10 },
       ],
     },
+    colorId: '11',
+    eventType: 'focusTime',
     conferenceData: {
       createRequest: {
+        requestId: uuid().split('-')[0],
+        // conferenceSolution: {
+        //   key: {
+        //     type: 'hangoutsMeet',
+        //   },
+        //   name: 'Hangouts Meet',
+        // },
         conferenceSolutionKey: {
-          type: 'hangoutsMeet',
+          type: 'eventHangout',
         },
-        requestId: randomUUID(),
+        // status: { statusCode: 'success' },
       },
     },
   },
 };
+
+// conferenceId: 'oref150-10',
+//       createRequest: {
+//         requestId: uuid(),
+//         conferenceSolution: {
+//           key: {
+//             type: 'hangoutsMeet',
+//           },
+//           name: 'Hangouts Meet'
+//       },
+//       entryPoints: [
+//         {
+//           entryPointType: 'video',
+//           accessCode: accessCode,
+//           meetingCode: accessCode,
+//           passcode: accessCode,
+//           password: accessCode,
+//           pin: accessCode,
+//           label: 'meet.google.com/oref150-10',
+//           uri: 'https://meet.google.com/oref150-10',
+//         },
+//       ],
+//     },

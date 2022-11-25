@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { google } from 'googleapis';
 import { CalendarClient } from './client/calendar.client';
 import { IntegrationController } from './integration.controller';
 
@@ -8,5 +6,4 @@ import { IntegrationController } from './integration.controller';
   controllers: [IntegrationController],
   providers: [CalendarClient],
 })
-export class IntegrationModule {
-}
+export class IntegrationModule {}
