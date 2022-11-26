@@ -33,7 +33,6 @@ export class RedisService {
     eventName: string,
   ): Observable<T> {
     this.redisSubscriberClient.subscribe(eventName);
-
     return new Observable((observer: Observer<RedisSubscribeMessage>) =>
       this.redisSubscriberClient.on('message', (channel, message) =>
         observer.next({ channel, message }),
