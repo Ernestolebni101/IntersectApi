@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { IMessageRepository } from '../messages/repository/message.repository';
 import { IUserRepository } from '../users/repository/user.repository';
@@ -9,6 +9,8 @@ import { IChatRepository } from './repository/chat-repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IntersectGateway } from '../../app.gateway';
 import { User } from '../users/entities/user.entity';
+import { REDIS_CHAT_SUSCRIBER_CLIENT } from 'src/App/shared/redis/redis.constants';
+import { RedisClient } from 'src/App/shared/redis/redis.providers';
 @Injectable()
 export class ChatsService {
   private readonly chatRepository: IChatRepository;
@@ -17,7 +19,7 @@ export class ChatsService {
   constructor(
     private readonly adapter: UnitOfWorkAdapter,
     private readonly eventEmitter: EventEmitter2,
-    private readonly chateGateway: IntersectGateway,
+    @Inject(REDIS_CHAT_SUSCRIBER_CLIENT) private readonly cache: RedisClient,
   ) {
     this.chatRepository = adapter.Repositories.chatRepository;
     this.userRepository = adapter.Repositories.userRepository;
@@ -37,7 +39,6 @@ export class ChatsService {
         asyncArray.push(copy);
         return asyncArray;
       }, Promise.resolve(new Array<ChatUserDto>()));
-      this.chateGateway.server.emit('onChat', model);
       return model;
     } catch (error) {
       throw new Error(error);

@@ -45,7 +45,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       },
     }),
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: ['.env', '.redis.env'],
       isGlobal: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
