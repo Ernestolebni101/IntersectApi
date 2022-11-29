@@ -7,15 +7,22 @@ import {
   Delete,
   Request,
   Response,
+  Inject,
+  CACHE_MANAGER,
 } from '@nestjs/common';
 import { Request as Req, Response as Res } from 'express';
 import { success, error } from '../../../common/response';
 import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
+import { Cache } from 'cache-manager';
+import { ChatDto } from './dto/read-chat.dto';
 
 @Controller('chats/v1')
 export class ChatsController {
-  constructor(private readonly chatsService: ChatsService) {}
+  constructor(
+    private readonly chatsService: ChatsService,
+    @Inject(CACHE_MANAGER) private readonly cacheChats: Cache,
+  ) {}
 
   @Post()
   public async create(
@@ -35,6 +42,12 @@ export class ChatsController {
     @Request() req,
     @Response() res,
   ) {
+    const cachedChats = await this.cacheChats.get<Promise<ChatDto[]>>(
+      `${uid}-chats`,
+    );
+    if (cachedChats != undefined) {
+      return success(req, res, cachedChats);
+    }
     return await this.chatsService
       .findUserChats(uid)
       .then((data) => success(req, res, data, 200))
