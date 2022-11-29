@@ -8,6 +8,7 @@ import {
   Request,
   Response,
 } from '@nestjs/common';
+import { Request as Req, Response as Res } from 'express';
 import { success, error } from '../../../common/response';
 import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -19,8 +20,8 @@ export class ChatsController {
   @Post()
   public async create(
     @Body() createChatDto: CreateChatDto,
-    @Request() req,
-    @Response() res,
+    @Request() req: Req,
+    @Response() res: Res,
   ) {
     return await this.chatsService
       .createChatAsync(createChatDto)
