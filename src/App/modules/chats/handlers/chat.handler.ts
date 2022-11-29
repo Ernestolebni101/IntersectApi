@@ -12,12 +12,12 @@ export class chatListener {
 
   // TODO: dont repeat read process for each create chat operation
   @OnEvent('chat.reload', { async: true })
-  public async onReload(event: CreateChatDto) {
-    const result = await this.cache.get<Promise<ChatDto>>(event.users[0]);
+  public async onReload(event: string[]) {
+    const result = await this.cache.get<Promise<ChatDto>>(event[0]);
     result &&
-      event.users.forEach(async (u: string) => {
+      event.forEach(async (u: string) => {
         const chats = await this.chatService.findUserChats(u);
-        this.cache.set(`${u}-chats`, chats, 400);
+        this.cache.set(`${u}-chats`, chats, 500);
       });
   }
   @OnEvent('chat.remove', { async: true })
