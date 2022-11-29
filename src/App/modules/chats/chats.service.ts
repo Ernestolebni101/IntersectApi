@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { IMessageRepository } from '../messages/repository/message.repository';
 import { IUserRepository } from '../users/repository/user.repository';
@@ -36,7 +36,7 @@ export class ChatsService {
         asyncArray.push(copy);
         return asyncArray;
       }, Promise.resolve(new Array<ChatUserDto>()));
-      await this.eventEmitter.emitAsync('chat.create', payload);
+      await this.eventEmitter.emitAsync('chat.reload', payload);
       return model;
     } catch (error) {
       throw new Error(error);
@@ -45,6 +45,7 @@ export class ChatsService {
 
   public async findUserChats(uid: string): Promise<Array<ChatDto>> {
     try {
+      await this.eventEmitter.emitAsync('chat.reload',);
       const chats = await this.adapter.Repositories.chatRepository.getUserChats(
         uid,
       );
@@ -87,6 +88,11 @@ export class ChatsService {
   };
 
   public removeAsync = async (chatId: string): Promise<void> => {
+    await this.eventEmitter.emitAsync(
+      'chat.remove',
+      chatId,
+      this.chatRepository.getChatAsync,
+    );
     await this.chatRepository.removeAsync(chatId, this.eventEmitter);
   };
 }
