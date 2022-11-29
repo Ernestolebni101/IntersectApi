@@ -1,7 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { OnEvent } from '@nestjs/event-emitter';
-import { CreateChatDto, ChatsService, ChatDto, Chat } from '../index';
+import { ChatsService, ChatDto, Chat } from '../index';
 
 @Injectable()
 export class chatListener {
@@ -14,11 +14,12 @@ export class chatListener {
   @OnEvent('chat.reload', { async: true })
   public async onReload(event: string[]) {
     const result = await this.cache.get<Promise<ChatDto>>(event[0]);
-    result &&
+    if (result == undefined) {
       event.forEach(async (u: string) => {
         const chats = await this.chatService.findUserChats(u);
         this.cache.set(`${u}-chats`, chats, 500);
       });
+    }
   }
   @OnEvent('chat.remove', { async: true })
   public async onDeleteChat(
