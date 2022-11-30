@@ -10,3 +10,6 @@ https://any-api.com/googleapis_com/calendar/docs/Definitions/ConferenceData
 
 https://github.com/googleapis/google-api-nodejs-client/issues/2506
 https://github.com/googleapis/google-api-nodejs-client/issues/2387
+
+TIENE QUE SER
+https://www.geeksforgeeks.org/developing-unofficial-google-meet-api-in-node-js/
