@@ -14,11 +14,10 @@ export class CalendarClient {
   ): Promise<unknown> => {
     try {
       const cred = AppModule.globalCalendar.calendarAccount;
-      const googleAuth = new google.auth.JWT({
-        email: cred['client_email'],
-        key: cred['private_key'],
-        keyId: cred['private_key_id'],
-        scopes: ['https://www.googleapis.com/auth/calendar'],
+      const googleAuth = new google.auth.OAuth2({
+        clientId: cred['clientId'],
+        clientSecret: cred['clientSecret'],
+        redirectUri: cred['redirectUri'],
       });
       const response = await this.calendar.events.insert(
         {
