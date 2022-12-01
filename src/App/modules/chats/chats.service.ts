@@ -49,10 +49,6 @@ export class ChatsService {
       const chats = await this.adapter.Repositories.chatRepository.getUserChats(
         uid,
       );
-      await this.eventEmitter.emitAsync(
-        'chat.reload',
-        chats.flatMap((x) => x.users),
-      );
       const principalUser = ChatUserDto.Factory(
         await this.userRepository.getUserbyId(uid),
       );
