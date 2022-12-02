@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Post,
-  Request,
-  Response,
-} from '@nestjs/common';
+import { Controller, Post, Request, Response } from '@nestjs/common';
 import { success } from 'src/common/response';
 import { CalendarClient } from './client/calendar.client';
 import { eventCall } from './events/new.meeting';

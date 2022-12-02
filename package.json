@@ -56,7 +56,7 @@
     "firebase-functions": "^3.21.0",
     "fireorm": "^0.23.3",
     "google-meet-api": "^1.0.0",
-    "googleapis": "^109.0.1",
+    "googleapis": "^27.0.0",
     "ioredis": "^5.0.4",
     "nestjs-pino": "^3.1.1",
     "passport": "^0.6.0",

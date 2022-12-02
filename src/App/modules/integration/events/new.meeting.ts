@@ -27,16 +27,15 @@ export const eventCall = {
     conferenceData: {
       createRequest: {
         requestId: uuid().split('-')[0],
-        // conferenceSolution: {
-        //   key: {
-        //     type: 'hangoutsMeet',
-        //   },
-        //   name: 'Hangouts Meet',
-        // },
+        conferenceSolution: {
+          key: {
+            type: 'hangoutsMeet',
+          },
+          name: 'Hangouts Meet',
+        },
         conferenceSolutionKey: {
           type: 'eventHangout',
         },
-        // status: { statusCode: 'success' },
       },
     },
   },
