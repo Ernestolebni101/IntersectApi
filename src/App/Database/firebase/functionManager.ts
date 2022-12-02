@@ -80,6 +80,7 @@ export class FunctionsManagerService {
   public onMessageMultimedia = async (snapshot: any) => {
     try {
       functions.logger.info(`the snapshot structure is ${snapshot}`);
+      snapshot.data().timeDecorator = Date.now();
       const repositorie = new MutimediaRepository();
       const message = await repositorie.insertMultimedia(snapshot);
       functions.logger.info(message);

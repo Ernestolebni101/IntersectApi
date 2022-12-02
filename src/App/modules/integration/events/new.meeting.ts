@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Time } from 'src/Utility/utility-time-zone';
+import { Time } from '../../../../Utility/utility-time-zone';
 
 export const eventCall = {
   events: {

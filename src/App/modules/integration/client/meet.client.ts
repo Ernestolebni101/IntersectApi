@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { google } from 'googleapis';
-import { AppModule } from '../../../app.module';
+import * as axios from 'axios';
 Injectable();
-export class MeetClient {}
+export class MeetClient {
+  public async;
+}

@@ -23,7 +23,7 @@ async function bootstrap() {
   //app.setGlobalPrefix('intersectApi');
   app.enableCors();
   await app.init();
-  await app.listen(process.env.PORT || 5000);
+  await app.listen(process.env.PORT || 5001);
   return app.get(FunctionsManagerService);
 }
 //#endregion
@@ -55,20 +55,6 @@ export const onCreateGroup = functions.firestore
     console.info(
       `El grupo ${inserted.groupName} ha sido creado exitosamente!!`,
     );
-  });
-//#endregion
-
-//#region Realtime Database Functions
-export const trackUserStatus = functions.database
-  .instance('intersectiondb-751e5')
-  .ref('/Users/status/{uid}')
-  .onUpdate(async (change, context) => {
-    const handler = await fManager;
-    const user = await handler.retrieveByUid(context.params.uid);
-    const firestoreUserRef = handler.db.doc(`Users/${user.id}`);
-    const userStatus: User = await change.after.val();
-    // ... and write it to Firestore.
-    return firestoreUserRef.update({ onlineStatus: userStatus.status });
   });
 //#endregion
 

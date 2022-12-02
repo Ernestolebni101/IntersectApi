@@ -1,7 +1,8 @@
 import { plainToInstance } from 'class-transformer';
 import { BaseFirestoreRepository, CustomRepository } from 'fireorm';
 import { MultimediaParams } from '../helpers/messages.constants';
-import { Multimedia } from '../entities/multimedia';
+import { createMultimediaDto, Multimedia } from '../entities/multimedia';
+import { Message } from '../entities/message.entity';
 
 export interface IMultimediaRepository {
   getMultimedia(
@@ -25,8 +26,9 @@ export class MutimediaRepository
     throw new Error('Method not implemented.');
   }
   public async insertMultimedia(snapshot: any): Promise<string> {
-    const multimedia = plainToInstance(Multimedia, snapshot.data());
-    if (multimedia.mediaUrl.length > 0) {
+    const multimedia = new createMultimediaDto(snapshot.data());
+    multimedia.timeDecorator = Date.now();
+    if (multimedia.mediaUrl.length > 0 || multimedia.messageType == 'video') {
       await this.create(multimedia);
       return 'Contenido multimedia agregado exitosamente';
     } else return 'El mensaje no contiene multimedia';
