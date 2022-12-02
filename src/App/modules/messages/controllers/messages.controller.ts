@@ -28,7 +28,7 @@ export class MessagesController {
   /**
    * @Controller Controlador estandarizado para el envío de mensajes para chats directos y grupos
    * @param files => Archivos de mensajes
-   */
+   */ 
   @Post(':param')
   @UseInterceptors(FilesInterceptor('mediaUrl', 20))
   async UploadMessages(

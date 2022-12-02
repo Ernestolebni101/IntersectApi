@@ -80,13 +80,17 @@ export class AppModule implements NestModule {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
   }
   public static globalCalendar: Record<string, unknown> = {
-    calendarAccount: '',
+    redirectUri: 'http://localhost:3000/calls/',
+    clientId: '',
+    clientSecret: '',
     calendarId: '',
   };
   constructor(private readonly configService: ConfigService) {
-    AppModule.globalCalendar.calendarAccount = JSON.parse(
-      this.configService.get<string>('CALENDAR_CREDENTIALS'),
+    const creds = JSON.parse(
+      this.configService.get<string>('WEB_CALENDAR_CREDENTIALS'),
     );
+    AppModule.globalCalendar.clientId = creds['client_id'];
+    AppModule.globalCalendar.clientSecret = creds['client_secret'];
     AppModule.globalCalendar.calendarId =
       this.configService.get<string>('CALENDAR_ID');
   }
