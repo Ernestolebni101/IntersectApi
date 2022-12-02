@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Param,
@@ -18,8 +17,6 @@ import { CreateMessageDto } from '../dto/create-message.dto';
 import { success, error } from '../../../../common/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { MultimediaService } from '../services/multimedia.service';
-import { MultimediaParams } from '../helpers/messages.constants';
 
 @ApiTags('Módulo de Mensajes')
 @Controller('messages/v1/')

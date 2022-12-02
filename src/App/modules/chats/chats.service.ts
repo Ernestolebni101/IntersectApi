@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
 import { IMessageRepository } from '../messages/repository/message.repository';
 import { IUserRepository } from '../users/repository/user.repository';
@@ -8,6 +8,7 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 import { IChatRepository } from './repository/chat-repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User } from '../users/entities/user.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ChatsService {
@@ -36,7 +37,7 @@ export class ChatsService {
         asyncArray.push(copy);
         return asyncArray;
       }, Promise.resolve(new Array<ChatUserDto>()));
-      await this.eventEmitter.emitAsync('chat.create', payload);
+      await this.eventEmitter.emitAsync('chat.reload', payload.users);
       return model;
     } catch (error) {
       throw new Error(error);
@@ -47,6 +48,10 @@ export class ChatsService {
     try {
       const chats = await this.adapter.Repositories.chatRepository.getUserChats(
         uid,
+      );
+      await this.eventEmitter.emitAsync(
+        'chat.reload',
+        chats.flatMap((x) => x.users),
       );
       const principalUser = ChatUserDto.Factory(
         await this.userRepository.getUserbyId(uid),
@@ -87,6 +92,11 @@ export class ChatsService {
   };
 
   public removeAsync = async (chatId: string): Promise<void> => {
+    await this.eventEmitter.emitAsync(
+      'chat.remove',
+      chatId,
+      this.chatRepository.getChatAsync,
+    );
     await this.chatRepository.removeAsync(chatId, this.eventEmitter);
   };
 }
