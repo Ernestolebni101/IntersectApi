@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './App/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { initAdapters } from './adapter.init';

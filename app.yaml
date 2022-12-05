@@ -1,6 +1,7 @@
 runtime: nodejs16
 env: standard
 instance_class: B1
+service: Intersect
 env_variables:
   DB_URL     :   "https://intersectiondb-751e5.firebaseio.com"
   BUCKET_URL :   "gs://intersectiondb-751e5.appspot.com/"
@@ -11,7 +12,7 @@ env_variables:
   RED_DB_NAME: "interdb"
   REDIS_CREDS: "KPd91VddTeI2NiNU15zuODGCJGgm8dfJ"
   REALTIME_DB: "https://intersectiondb-751e5.firebaseio.com/"
-  PORT:   3000
+  PORT:   8080
   Client_ID: '67083479035-rkpqhn228okdr8lrefenqg4iv51jr2pc.apps.googleusercontent.com'
   Client_Secret: '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'
   CALENDAR_ID: '3201e80cc86a01bbcb5075f563130c60973c8a9ec9e4e67428a1c4aee51a526c@group.calendar.google.com'
