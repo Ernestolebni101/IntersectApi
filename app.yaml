@@ -1,0 +1,34 @@
+runtime: nodejs16
+env: standard
+instance_class: B1
+env_variables:
+  DB_URL     :   "https://intersectiondb-751e5.firebaseio.com"
+  BUCKET_URL :   "gs://intersectiondb-751e5.appspot.com/"
+  SERVERKEY  :  "AAAAD558p_s:APA91bHX9axNQxobkPxeYcWQuMPiWqRmfmjcH4aZ5yJJg44U-nyuYjEkIbNi5FC3PYTUDGglKE0WULPHRRhXk3mpadF8NQ2Fkgi7lL1qaSQWxwk6TeGPD45isBrPOHK0GthqRuNXtLfz"
+  SENDERID   :   "67083479035"
+  REDIS_HOST : "redis-10854.c8.us-east-1-4.ec2.cloud.redislabs.com"
+  REDIS_PORT :  10854
+  RED_DB_NAME: "interdb"
+  REDIS_CREDS: "KPd91VddTeI2NiNU15zuODGCJGgm8dfJ"
+  REALTIME_DB: "https://intersectiondb-751e5.firebaseio.com/"
+  PORT:   3000
+  Client_ID: '67083479035-rkpqhn228okdr8lrefenqg4iv51jr2pc.apps.googleusercontent.com'
+  Client_Secret: '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'
+  CALENDAR_ID: '3201e80cc86a01bbcb5075f563130c60973c8a9ec9e4e67428a1c4aee51a526c@group.calendar.google.com'
+  CALENDAR_CREDENTIALS: '{"type": "service_account","project_id": "intersectiondb-751e5","private_key_id": "5dd891d8fd1cefedc4f87d4c8afa1cc5fc300802","private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDTOPi5SMKLS8KP\n5LjtcamGR5QPh0AMjjm7z2EtNnJcFzvPSmrTuUeB/nSkzvBIFWEpIZBF4PejaMEi\nZzcBmfZSsto0cGYG+mXnNnDVs52i14JjRAephwKyjHY3qT/dFLOQYZ/6ZyHt1sxN\nGz7gwP2CKosggHNsnDZ4/w6b7N6ag8ClosbE1/eHydasAMVpiP6531m4aWzgt0Ve\nHf052OfTQ/L3Qr7j7yHQsaHHHuLCB1s9WHB9ySf1ZP2ZNKNgLrNdJzCqZwKKzGKl\nLxXPOFEhqP/HFh+R2093VR7P+F62XbCivyDsJYqdMERpiunVXOZNRj39989+sS/w\nOarYnIrDAgMBAAECggEABdIWGJUGt2v5CpoU9oYhU8/5JoxlmXL56FEIroRHln4V\nadr1IqyCafSnJjuFp5bfPJDuNt7CNECYwefyPhsODK1dEgDe7uZLlJmNdnYiq/Ag\nabfgNi3AR0dToqkJV4BQinQGQpJA/xriOmW7z9nBoqqldtnTVHThk2gD8QwP/lYC\nUHKDKl2NJBV+vekIl/xwqMWfZcD2ocscPleduhcKtVg7HQJkPg+e4x35GFz1dDk+\nyx5avnVaZdYg9lSBZpMDkl+7ti8v7XHOFStB9C05c5WgQGOhF9tv5j0jDt0FiiU2\nz3wG91jDovRvqbB7x9v72nqq/hUlyA2mk2j6n6tOsQKBgQDwE76tw+FhKNkZZawD\nd/OP3M2xR5PvhMJEExwbOt1q3W/m0HeJjDGpNF1wdWroQoOEA3S9MSOSwaIiU73j\nuUYSIYXAXltGEc5IzR2JSvm5nxXSLFGRM6Qg/P4w2NPf1pL/fAZaAGi33tgIBx7C\nXgoLtOdC7c9TIxO/Fs/d3FA/LQKBgQDhO053AEtsdvKbVs5OssinrNWINdCdkiRY\nHxW3y9fwAZomDsQ6GRssz83IqQNiX/KLeu5+K3avHZLU+CTa/5XTyFhInmqxU5vL\nLTY+omlz9T1NEiNRfQq05w50D4MglkIxejxBw81pCb7Gbk8HYc+iZYz7hhL1hoEA\nbuFuxZenrwKBgG9nCiVB7vSR6uPxHPfjEn9gW4Z3C3uqpCbIo1MzZolvRbzaYY3P\nI0A8D1ve8IPkUXjRzbr48WPpPF4nc8cXMx+4tIMGhd4m5w07OQh7ZRQwcQS9EgCJ\n8RBptV5fTzngLQgmuh/LbsxbuO1IuIpC7vBtup6BEaKndUNHx59Q21/lAoGBAM0f\nnBhY1lgUBGNgrUeTH5dFmrsQd8vpmtv+g2L+bM0SSHc8n41h7BPltT54XrKrO1O4\nQ5f4sYBOaLk4vSgN+UAFiBGq5PRWdt6VcH+enneS859LU4sVXDjg7ZLZxcxZzDMP\nZe1nC54L2AkT0Tmh5N27qqgvtPiS5M2mLf0aS0HVAoGAQI85QTuTSdmfMg2Zpo1H\nUSqdUYB/dzBTpUY4UgRzRM9c9Qb87iUwpYSlOT7WWDeyEYUH92hzG3dDvfd0RKQQ\nocXFHwU1mlDTEFjd5tgIKj6cbVfXChYJxDJ2JJKYdsfXcedYPikjpOgbKq23jy7V\nOoKfHYpSFxZDrrQa4VufVtc:\n-----END PRIVATE KEY-----\n","client_email": "intersect-calendar-api@intersectiondb-751e5.iam.gserviceaccount.com","client_id": "117802797354594368924","auth_uri": "https://accounts.google.com/o/oauth2/auth","token_uri": "https://oauth2.googleapis.com/token","auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/intersect-calendar-api%40intersectiondb-751e5.iam.gserviceaccount.com"}'
+  WEB_CLIENTID: '67083479035-9u1ad7ei6t3cu38qc3vgcsjcdh4in8mc.apps.googleusercontent.com'
+  WEB_CLIENTSECRET: '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'
+  WEB_CALENDAR_CREDENTIALS : '{"web":{"client_id":"67083479035-9u1ad7ei6t3cu38qc3vgcsjcdh4in8mc.apps.googleusercontent.com","project_id":"intersectiondb-751e5","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["http://localhost:3000/calls/"],"javascript_origins":["http://localhost:3000"]}}'
+  REFRESH: '1//04d5aV3Uy3iQlCgYIARAAGAQSNwF-L9IrGvn5oMlGBwCDbByaoVyx4ndqc61XPWwEJaiI9WycsJRRBP3E40OflXYoMrA-K4k8ZIU'
+  ACCESS: 'ya29.a0AeTM1id_XbUxpOLZVy5j8p7Ti2iBIjUHsVVrv83THgij1lnTWTzh34fyhkMDI2-8-ELM4aFRrvXjDq5Uvk-lTt3mS74BgDK9CO94LKbfCeQI5p4UGrul_KblFejuO2OX4MS8MgSzGwTBkgydM5Npr3si0m5OaCgYKAZUSARISFQHWtWOmhSRJhvq5Oe0Gi8AfGfpQaQ0163'
+  URL: 'https://www.googleapis.com/calendar/v3/calendars/'
+  REDIS_HOST_DEV : "redis-11088.c89.us-east-1-3.ec2.cloud.redislabs.com"
+  REDIS_PORT_DEV :  11088
+  RED_DB_NAME_DEV: "Dev2-free-db"
+  REDIS_CREDS_DEV: "R5qCdxGFZQwPNS22NGRul6XIsW5yUH50"  
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 0.25 
+  disk_size_gb: 10

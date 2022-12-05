@@ -13,3 +13,12 @@ https://github.com/googleapis/google-api-nodejs-client/issues/2387
 
 TIENE QUE SER
 https://www.geeksforgeeks.org/developing-unofficial-google-meet-api-in-node-js/
+
+
+ // const config = new DocumentBuilder()
+  //   .setTitle('API Documentation by Intertech')
+  //   .setDescription('Intersection-Api')
+  //   .setVersion('1.0')
+  //   .build();
+  // const document = SwaggerModule.createDocument(app, config);
+  // SwaggerModule.setup('docs', app, document);

@@ -8,19 +8,12 @@ import { GPATH, GPATHID } from './App/Database/database.constants';
 import { FunctionsManagerService } from './App/Database/firebase/functionManager';
 import { User } from './App/Database/firebase/user';
 import { Logger } from 'nestjs-pino';
-//#region bootStrapm
+//#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   initAdapters(app);
   app.useLogger(app.get(Logger));
-  const config = new DocumentBuilder()
-    .setTitle('API Documentation by Intertech')
-    .setDescription('Intersection-Api')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
-  //app.setGlobalPrefix('intersectApi');
+  app.setGlobalPrefix('intersectApi');
   app.enableCors();
   await app.init();
   await app.listen(process.env.PORT || 5001);
