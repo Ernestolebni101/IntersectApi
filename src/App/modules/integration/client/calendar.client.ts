@@ -11,7 +11,7 @@ export class CalendarClient {
     event: Record<string, unknown>,
   ): Promise<unknown> => {
     try {
-      const jwt = new google.auth.JWT()
+      const jwt = new google.auth.JWT();
       const calendar = google.calendar({ version: 'v3', auth: jwt });
       const response = await calendar.events.insert(
         {

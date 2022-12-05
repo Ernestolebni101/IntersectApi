@@ -8,7 +8,7 @@ import { GPATH, GPATHID } from './App/Database/database.constants';
 import { FunctionsManagerService } from './App/Database/firebase/functionManager';
 import { User } from './App/Database/firebase/user';
 import { Logger } from 'nestjs-pino';
-//#region bootStrap
+//#region bootStrapm
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   initAdapters(app);
