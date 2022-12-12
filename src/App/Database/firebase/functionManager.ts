@@ -70,11 +70,9 @@ export class FunctionsManagerService {
     const user = await this.retrieveByUid(uid);
     const userRef = this.db.collection('Users').doc(user.id);
     await userRef.update({ onlineStatus: false });
-    delete user.groups,
-      delete user.email,
+    delete user.email,
       delete user.profilePic,
-      delete user.phoneNumber;
-    console.log(`${JSON.stringify(user)} se ha desconectado`);
+      console.log(`${JSON.stringify(user)} se ha desconectado`);
   };
 
   public onMessageMultimedia = async (snapshot: any) => {

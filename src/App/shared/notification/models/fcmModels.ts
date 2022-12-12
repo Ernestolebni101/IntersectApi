@@ -48,11 +48,7 @@ export class DataModel {
 }
 
 export class DirectNotification {
-  constructor(
-    public Id: string,
-    public user: string[],
-    public profileUrls: string[],
-  ) {}
+  constructor(public Id: string, public user: Array<Record<string, unknown>>) {}
 }
 
 export class GroupNotification {

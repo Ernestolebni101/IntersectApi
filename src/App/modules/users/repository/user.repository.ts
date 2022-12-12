@@ -101,7 +101,6 @@ export class UsersRepository
       foundUser.profilePic = payload.profilePic ?? foundUser.profilePic;
       foundUser.token = payload.token ?? foundUser.token;
       foundUser.onlineStatus = payload.onlineStatus ?? foundUser.onlineStatus;
-      if (payload.group != null) foundUser.groups.push(payload.group);
       await this.update(foundUser);
       this.logger.log(
         '******Update Proceess ended******',
