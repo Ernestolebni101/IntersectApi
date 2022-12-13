@@ -15,6 +15,9 @@ TIENE QUE SER
 https://www.geeksforgeeks.org/developing-unofficial-google-meet-api-in-node-js/
 
 
+Authorization url nestjs
+https://www.youtube.com/watch?v=wdsp7BNmJRc
+
  // const config = new DocumentBuilder()
   //   .setTitle('API Documentation by Intertech')
   //   .setDescription('Intersection-Api')

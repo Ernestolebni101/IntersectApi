@@ -21,7 +21,7 @@ const error = (
   fn: (msg: string, e: string, context: string) => void = undefined,
   context = '',
 ): Response => {
-  fn != null &&
+  fn != undefined &&
     fn('Error en la Petición', `Traza del Error: ${details}`, context);
   return res.status(statusCode).send({
     error: message,

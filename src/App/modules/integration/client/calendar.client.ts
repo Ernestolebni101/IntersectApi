@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
-import { AppModule } from '../../../app.module';
 Injectable();
 export class CalendarClient {
-  public printKeys(): void {
-    console.log(AppModule.globalCalendar);
-  }
-
   public newEvent = async (
     event: Record<string, unknown>,
   ): Promise<unknown> => {

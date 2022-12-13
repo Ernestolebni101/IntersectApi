@@ -1,10 +1,16 @@
-import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  Global,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { firebaseProvider } from './Database/database-providers/firebase.provider';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { UnitOfWorkAdapter } from './Database/UnitOfWork/adapter.implements';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GroupsModule } from 'src/App/modules/groups/groups.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';
@@ -21,6 +27,7 @@ import {
 import { Request } from 'express';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './modules/auth/auth.module';
+import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
 @Global()
 @Module({
   imports: [
@@ -55,7 +62,6 @@ import { AuthModule } from './modules/auth/auth.module';
     GroupsModule,
     MessagesModule,
     ChatsModule,
-    MiddlewaresModuleModule,
     IntegrationModule,
     AuthModule,
   ],
@@ -80,20 +86,8 @@ import { AuthModule } from './modules/auth/auth.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
-  }
-  public static globalCalendar: Record<string, unknown> = {
-    redirectUri: 'http://localhost:3000/calls/',
-    clientId: '',
-    clientSecret: '',
-    calendarId: '',
-  };
-  constructor(private readonly configService: ConfigService) {
-    const creds = JSON.parse(
-      this.configService.get<string>('WEB_CALENDAR_CREDENTIALS'),
-    );
-    AppModule.globalCalendar.clientId = creds['client_id'];
-    AppModule.globalCalendar.clientSecret = creds['client_secret'];
-    AppModule.globalCalendar.calendarId =
-      this.configService.get<string>('CALENDAR_ID');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes({ path: 'users/v1', method: RequestMethod.ALL });
   }
 }
