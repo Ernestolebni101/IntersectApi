@@ -6,8 +6,6 @@ export class UserDto {
   @ApiProperty()
   public readonly lastName: string;
   @ApiProperty()
-  public readonly phoneNumber: string;
-  @ApiProperty()
   public readonly profilePic: string;
   @ApiProperty()
   public readonly email: string;
@@ -15,8 +13,6 @@ export class UserDto {
   public readonly nickName: string;
   @ApiProperty()
   public token: string;
-  @ApiProperty()
-  public readonly groups?: Array<string> = new Array<string>();
   @ApiProperty()
   public readonly uid: string;
   @ApiProperty()

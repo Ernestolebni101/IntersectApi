@@ -36,7 +36,7 @@ export class AuthMiddleware implements NestMiddleware {
     res
       .status(403)
       .sendFile(
-        'D:/Source/Information_Sys/Mobile/CurrentProject/Intersect-Api/src/App/Middlewares/auth/static/forbiden.html',
+        'C:/Users/PC/source/Backend/Intersect_BackEnd/src/App/Middlewares/auth/static/forbiden.html',
       );
   }
 }

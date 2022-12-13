@@ -10,7 +10,7 @@ import { firebaseProvider } from './Database/database-providers/firebase.provide
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { UnitOfWorkAdapter } from './Database/UnitOfWork/adapter.implements';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GroupsModule } from 'src/App/modules/groups/groups.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';
@@ -84,10 +84,15 @@ import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
  * TODO: Implementar Clases de configuración y Módulo de Base de Datos
  */
 export class AppModule implements NestModule {
+  public static appConfigurations: Record<string, unknown> = {};
+  constructor(private readonly configService: ConfigService) {
+    AppModule.appConfigurations['secret'] =
+      this.configService.get<string>('SECRET');
+  }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'users/v1', method: RequestMethod.ALL });
+      .forRoutes({ path: 'intersectApi/users/v1', method: RequestMethod.ALL });
   }
 }

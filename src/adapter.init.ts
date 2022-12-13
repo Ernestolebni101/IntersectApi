@@ -15,3 +15,8 @@ export const initAdapters = (app: INestApplication): INestApplication => {
 
   return app;
 };
+
+// const deleteFiles = async () => {
+//   const adminStorage = (await fManager).storage;
+//   await adminStorage.deleteFiles();
+// };
