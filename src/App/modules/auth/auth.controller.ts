@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
@@ -8,19 +7,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { success } from 'src/common/response';
-import { AuthService } from './auth.service';
-import * as Exp from 'express';
-import { createAuthDto } from './dto/auth.dto';
-import { LocalAuthGuard } from './guards/localauth.guard';
+import { LocalAuthGuard } from './guards/local.auth.guard';
 @Controller('auth/v1/')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
   @UseGuards(LocalAuthGuard)
   @Post('identity')
-  identity(@Req() req: Request): any {
-    // const response = await this.authService.Identity(payload);
-    return req.user;
+  identity(@Req() req: Request, @Res() res: Response): any {
+    return res.status(201).send('Logged in!');
   }
   @Get('protected')
   getCookies(@Req() req: Request) {

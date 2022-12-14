@@ -91,8 +91,5 @@ export class AppModule implements NestModule {
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({ path: 'intersectApi/users/v1', method: RequestMethod.ALL });
   }
 }
