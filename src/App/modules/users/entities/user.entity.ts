@@ -11,5 +11,5 @@ export class User {
   public nickName: string;
   public token: string;
   public onlineStatus = false;
-  public Role: string;
+  public roleId: string;
 }

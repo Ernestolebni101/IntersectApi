@@ -17,6 +17,8 @@ export class UserDto {
   public readonly uid: string;
   @ApiProperty()
   public onlineStatus: boolean;
+  @ApiProperty()
+  public readonly roleId: string;
 }
 
 export class UserPartialDto {

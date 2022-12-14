@@ -17,12 +17,14 @@ async function bootstrap() {
   app.enableCors();
   app.use(
     sessions({
-      secret: AppModule.appConfigurations['secret'] as string,
+      secret: AppModule.secretKey,
       resave: false,
       saveUninitialized: false,
       cookie: { maxAge: 3600000 },
     }),
   );
+  app.use(passport.initialize());
+  app.use(passport.session());
   await app.init();
   await app.listen(process.env.PORT || 5001);
   return app.get(FunctionsManagerService);

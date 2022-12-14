@@ -84,10 +84,9 @@ import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
  * TODO: Implementar Clases de configuración y Módulo de Base de Datos
  */
 export class AppModule implements NestModule {
-  public static appConfigurations: Record<string, unknown> = {};
-  constructor(private readonly configService: ConfigService) {
-    AppModule.appConfigurations['secret'] =
-      this.configService.get<string>('SECRET');
+  public static secretKey = '';
+  constructor(public configService: ConfigService) {
+    AppModule.secretKey = configService.get<string>('SECRET');
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');

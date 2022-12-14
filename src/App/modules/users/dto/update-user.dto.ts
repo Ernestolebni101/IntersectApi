@@ -9,4 +9,5 @@ export class UpdateUserDto {
   public group?: string;
   public token: string;
   public onlineStatus: boolean;
+  public roleId: string;
 }

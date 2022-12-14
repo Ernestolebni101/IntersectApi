@@ -101,6 +101,7 @@ export class UsersRepository
       foundUser.profilePic = payload.profilePic ?? foundUser.profilePic;
       foundUser.token = payload.token ?? foundUser.token;
       foundUser.onlineStatus = payload.onlineStatus ?? foundUser.onlineStatus;
+      foundUser.roleId = payload.roleId ?? foundUser.roleId;
       await this.update(foundUser);
       this.logger.log(
         '******Update Proceess ended******',

@@ -29,10 +29,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty()
   public nickName: string;
-  // @IsString()
-  // @IsNotEmpty()
-  // @ApiProperty()
-  // public password: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public roleId: string;
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
