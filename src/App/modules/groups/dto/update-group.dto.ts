@@ -64,6 +64,10 @@ export class UpdateGroupDto extends PartialType(CreateGroupDto) {
   @ApiProperty()
   @IsNotEmpty()
   public isNotify: boolean;
+  @IsBoolean()
+  @ApiProperty()
+  @IsNotEmpty()
+  public isCertified: boolean;
 }
 /**
  * Enumerable para determinar las opciones de actualización relacionadas al owner

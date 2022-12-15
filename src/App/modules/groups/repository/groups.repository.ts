@@ -12,7 +12,7 @@ export const FIRSTGROUP = 'IGROUPSERVICE';
 
 export interface IGroupsRepository {
   ifExist(groupName: string): Promise<number>;
-  getAllAsync(): Promise<Array<GroupDto>>;
+  getAllAsync(filter: string): Promise<Array<Group>>;
   getGroupByParams(searchParam: string): Promise<GroupDto>;
   getById(groupId: string): Promise<Group>;
   getIntersectedGroups(userId: string): Promise<Array<GroupDto>>;
@@ -80,9 +80,14 @@ export class GroupsRepository
    * @returns  => Devuelve todos los grupos contenidos en la base de Datos
    *  @description debería llevar un metodo de paginación para evitar que el sistema colapse en un petición
    */
-  public getAllAsync = async (): Promise<Array<GroupDto>> => {
-    const collection = (await this.find())
-      .map((group: Group) => plainToInstance(GroupDto, group))
+  public getAllAsync = async (filter: string): Promise<Array<Group>> => {
+    const ctx = [false, true];
+    const collection = (
+      await this.whereEqualTo(
+        (g) => g.isCertified,
+        ctx[parseInt(filter)],
+      ).find()
+    )
       .sort((a, b) => a.flag - b.flag)
       .reverse();
     return collection ? collection : null;
@@ -179,6 +184,7 @@ export class GroupsRepository
     foundGroup.isPrivate = payload.isPrivate ?? foundGroup.isPrivate;
     foundGroup.lastMessage = payload.lastMessage ?? foundGroup.lastMessage;
     foundGroup.whosWriting = payload.whosWriting ?? '';
+    foundGroup.isCertified = payload.isCertified ?? foundGroup.isCertified;
     foundGroup.isWriting = payload.isWriting ?? false;
     await this.update(foundGroup);
     if (payload.isActive) {

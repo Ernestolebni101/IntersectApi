@@ -36,6 +36,8 @@ export class GroupDto implements IGroupEntity {
   public isPrivate: boolean;
   @ApiProperty()
   public groupSettings: Array<GroupSettings>;
+  @ApiProperty()
+  public isCertified: boolean;
   public static GroupInstance(
     group: Group,
     intersectedUsers: Array<UserPartialDto>,
@@ -53,6 +55,7 @@ export class GroupDto implements IGroupEntity {
     groupDto.users = intersectedUsers;
     groupDto.groupProfile = group.groupProfile;
     groupDto.isPrivate = group.isPrivate;
+    groupDto.isCertified = group.isCertified;
     return groupDto;
   }
 }

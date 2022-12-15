@@ -8,7 +8,6 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 import { IChatRepository } from './repository/chat-repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User } from '../users/entities/user.entity';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ChatsService {

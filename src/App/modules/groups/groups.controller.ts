@@ -18,6 +18,7 @@ import { success, error } from '../../../common/response';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GroupContext } from './group.context';
+import { Query } from '@nestjs/common/decorators';
 
 @ApiTags('Módulo de Grupos')
 @Controller('groups/v1')
@@ -31,15 +32,15 @@ export class GroupsController {
   @ApiOperation({
     summary: 'Devuelve todos los grupos sin objetos de usuarios',
   })
-  public async findAllAsync(@Request() req, @Response() res) {
+  public async findAllAsync(@Request() req, @Response() res, @Query('filter') filter: string) {
     return await this.groupsService
-      .findAllAsync()
+      .findAllAsync({filter: filter})
       .then((data) => {
         success(req, res, data);
       })
       .catch((e) => error(req, res, 'Unexpected Error', e));
   }
-
+  
   @Get('/:groupId')
   @ApiOperation({ summary: 'Devuelve un Grupo con los usuarios intersectados' })
   public async findOneAsync(

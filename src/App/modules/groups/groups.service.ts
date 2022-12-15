@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
-import { UserPartialDto } from '../users/dto/read-user.dto';
+import { UserDto, UserPartialDto } from '../users/dto/read-user.dto';
 import { IUserRepository } from '../users/repository/user.repository';
 import { GroupDto } from './dto/read-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -9,6 +9,8 @@ import { Bucket } from '@google-cloud/storage';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IMessageRepository } from '../messages/repository/message.repository';
 import { Time } from '../../../Utility/utility-time-zone';
+import { User } from '../users/entities/user.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class GroupsService {
@@ -28,8 +30,23 @@ export class GroupsService {
   /**
    * @ReadOperations => Segmento de Operaciones de  Lectura
    */
-  public findAllAsync = async (): Promise<Array<GroupDto>> =>
-    (await this.groupsRepository.getAllAsync()) ?? null;
+  public findAllAsync = async ({ filter = '' }): Promise<Array<GroupDto>> => {
+    const groups = (await this.groupsRepository.getAllAsync(filter)) ?? null;
+    const foundGroups = await Promise.all(
+      groups.map(async (g) => {
+        const users = await this.usersRepository.getUsersByUids(g.users);
+        const owner = await this.usersRepository.getUserbyId(g.author);
+        return GroupDto.GroupInstance(
+          g,
+          users.map((user: User) =>
+            UserPartialDto.Factory(plainToInstance(UserDto, user)),
+          ),
+          plainToInstance(UserPartialDto, owner),
+        );
+      }),
+    );
+    return foundGroups;
+  };
 
   /**
    * Este metodo devuele los grupos en lo que un usuario está intersectado

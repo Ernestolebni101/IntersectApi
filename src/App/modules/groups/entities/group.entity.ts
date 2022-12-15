@@ -6,7 +6,7 @@ export class Group {
   public id: string;
   public groupName: string;
   public createdBy?: string;
-  public createdDate: string = Time.getCustomDate(new Date()); // no modificable
+  public createdDate: string = Time.getCustomDate(new Date(), 'F'); // no modificable
   public modifiedDate: string = Time.getCustomDate(new Date(), 'T');
   public isCertified = false;
   public isActive = true;
