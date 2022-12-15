@@ -25,7 +25,7 @@ export class AuthController {
   public async identity(
     @Req() req: Request,
     @Res() res: Response,
-  ): Promise<Exp.Response<AuthResponse>> {
+  ): Promise<Exp.Response<Aut hResponse>> {
     const response = await this.authService.logCredentials(req.body);
     return success(req, res, response);
   }
