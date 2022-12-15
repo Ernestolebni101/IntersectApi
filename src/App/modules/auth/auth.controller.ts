@@ -19,7 +19,8 @@ import { roles } from './helpers/role.enum';
 @Controller('auth/v1/')
 export class AuthController {
   constructor(@Inject('AUTH') private readonly authService: AuthService) {}
-
+  // @hasRoles(roles.ADMIN, roles.SA)
+  // @UseGuards(RolesGuard)
   @Post('identity')
   public async identity(
     @Req() req: Request,

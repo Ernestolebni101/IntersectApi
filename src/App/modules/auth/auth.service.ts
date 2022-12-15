@@ -2,11 +2,13 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthResponse } from './dto/response.dto';
 import { JwtService } from '@nestjs/jwt';
+import { RoleRepository } from './repository/auth.role.repository';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly roleRepository: RoleRepository,
   ) {}
   public async logCredentials(user: any): Promise<AuthResponse> {
     const authResponse = await this.validateCredentials(user.uid, user.uid);
@@ -27,10 +29,11 @@ export class AuthService {
   ): Promise<AuthResponse> {
     const { nickName, profilePic, email, roleId } =
       await this.userService.findOne(uid);
+    const foundRole = await this.roleRepository.getRoleById(roleId);
     const authResponse = new AuthResponse(
       uid,
       nickName,
-      roleId,
+      foundRole,
       profilePic,
       email,
       '',

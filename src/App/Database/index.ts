@@ -7,3 +7,5 @@ export {
   firebaseProvider,
 } from './database-providers/firebase.provider';
 export { User } from './firebase/user';
+export type FirestoreCollection =
+  FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
