@@ -9,7 +9,7 @@ export class RolesGuard implements CanActivate {
     if (!roles) return true;
     const request = ctx.switchToHttp().getRequest();
     const user = request.user;
-    const hasPermissions = roles.some((role) => user.role == role);
+    const hasPermissions = roles.some((role) => user.role.RoleId == role);
     return hasPermissions;
   }
 }

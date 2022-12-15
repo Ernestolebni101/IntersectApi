@@ -1,6 +1,7 @@
 export const FIREBASE_APP_CLIENT = 'FIREBASE_APP_CLIENT';
 export const SETTINGS = {
   timestampsInSnapshots: true,
+  ignoreUndefinedProperties: true,
 };
 
 // Group Document References
