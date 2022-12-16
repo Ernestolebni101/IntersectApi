@@ -9,3 +9,6 @@ export {
 export { User } from './firebase/user';
 export type FirestoreCollection =
   FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+export type DocumentData = FirebaseFirestore.DocumentData;
+export type Documents =
+  FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[];
