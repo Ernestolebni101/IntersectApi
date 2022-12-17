@@ -62,8 +62,8 @@ export class MessageListener {
       const notification = new DirectNotification(
         messageChatEvent.payloadMessage.fromGroup,
         [
-        {'sender': {'profilePic': messageChatEvent.payloadMessage.profilePic, 'nickName': messageChatEvent.payloadMessage.nickName}},
-        {'receptor': {'profilePic': messageChatEvent.user.profilePic, 'nickName': messageChatEvent.user.nickName}}
+        { 'uid': messageChatEvent.payloadMessage.messageFrom ,profilePic: messageChatEvent.payloadMessage.profilePic, 'nickName': messageChatEvent.payloadMessage.nickName},
+        { 'uid': messageChatEvent.user.uid, 'profilePic': messageChatEvent.user.profilePic, 'nickName': messageChatEvent.user.nickName}
         ]
       );
       await Promise.all([await this.notificationSvc.sendToDevices({

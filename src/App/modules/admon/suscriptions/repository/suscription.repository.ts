@@ -7,4 +7,14 @@ export interface ISuscription {
   getSuscriptionDetail();
 }
 
-export class SuscriptionRepository implements ISuscription {}
+export class SuscriptionRepository implements ISuscription {
+  newSuscription(payload: createSuscriptionDto): Promise<SuscriptionDetailDto> {
+    throw new Error('Method not implemented.');
+  }
+  getSuscription() {
+    throw new Error('Method not implemented.');
+  }
+  getSuscriptionDetail() {
+    throw new Error('Method not implemented.');
+  }
+}
