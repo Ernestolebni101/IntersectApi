@@ -28,6 +28,7 @@ import { Request } from 'express';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
+import { AdmonModule } from './modules/admon/admon.module';
 @Global()
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
     ChatsModule,
     IntegrationModule,
     AuthModule,
+    AdmonModule,
   ],
   controllers: [AppController],
   providers: [

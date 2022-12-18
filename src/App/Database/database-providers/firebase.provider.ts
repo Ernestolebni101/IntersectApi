@@ -7,9 +7,13 @@ import { Provider } from '@nestjs/common';
 // ------------------------------------------------------------
 import { app, ServiceAccount } from 'firebase-admin';
 import * as firebase from 'firebase-admin';
-import { FIREBASE_APP_CLIENT } from '../database.constants';
+import {
+  FIREBASE_APP_CLIENT,
+  FIRESTORE_DB,
+  SETTINGS,
+} from '../database.constants';
 export type firebaseClient = app.App;
-
+export type firestoreDb = firebase.firestore.Firestore;
 export const firebaseProvider: Provider[] = [
   {
     useFactory: (config: ConfigService): firebaseClient => {
@@ -23,5 +27,14 @@ export const firebaseProvider: Provider[] = [
     },
     provide: FIREBASE_APP_CLIENT,
     inject: [ConfigService],
+  },
+  {
+    useFactory: (app: firebaseClient): firestoreDb => {
+      const fireDb = app.firestore();
+      fireDb.settings(SETTINGS);
+      return fireDb;
+    },
+    provide: FIRESTORE_DB,
+    inject: [FIREBASE_APP_CLIENT],
   },
 ];

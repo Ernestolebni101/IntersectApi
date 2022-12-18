@@ -1,4 +1,5 @@
 export const FIREBASE_APP_CLIENT = 'FIREBASE_APP_CLIENT';
+export const FIRESTORE_DB = 'FIRESTORE_DB';
 export const SETTINGS = {
   timestampsInSnapshots: true,
   ignoreUndefinedProperties: true,

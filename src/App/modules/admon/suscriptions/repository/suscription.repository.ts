@@ -1,20 +1,41 @@
 import { createSuscriptionDto } from '../dtos/create-suscription.dto';
-import { SuscriptionDetailDto } from '../dtos/read-suscriptions.dto';
-
+import {
+  SuscriptionDetailDto,
+  SuscriptionDto,
+} from '../dtos/read-suscriptions.dto';
+import {
+  FIRESTORE_DB,
+  firestoreDb,
+  FirestoreCollection,
+} from '../../../../Database/index';
+import { v4 as uuid } from 'uuid';
+import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
+import { instanceToPlain } from 'class-transformer';
 export interface ISuscription {
-  newSuscription(payload: createSuscriptionDto): Promise<SuscriptionDetailDto>;
-  getSuscription();
-  getSuscriptionDetail();
+  newSuscription(payload: createSuscriptionDto): Promise<void>;
+  getSuscriptions(): Promise<Array<SuscriptionDto>>;
+  getSuscriptionDetail(): Promise<Array<SuscriptionDetailDto>>;
 }
-
+@Injectable()
 export class SuscriptionRepository implements ISuscription {
-  newSuscription(payload: createSuscriptionDto): Promise<SuscriptionDetailDto> {
+  private readonly suscriptionCol: FirestoreCollection;
+  private readonly sucriptionDetailCol: FirestoreCollection;
+  constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
+    this.suscriptionCol = this.fireDb.collection('Suscriptions');
+    this.sucriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
+  }
+  public async newSuscription(payload: createSuscriptionDto): Promise<void> {
+    await this.fireDb.runTransaction(async (tran) => {
+      payload.suscriptionId = uuid();
+      const { suscriptionDetailId, ...head } = payload;
+      const suscriptionRef = this.suscriptionCol.doc(payload.suscriptionId);
+      tran.set(suscriptionRef, instanceToPlain(head));
+    });
+  }
+  public async getSuscriptions(): Promise<Array<SuscriptionDto>> {
     throw new Error('Method not implemented.');
   }
-  getSuscription() {
-    throw new Error('Method not implemented.');
-  }
-  getSuscriptionDetail() {
+  public async getSuscriptionDetail(): Promise<Array<SuscriptionDetailDto>> {
     throw new Error('Method not implemented.');
   }
 }

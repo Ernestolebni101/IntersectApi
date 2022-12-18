@@ -1,5 +1,4 @@
 import { suscriptionState } from '../suscription.enum';
-
 export class createSuscriptionDto {
   constructor(
     public suscriptionId: string,
@@ -7,7 +6,7 @@ export class createSuscriptionDto {
     public createdDate: Date,
     public createdBy: string,
     public modifiedBy: string,
-    public suscriptionDetailId: createSuscriptionDetailDto,
+    public suscriptionDetailId: Array<createSuscriptionDetailDto>,
   ) {}
 }
 

@@ -1,19 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   InternalServerErrorException,
   NotImplementedException,
 } from '@nestjs/common/exceptions';
 import { instanceToPlain } from 'class-transformer';
 import {
-  UnitOfWorkAdapter,
+  firestoreDb,
   FirestoreCollection,
+  FIRESTORE_DB,
 } from '../../../Database/index';
 import { createRoleDto, RoleDto, updateRoleDto } from '../dto/role.dto';
 @Injectable()
 export class RoleRepository {
   private readonly roleCollection: FirestoreCollection;
-  constructor(private readonly adapter: UnitOfWorkAdapter) {
-    this.roleCollection = this.adapter._db.collection('Roles');
+  constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
+    this.roleCollection = this.fireDb.collection('Roles');
   }
 
   public async createNewRole(createRoleDto: createRoleDto): Promise<RoleDto> {

@@ -15,7 +15,7 @@ export class SuscriptionDto {
     this.createdDate = plainObject['createdDate'];
     this.createdBy = plainObject['createdBy'];
     this.modifiedBy = plainObject['modifiedBy'];
-    this.suscriptionDetailId = plainObject['sus3criptionDetailId'];
+    this.suscriptionDetailId = plainObject['suscriptionDetailId'];
     this.suscriptionDetail = SuscriptionDetailDto.getDetailFromSnapshots(
       plainObject['details'],
     );
