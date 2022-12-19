@@ -21,7 +21,7 @@ export class FcmModel {
           priority: 'high',
           body: body,
           channelId: 'intersect',
-          visibility: 'private',
+          visibility: 'public',
           defaultVibrateTimings: true,
           eventTimestamp: new Date(),
           vibrateTimingsMillis: [1000, 2000],

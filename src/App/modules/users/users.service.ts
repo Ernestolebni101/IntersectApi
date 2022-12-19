@@ -59,4 +59,14 @@ export class UsersService {
 
   public getOwnGroups = async (uid: string) =>
     await this.groupRepository.getGroupAsyncByParams(uid, '');
+
+  public userSearch = async (searchParam: string) => {
+    const users = await this.findAllAsync();
+    return users.filter(
+      (user) =>
+        user.firstName == searchParam ||
+        user.lastName == searchParam ||
+        user.nickName,
+    );
+  };
 }

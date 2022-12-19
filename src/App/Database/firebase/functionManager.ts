@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { firebaseClient } from '../database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT } from '../database.constants';
 import { Group } from '../../modules/groups/entities/group.entity';

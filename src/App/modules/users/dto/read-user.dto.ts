@@ -4,6 +4,8 @@ export class UserDto {
   @ApiProperty()
   public readonly id: string;
   @ApiProperty()
+  public readonly firstName: string;
+  @ApiProperty()
   public readonly lastName: string;
   @ApiProperty()
   public readonly profilePic: string;
