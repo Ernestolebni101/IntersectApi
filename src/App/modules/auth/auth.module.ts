@@ -9,7 +9,9 @@ import { JwtModule } from '@nestjs/jwt/dist';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './guards/jwt.strategy.guard';
 import { RoleRepository } from './repository/auth.role.repository';
-
+import { RolesGuard } from './guards/roles.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local.auth.guard';
 @Module({
   imports: [
     PassportModule.register({ session: true }),
@@ -28,11 +30,14 @@ import { RoleRepository } from './repository/auth.role.repository';
     RoleRepository,
     UsersService,
     SessionSerializer,
+    RolesGuard,
+    JwtAuthGuard,
     {
       provide: 'AUTH',
       useClass: AuthService,
     },
     LocalStrategy,
+    LocalAuthGuard,
     JwtStrategy,
     {
       provide: 'SECRET',
@@ -40,6 +45,13 @@ import { RoleRepository } from './repository/auth.role.repository';
         configService.get<string>('SECRET'),
       inject: [ConfigService],
     },
+  ],
+  exports: [
+    JwtStrategy,
+    LocalStrategy,
+    RolesGuard,
+    JwtAuthGuard,
+    LocalAuthGuard,
   ],
 })
 export class AuthModule {

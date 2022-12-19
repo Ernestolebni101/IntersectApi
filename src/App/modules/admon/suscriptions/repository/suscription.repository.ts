@@ -26,10 +26,13 @@ export class SuscriptionRepository implements ISuscription {
   }
   public async newSuscription(payload: createSuscriptionDto): Promise<void> {
     await this.fireDb.runTransaction(async (tran) => {
-      payload.suscriptionId = uuid();
-      const { suscriptionDetailId, ...head } = payload;
+      const { suscriptionDetail, ...head } = payload;
       const suscriptionRef = this.suscriptionCol.doc(payload.suscriptionId);
       tran.set(suscriptionRef, instanceToPlain(head));
+      suscriptionDetail.forEach((detail) => {
+        const ref = this.sucriptionDetailCol.doc(detail.suscriptioDetailId);
+        tran.set(ref, instanceToPlain(detail));
+      });
     });
   }
   public async getSuscriptions(): Promise<Array<SuscriptionDto>> {

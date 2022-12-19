@@ -6,7 +6,8 @@ export class createSuscriptionDto {
     public createdDate: Date,
     public createdBy: string,
     public modifiedBy: string,
-    public suscriptionDetailId: Array<createSuscriptionDetailDto>,
+    public detailReferences: Array<string>,
+    public suscriptionDetail: Array<createSuscriptionDetailDto>,
   ) {}
 }
 
