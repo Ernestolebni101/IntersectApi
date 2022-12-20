@@ -64,9 +64,9 @@ export class UsersService {
     const users = await this.findAllAsync();
     return users.filter(
       (user) =>
-        user.firstName == searchParam ||
-        user.lastName == searchParam ||
-        user.nickName,
+        user.firstName.includes(searchParam) ||
+        user.lastName.includes(searchParam) ||
+        user.nickName.includes(searchParam),
     );
   };
 }
