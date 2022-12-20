@@ -27,6 +27,7 @@ async function bootstrap() {
   app.use(passport.session());
   await app.init();
   await app.listen(process.env.PORT || 5001);
+  console.log(process.cwd());
   return app.get(FunctionsManagerService);
 }
 const fManager: Promise<FunctionsManagerService> = bootstrap();

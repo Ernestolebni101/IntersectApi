@@ -37,8 +37,4 @@ import { AuthMiddleware } from 'src/App/Middlewares/auth/auth.middleware';
   ],
   exports: [GroupsService],
 })
-export class GroupsModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(GroupsController);
-  }
-}
+export class GroupsModule {}

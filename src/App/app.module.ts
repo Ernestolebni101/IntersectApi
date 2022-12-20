@@ -29,6 +29,13 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
 import { AdmonModule } from './modules/admon/admon.module';
+import { UsersController } from './modules/users/users.controller';
+import { GroupsController } from './modules/groups/groups.controller';
+import { MessagesController } from './modules/messages/controllers/messages.controller';
+import { MultimediaController } from './modules/messages/controllers/multimedia.controller';
+import { ChatsController } from './modules/chats/chats.controller';
+import { IntegrationController } from './modules/integration/integration.controller';
+import { WaitingListController } from './modules/groups/waiting-list/waiting-list.controller';
 @Global()
 @Module({
   imports: [
@@ -92,5 +99,16 @@ export class AppModule implements NestModule {
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        UsersController,
+        GroupsController,
+        MessagesController,
+        MultimediaController,
+        ChatsController,
+        IntegrationController,
+        WaitingListController,
+      );
   }
 }

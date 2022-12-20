@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { FIREBASE_APP_CLIENT, firebaseClient } from '../../Database/index';
+import * as Path from 'path';
 import { Logger } from '@nestjs/common';
-
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
@@ -26,6 +26,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   private accessDenied(req: Request, res: Response): void {
     const logger = new Logger();
+    const path = '\\src\\App\\Middlewares\\auth\\forbiden.html';
     const mss = {
       timestamp: new Date().toISOString(),
       path: req.url,
@@ -33,10 +34,6 @@ export class AuthMiddleware implements NestMiddleware {
     };
     const messageError = `the client ip ${req.ip} trying to access in ${req.url}`;
     logger.error(mss, messageError, AuthMiddleware.name);
-    res
-      .status(403)
-      .sendFile(
-        'C:/Users/PC/source/Backend/Intersect_BackEnd/src/App/Middlewares/auth/static/forbiden.html',
-      );
+    res.status(403).sendFile(process.cwd() + path);
   }
 }

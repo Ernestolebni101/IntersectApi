@@ -38,7 +38,6 @@ export class MessagesController {
     @Res() res,
     @Body() payload: CreateMessageDto,
   ) {
-    console.log(payload);
     await this.messagesService
       .saveMessages(files, payload, +param)
       .then((data) => success(req, res, data, 201))
