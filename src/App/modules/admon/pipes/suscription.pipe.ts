@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 export class SuscriptionPipe implements PipeTransform {
   transform(value: createSuscriptionDto, metadata: ArgumentMetadata) {
     value.suscriptionId = this.setId(value.userId);
+    value.createdDate = new Date();
     value.detailReferences = value.suscriptionDetail.map((detail) => {
       detail.amount = 200;
       return (detail.suscriptioDetailId = uuid());

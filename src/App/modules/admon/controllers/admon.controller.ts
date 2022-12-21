@@ -1,8 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
-  Param,
   Post,
   Request as Req,
   Response as Res,
@@ -10,16 +8,16 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { success } from 'src/common/response';
-import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../auth/index';
-import { SuscriptionRepository } from './suscriptions/repository/suscription.repository';
-import { createSuscriptionDto } from './suscriptions/dtos/create-suscription.dto';
-import { SuscriptionPipe } from './pipes/suscription.pipe';
-import { SearchPipe } from './pipes/search.pipe';
-import { UsersService } from '../users/users.service';
+import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../../auth/index';
+import { createSuscriptionDto } from '../suscriptions/dtos/create-suscription.dto';
+import { SuscriptionPipe } from '../pipes/suscription.pipe';
+import { SearchPipe } from '../pipes/search.pipe';
+import { UsersService } from '../../users/users.service';
+import { SuscriptionService } from '../suscriptions/suscriptions.service';
 @Controller('admon/v1/')
 export class AdmonController {
   constructor(
-    private readonly suscriptionRepository: SuscriptionRepository,
+    private readonly suscriptionService: SuscriptionService,
     private readonly userService: UsersService,
   ) {}
   @hasRoles(roles.ADMIN, roles.SA)
@@ -30,11 +28,11 @@ export class AdmonController {
     @Res() res: Response,
     @Body(SuscriptionPipe) payload: createSuscriptionDto,
   ) {
-    await this.suscriptionRepository.newSuscription(payload);
-    return success(req, res, 'QE', 200);
+    await this.suscriptionService.newSuscription(payload);
+    return success(req, res, 'login success', 201);
   }
-  // @hasRoles(roles.ADMIN, roles.SA)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('users-search')
   public async userSearch(
     @Req() req: Request,

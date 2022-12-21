@@ -19,7 +19,7 @@ import { LocalAuthGuard } from './guards/local.auth.guard';
       useFactory: (configService: ConfigService) => {
         return {
           secret: configService.get<string>('SECRET'),
-          signOptions: { expiresIn: '60s' },
+          signOptions: { expiresIn: '3600s' },
         };
       },
       inject: [ConfigService],

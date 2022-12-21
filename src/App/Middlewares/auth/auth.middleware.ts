@@ -1,7 +1,6 @@
 import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { FIREBASE_APP_CLIENT, firebaseClient } from '../../Database/index';
-import * as Path from 'path';
 import { Logger } from '@nestjs/common';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

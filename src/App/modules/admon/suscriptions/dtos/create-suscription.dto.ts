@@ -18,9 +18,10 @@ export class createSuscriptionDetailDto {
     public paymentMethodId: string,
     public voucherUrl: string,
     public description: string,
-    public amount: number,
     public beginDate: Date,
     public endDate: Date,
-    public suscriptionState: suscriptionState,
+    public suscriptionState: suscriptionState, // por defecto
+    public amount: number,
+    public billingPeriodId: string,
   ) {}
 }

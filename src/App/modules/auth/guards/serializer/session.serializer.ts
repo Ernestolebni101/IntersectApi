@@ -1,19 +1,25 @@
 import { PassportSerializer } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/App/modules/users/users.service';
+import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
   constructor(private readonly userService: UsersService) {
     super();
   }
-  serializeUser(user: any, done: (err: Error, user: any) => void): any {
-    done(null, { uid: user.uid });
+  serializeUser(
+    user: Record<string, unknown>,
+    done: (err: Error, user: Record<string, unknown>) => void,
+  ): any {
+    done(null, user);
   }
-  async deserializeUser(payload: any, done: (err: Error, user: any) => void) {
+  async deserializeUser(user: any, done: (err: Error, user: any) => void) {
     const { token, email, onlineStatus, lastName, id, ...rest } =
-      await this.userService.findOne(payload.uid);
-    done(null, rest);
+      await this.userService.findOne(user.uid);
+    console.log(user);
+    console.log(rest);
+    return rest ? done(null, rest) : done(null, null);
   }
 }
 

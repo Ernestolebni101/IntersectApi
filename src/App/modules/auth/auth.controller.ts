@@ -6,6 +6,7 @@ import {
   Request as Req,
   Response as Res,
   UseGuards,
+  Session,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { success } from 'src/common/response';
@@ -16,11 +17,13 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { hasRoles } from './helpers/roles.decorator';
 import { roles } from './helpers/role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { LocalAuthGuard } from './guards/local.auth.guard';
 @Controller('auth/v1/')
 export class AuthController {
   constructor(@Inject('AUTH') private readonly authService: AuthService) {}
   @hasRoles(roles.ADMIN, roles.SA)
-  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard('local'), RolesGuard)
   @Post('identity')
   public async identity(
     @Req() req: Request,
@@ -34,5 +37,15 @@ export class AuthController {
   @Get('protected')
   getCookies(@Req() req: Request) {
     return req.user;
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('session')
+  public session(@Req() req: Request, @Res() res: Response) {}
+
+  @Get('session')
+  public getSession(@Session() session: Record<string, unknown>) {
+    session['authenticated'] = true;
+    return session;
   }
 }

@@ -10,6 +10,11 @@ export class Time {
     return strTime;
   }
 
+  public static getNextMonth(): Date {
+    const now = new Date();
+    const current = new Date(now.getFullYear(), now.getMonth() + 1, 3);
+    return current;
+  }
   /**
    *
    * @param current_date Fecha y hora actual
