@@ -20,7 +20,6 @@ export class SuscriptionService {
   ): Promise<createSuscriptionDto> {
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
-      this.groupRepo.updateGroup,
       this.periodRepo.getByParam,
     );
     this.unitOfWork.commitChanges();

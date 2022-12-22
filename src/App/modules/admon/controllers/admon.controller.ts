@@ -20,9 +20,9 @@ export class AdmonController {
     private readonly suscriptionService: SuscriptionService,
     private readonly userService: UsersService,
   ) {}
-  @hasRoles(roles.ADMIN, roles.SA)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Post('suscription')
+  // @hasRoles(roles.ADMIN, roles.SA)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Post('new-suscription')
   public async identity(
     @Req() req: Request,
     @Res() res: Response,

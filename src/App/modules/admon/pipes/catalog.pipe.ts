@@ -7,10 +7,12 @@ export class CatalogPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     value.periodId = `periodo-${uuid().split('-')[0]}`;
     value.isActive = true;
+    const date = FirebaseFirestore.Timestamp.fromDate(new Date());
     return new createBillingPeriodDto(
       value.periodId,
       value.periodName,
       true,
+      date,
       value.endDate || Time.getNextMonth(),
     );
   }

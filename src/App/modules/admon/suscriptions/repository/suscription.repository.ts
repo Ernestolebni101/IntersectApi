@@ -11,21 +11,12 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { UpdateGroupDto } from 'src/App/modules/groups/dto/update-group.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Bucket } from '@google-cloud/storage';
 import { BillingPeriodDto } from '../..';
 import { BillingIdentifierDto } from '../../catalogs/billing-period/dtos/read-billing-period.dto';
 
 export interface ISuscription {
   newSuscription(
     payload: createSuscriptionDto,
-    fn: (
-      file: Express.Multer.File,
-      payload: UpdateGroupDto,
-      bucket: Bucket,
-      eventEmitter: EventEmitter2,
-    ) => Promise<string>,
     fnp: (payload: BillingIdentifierDto) => Promise<BillingPeriodDto[]>,
   ): Promise<createSuscriptionDto>;
   getSuscriptions(): Promise<Array<SuscriptionDto>>;
@@ -35,20 +26,16 @@ export interface ISuscription {
 export class SuscriptionRepository implements ISuscription {
   private readonly suscriptionCol: FirestoreCollection;
   private readonly sucriptionDetailCol: FirestoreCollection;
+  private readonly groupCol: FirestoreCollection;
   constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
     this.sucriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
+    this.groupCol = this.fireDb.collection('interGroups');
   }
-  public async newSuscription(
+  public newSuscription = async (
     payload: createSuscriptionDto,
-    fn: (
-      file: Express.Multer.File,
-      payload: UpdateGroupDto,
-      bucket: Bucket,
-      eventEmitter: EventEmitter2,
-    ) => Promise<string>,
     fnp: (payload: BillingIdentifierDto) => Promise<BillingPeriodDto[]>,
-  ): Promise<createSuscriptionDto> {
+  ): Promise<createSuscriptionDto> => {
     const tran = await this.fireDb.runTransaction(async (tran) => {
       try {
         const { suscriptionDetail, ...head } = payload;
@@ -59,19 +46,14 @@ export class SuscriptionRepository implements ISuscription {
         tran.set(suscriptionRef, instanceToPlain(head));
         suscriptionDetail.forEach(async (detail) => {
           const ref = this.sucriptionDetailCol.doc(detail.suscriptioDetailId);
-          const toGroup = {
-            id: detail.groupId,
-            billingRecords: {
-              amount: 200,
-              billPeriod: instanceToPlain(period),
-            },
-          };
           tran.set(ref, instanceToPlain(detail));
-          await fn(
-            undefined,
-            plainToInstance(UpdateGroupDto, toGroup),
-            undefined,
-            undefined,
+          await this.groupCol.doc(detail.groupId).set(
+            {
+              billingRecords: [
+                { amount: 200, billPeriod: instanceToPlain(period) },
+              ],
+            },
+            { merge: true },
           );
         });
         return true;
@@ -81,7 +63,7 @@ export class SuscriptionRepository implements ISuscription {
     });
     if (!tran) throw new BadRequestException();
     return payload;
-  }
+  };
   public async getSuscriptions(): Promise<Array<SuscriptionDto>> {
     throw new Error('Method not implemented.');
   }

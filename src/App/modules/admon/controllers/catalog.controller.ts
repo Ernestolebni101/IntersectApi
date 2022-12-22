@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Request as Req,
   Response as Res,
@@ -12,12 +13,14 @@ import { Response, Request } from 'express';
 import { success } from 'src/common/response';
 import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../../auth/index';
 import { CatalogPipe } from '../pipes/catalog.pipe';
+import { BillingIdentifierDto } from '../catalogs/billing-period/dtos/read-billing-period.dto';
+import { plainToInstance } from 'class-transformer';
 @Controller('catalogs/v1/')
 export class CatalogController {
   constructor(private readonly billingRepository: BillingPeriodRepository) {}
   //#region  Periods
-  //   @hasRoles(roles.ADMIN, roles.SA)
-  //   @UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('billing-period')
   public async NewPeriod(
     @Req() req: Request,
@@ -28,8 +31,18 @@ export class CatalogController {
     return success(req, res, response, 201);
   }
   @Get('billing-period')
-  public async getAllCatalogs(@Req() req: Request, @Res() res: Response) {
-    const catalogs = await this.billingRepository.getAll();
+  public async getAllCatalogs(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('isActive') isActive = true,
+  ) {
+    const catalogs = await this.billingRepository.getByParam(
+      plainToInstance(
+        BillingIdentifierDto,
+        { isActive: isActive || true },
+        { ignoreDecorators: true },
+      ),
+    );
     return success(req, res, catalogs, 200);
   }
   //#endregion

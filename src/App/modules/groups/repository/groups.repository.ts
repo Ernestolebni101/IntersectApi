@@ -82,15 +82,19 @@ export class GroupsRepository
    */
   public getAllAsync = async (filter: string): Promise<Array<Group>> => {
     const ctx = [false, true];
-    const collection = (
-      await this.whereEqualTo(
-        (g) => g.isCertified,
-        ctx[parseInt(filter)],
-      ).find()
-    )
-      .sort((a, b) => a.flag - b.flag)
-      .reverse();
-    return collection ? collection : null;
+    let collection: Group[];
+    if (Number.isNaN(Number(filter))) {
+      collection = await this.whereEqualTo(
+        (g) => g.groupName,
+        filter.toLowerCase(),
+      ).find();
+      return collection.sort((a, b) => a.flag - b.flag).reverse() ?? null;
+    }
+    collection = await this.whereEqualTo(
+      (g) => g.isCertified,
+      ctx[parseInt(filter)],
+    ).find();
+    return collection.sort((a, b) => a.flag - b.flag).reverse() ?? null;
   };
 
   public getGroupAsyncByParams = async (

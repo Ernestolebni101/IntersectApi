@@ -5,7 +5,8 @@ export class createBillingPeriodDto implements ICatalog {
     public periodId: string,
     public periodName: string,
     public isActive: boolean,
-    public endDate: Date,
+    public startDate: FirebaseFirestore.Timestamp,
+    public endDate: FirebaseFirestore.Timestamp,
   ) {}
   public reflectData = (): unknown => this;
 }
