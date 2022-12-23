@@ -12,7 +12,7 @@ export class Group {
   public isActive = true;
   public users?: Array<string> = new Array<string>();
   public flag: number = new Date().getTime(); // para hacer el ordenamiento de los grupos
-  public flagDate: number = new Date().getDate(); // Para mostrar la fecha en que se creó el grupo
+  public flagDate: number = new Date().getTime(); // Para mostrar la fecha en que se creó el grupo
   public groupProfile = '';
   public author: string;
   public isPrivate = false;

@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './App/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { initAdapters } from './adapter.init';
@@ -8,6 +8,7 @@ import { FunctionsManagerService } from './App/Database/firebase/functionManager
 import { Logger } from 'nestjs-pino';
 import * as sessions from 'express-session';
 import * as passport from 'passport';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 //#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -24,6 +25,7 @@ async function bootstrap() {
       cookie: { maxAge: 3600000 },
     }),
   );
+  app.useGlobalPipes(new ValidationPipe());
   app.use(passport.initialize());
   app.use(passport.session());
   await app.init();

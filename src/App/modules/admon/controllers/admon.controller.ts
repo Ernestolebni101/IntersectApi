@@ -22,7 +22,7 @@ export class AdmonController {
   ) {}
   // @hasRoles(roles.ADMIN, roles.SA)
   // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Post('new-suscription')
+  @Post('new-suscription')
   public async identity(
     @Req() req: Request,
     @Res() res: Response,
