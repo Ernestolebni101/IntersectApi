@@ -214,8 +214,14 @@ export class GroupsRepository
   ): Promise<Group> {
     switch (payload.memberOption) {
       case MemberOpt.addMember:
-        foundGroup.users.push(payload.userId);
-        await eventEmitter.emitAsync('onAccess', payload.userId, foundGroup.id);
+        if (!foundGroup.users.includes(payload.userId)) {
+          foundGroup.users.push(payload.userId);
+          await eventEmitter.emitAsync(
+            'onAccess',
+            payload.userId,
+            foundGroup.id,
+          );
+        }
         return foundGroup;
       case MemberOpt.removeMember:
         foundGroup.users = foundGroup.users.filter(

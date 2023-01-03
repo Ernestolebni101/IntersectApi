@@ -30,6 +30,8 @@ export class CatalogController {
     const response = await this.billingRepository.newCatalogElement(payload);
     return success(req, res, response, 201);
   }
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('billing-period')
   public async getAllCatalogs(
     @Req() req: Request,

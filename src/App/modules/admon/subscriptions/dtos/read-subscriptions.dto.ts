@@ -1,32 +1,33 @@
 import { Documents, DocumentData } from '../../../../Database/index';
-import { suscriptionState } from '../suscription.enum';
+import { subscriptionState } from '../subscription.enum';
 
-export class SuscriptionDto {
-  private suscriptionId: string;
+export class SubscriptionDto {
+  private subscriptionId: string;
   private userId: string;
-  private createdDate: Date;
+  private createdDate: number;
   private createdBy: string;
   private modifiedBy: string;
-  private suscriptionDetailId: Array<SuscriptionDetailDto>;
-  private suscriptionDetail: Array<SuscriptionDetailDto>;
+  private subscriptionDetailId: Array<SubscriptionDetailDto>;
+  private subscriptionDetail: Array<SubscriptionDetailDto>;
   constructor(plainObject: DocumentData) {
-    this.suscriptionId = plainObject['suscriptionId'];
+    this.subscriptionId = plainObject['subscriptionId'];
     this.userId = plainObject['userId'];
     this.createdDate = plainObject['createdDate'];
     this.createdBy = plainObject['createdBy'];
     this.modifiedBy = plainObject['modifiedBy'];
-    this.suscriptionDetailId = plainObject['suscriptionDetailId'];
-    this.suscriptionDetail = SuscriptionDetailDto.getDetailFromSnapshots(
+    this.subscriptionDetailId = plainObject['subscriptionDetailId'];
+    this.subscriptionDetail = SubscriptionDetailDto.getDetailFromSnapshots(
       plainObject['details'],
     );
   }
   public static getSuscriptionsFromSnapshots = (
     snapshot: Documents,
-  ): Array<SuscriptionDto> => snapshot.map((snap) => new SuscriptionDto(snap));
+  ): Array<SubscriptionDto> =>
+    snapshot.map((snap) => new SubscriptionDto(snap));
 }
 
-export class SuscriptionDetailDto {
-  private suscriptioDetailId: string;
+export class SubscriptionDetailDto {
+  private subscriptioDetailId: string;
   private groupId: string;
   private paymentMethodId: string;
   private voucherUrl: string;
@@ -34,20 +35,20 @@ export class SuscriptionDetailDto {
   private amount: number;
   private beginDate: Date;
   private endDate: Date;
-  private suscriptionState: suscriptionState;
+  private subscriptionState: subscriptionState;
   constructor(plainObject: DocumentData) {
-    this.suscriptioDetailId = plainObject['suscriptioDetailId'];
+    this.subscriptioDetailId = plainObject['subscriptionDetailId'];
     this.groupId = plainObject['groupId'];
     this.paymentMethodId = plainObject['paymentMethodId'];
-    this.voucherUrl = plainObject['vou`cherUrl'];
+    this.voucherUrl = plainObject['voucherUrl'];
     this.description = plainObject['description'];
     this.amount = plainObject['amount'];
     this.beginDate = plainObject['beginDate'];
     this.endDate = plainObject['endDate'];
-    this.suscriptionState = plainObject['suscriptionState'];
+    this.subscriptionState = plainObject['subscriptionState'];
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,
-  ): Array<SuscriptionDetailDto> =>
-    snapshot.map((snap) => new SuscriptionDetailDto(snap));
+  ): Array<SubscriptionDetailDto> =>
+    snapshot.map((snap) => new SubscriptionDetailDto(snap));
 }

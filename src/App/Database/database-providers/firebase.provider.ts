@@ -3,7 +3,7 @@ import * as creds from '../../../keys/creds.json';
 import { ConfigService } from '@nestjs/config';
 // ------------------------------------------------------------
 // Providers imports
-import { Provider } from '@nestjs/common';
+import { Provider, Scope } from '@nestjs/common';
 // ------------------------------------------------------------
 import { app, ServiceAccount } from 'firebase-admin';
 import * as firebase from 'firebase-admin';

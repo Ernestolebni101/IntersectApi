@@ -9,4 +9,4 @@ export interface ICatalog {
   reflectData(): unknown;
 }
 
-export interface IReadable {}
+export abstract class IReadable {}

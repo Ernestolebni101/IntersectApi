@@ -65,6 +65,7 @@ export class Time {
     const formatted = array[1].toString().trim();
     return formatted;
   }
+
   /**
    * Date Time For Google Calendar
    * @returns

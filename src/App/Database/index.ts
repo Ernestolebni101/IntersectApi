@@ -18,3 +18,5 @@ export type FirestoreCollection =
 export type DocumentData = FirebaseFirestore.DocumentData;
 export type Documents =
   FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[];
+export type DocumentReference =
+  FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;

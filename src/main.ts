@@ -25,7 +25,7 @@ async function bootstrap() {
       cookie: { maxAge: 3600000 },
     }),
   );
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: true }));
   app.use(passport.initialize());
   app.use(passport.session());
   await app.init();

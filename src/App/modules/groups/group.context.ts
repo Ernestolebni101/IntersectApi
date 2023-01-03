@@ -63,7 +63,9 @@ export class GroupContext {
             plainToInstance(Group, foundDoc.data()),
           );
           record['groupData'] = 'is private';
-          record['operationType'] = groupEnum.request;
+          record['operationType'] = foundDoc.data()['isCertified']
+            ? groupEnum.premium
+            : groupEnum.request;
           break;
         case groupEnum.redirect:
           record['groupData'] = foundDoc.data();
@@ -97,4 +99,5 @@ export enum groupEnum {
   add = 1, // el usuario no está en el grupo pero es publico
   request = 2, // el grupo es privado,
   createNew = 3, // El grupo no existe
+  premium = 4,
 }

@@ -1,16 +1,24 @@
 import { ICatalog, IReadable } from '../../../index';
 import { Documents } from '../../../../../Database/index';
 import { Exclude, plainToInstance, Transform } from 'class-transformer';
-import { Time } from 'src/Utility/utility-time-zone';
+import { Time } from '../../../../../../Utility/utility-time-zone';
 export class BillingPeriodDto implements IReadable {
   public periodId: string;
   public periodName: string;
-  @Transform((value) => Time.getCustomDate(new Date(value.value), 'long'))
+  @Transform((value) => Time.getCustomDate(new Date(value.value), 'long'), {
+    toClassOnly: true,
+  })
+  @Transform((value) => value.value, { toPlainOnly: true })
   public startDate: number;
-  @Transform((value) => Time.getCustomDate(new Date(value.value), 'long'))
+  @Transform((value) => Time.getCustomDate(new Date(value.value), 'long'), {
+    toClassOnly: true,
+  })
+  @Transform((value) => value.value, { toPlainOnly: true })
   public endDate: number;
   public isActive: boolean;
   public static getFromSnapshot = (docs: Documents): BillingPeriodDto[] =>
+    docs.map((doc) => plainToInstance(BillingPeriodDto, doc.data()));
+  public static getFromPlain = (docs: Documents): BillingPeriodDto[] =>
     docs.map((doc) => plainToInstance(BillingPeriodDto, doc.data()));
 }
 

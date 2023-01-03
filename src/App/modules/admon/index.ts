@@ -8,15 +8,15 @@ export { BillingPeriodRepository } from './catalogs/billing-period/repository/bi
 export { AdmonController } from './controllers/admon.controller';
 export { CatalogController } from './controllers/catalog.controller';
 export { SearchPipe } from './pipes/search.pipe';
-export { SuscriptionPipe } from './pipes/suscription.pipe';
+export { SubscriptionPipe } from './pipes/subscription.pipe';
 export {
-  createSuscriptionDetailDto,
-  createSuscriptionDto,
-} from './suscriptions/dtos/create-suscription.dto';
+  createSubscriptionDetailDto,
+  createSubscriptionDto,
+} from './subscriptions/dtos/create-subscription.dto';
 export {
-  SuscriptionDetailDto,
-  SuscriptionDto,
-} from './suscriptions/dtos/read-suscriptions.dto';
+  SubscriptionDetailDto,
+  SubscriptionDto,
+} from './subscriptions/dtos/read-subscriptions.dto';
 export {
   ICatalog,
   ICatalogRepository,

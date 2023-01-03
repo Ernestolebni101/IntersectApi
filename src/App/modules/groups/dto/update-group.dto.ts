@@ -1,6 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CreateGroupDto } from './create-group.dto';
 
 /**
@@ -12,63 +18,20 @@ import { CreateGroupDto } from './create-group.dto';
  * !
  */
 export class UpdateGroupDto extends PartialType(CreateGroupDto) {
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNotEmpty()
   public id: string; //grupo
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public userId?: string; //usuario extra
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public groupProfile: string = null; // =>  Perfil de Grupo
-  @IsBoolean()
-  @ApiProperty()
-  @IsNotEmpty()
   public isActive: boolean = null; // =>  Actividad  de Grupo
-  @IsBoolean()
-  @ApiProperty()
-  @IsNotEmpty()
   public isPrivate: boolean = null; // =>  Privacidad  de Grupo
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public modifiedDate: string;
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public flag: number;
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public lastMessage: string;
-  @ApiProperty()
-  @IsNotEmpty()
   public isWriting = false;
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public whosWriting: string;
-  @IsString()
-  @ApiProperty()
-  @IsNotEmpty()
   public inherithOwner: string;
-  @IsInt()
-  @ApiProperty()
-  @IsNotEmpty()
   public memberOption = MemberOpt.none;
-  @IsInt()
-  @ApiProperty()
-  @IsNotEmpty()
   public isNotify: boolean;
-  @IsBoolean()
-  @ApiProperty()
-  @IsNotEmpty()
   public isCertified: boolean;
-  @ApiProperty()
   public billingRecords: Record<string, unknown>;
 }
 /**
