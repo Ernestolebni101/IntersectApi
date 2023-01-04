@@ -12,7 +12,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { BillingPeriodDto } from '../..';
 import { Detail } from '../utils/suscriptionDetail';
 
 export interface ISubscription {

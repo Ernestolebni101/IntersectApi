@@ -1,14 +1,14 @@
 import { Documents, DocumentData } from '../../../../Database/index';
 import { subscriptionState } from '../subscription.enum';
 
-export class SubscriptionDto {
+export class Subscription {
   private subscriptionId: string;
   private userId: string;
   private createdDate: number;
   private createdBy: string;
   private modifiedBy: string;
   private subscriptionDetailId: Array<string>;
-  private subscriptionDetail: Array<SubscriptionDetailDto>;
+  private subscriptionDetail: Array<SubscriptionDetail>;
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
     this.userId = plainObject['userId'];
@@ -16,17 +16,16 @@ export class SubscriptionDto {
     this.createdBy = plainObject['createdBy'];
     this.modifiedBy = plainObject['modifiedBy'];
     this.subscriptionDetailId = plainObject['subscriptionDetailId'];
-    this.subscriptionDetail = SubscriptionDetailDto.getDetailFromSnapshots(
+    this.subscriptionDetail = SubscriptionDetail.getDetailFromSnapshots(
       plainObject['details'],
     );
   }
   public static getSuscriptionsFromSnapshots = (
     snapshot: Documents,
-  ): Array<SubscriptionDto> =>
-    snapshot.map((snap) => new SubscriptionDto(snap));
+  ): Array<Subscription> => snapshot.map((snap) => new Subscription(snap));
 }
 
-export class SubscriptionDetailDto {
+export class SubscriptionDetail {
   private subscriptioDetailId: string;
   private groupId: string;
   private paymentMethodId: string;
@@ -49,6 +48,6 @@ export class SubscriptionDetailDto {
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,
-  ): Array<SubscriptionDetailDto> =>
-    snapshot.map((snap) => new SubscriptionDetailDto(snap));
+  ): Array<SubscriptionDetail> =>
+    snapshot.map((snap) => new SubscriptionDetail(snap));
 }

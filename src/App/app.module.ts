@@ -14,7 +14,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GroupsModule } from 'src/App/modules/groups/groups.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';
-import { MiddlewaresModuleModule } from './Middlewares/middlewares-module.module';
 import { IntersectGateway } from './app.gateway';
 import { SharedModule } from './shared/shared.module';
 import { FunctionsManagerService } from './Database/firebase/functionManager';
@@ -94,8 +93,10 @@ import { WaitingListController } from './modules/groups/waiting-list/waiting-lis
  */
 export class AppModule implements NestModule {
   public static secretKey = '';
+  public static apiKey = '';
   constructor(public configService: ConfigService) {
     AppModule.secretKey = configService.get<string>('SECRET');
+    AppModule.apiKey = configService.get<string>('APIKEY');
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');

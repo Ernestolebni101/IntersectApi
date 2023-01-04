@@ -1,4 +1,4 @@
-import { Logger, Module, NestModule } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import * as Multer from 'multer';

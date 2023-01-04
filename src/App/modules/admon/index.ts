@@ -23,3 +23,7 @@ export {
   IReadable,
 } from './catalogs/catalog.interface';
 export {} from './catalogs/states/dtos';
+export {
+  Subscription,
+  SubscriptionDetail,
+} from './subscriptions/entities/subscription.entities';
