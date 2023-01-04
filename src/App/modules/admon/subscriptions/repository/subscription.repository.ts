@@ -1,8 +1,9 @@
-import { createSubscriptionDto } from '../dtos/create-subscription.dto';
 import {
-  SubscriptionDetailDto,
-  SubscriptionDto,
-} from '../dtos/read-subscriptions.dto';
+  createSubscriptionDto,
+  Detail,
+  Subscription,
+  SubscriptionDetail,
+} from '../../index';
 import {
   FIRESTORE_DB,
   firestoreDb,
@@ -12,15 +13,14 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { Detail } from '../utils/suscriptionDetail';
 
 export interface ISubscription {
   newSuscription(
     payload: createSubscriptionDto,
     period: Record<string, any>,
   ): Promise<createSubscriptionDto>;
-  getSuscriptions(): Promise<Array<SubscriptionDto>>;
-  getSuscriptionDetail(): Promise<Array<SubscriptionDetailDto>>;
+  getAllSuscriptions(): Promise<Subscription[]>;
+  getSubscription(filter: string): Promise<Array<SubscriptionDetail>>;
 }
 @Injectable()
 export class SubscriptionRepository implements ISubscription {
@@ -39,7 +39,7 @@ export class SubscriptionRepository implements ISubscription {
     const tran = await this.fireDb.runTransaction(async (tran) => {
       try {
         const { subscriptionDetail, ...head } = payload;
-        const suscriptionRef = this.suscriptionCol.doc(payload.suscriptionId);
+        const suscriptionRef = this.suscriptionCol.doc(payload.subscriptionId);
         const detailGroups: Detail[] = [];
         const groupRefs: DocumentReference[] = [];
         tran.set(suscriptionRef, instanceToPlain(head));
@@ -85,10 +85,25 @@ export class SubscriptionRepository implements ISubscription {
     });
   }
 
-  public async getSuscriptions(): Promise<Array<SubscriptionDto>> {
-    throw new Error('Method not implemented.');
+  public async getAllSuscriptions(): Promise<Subscription[]> {
+    const docs = (await this.suscriptionCol.get()).docs;
+    const snapshots = await Promise.all(
+      docs.map(async (sub) => ({
+        ...sub.data(),
+        details: await Promise.all(
+          (
+            await this.sucriptionDetailCol
+              .where('subscriptionId', '==', sub.data().subscriptionId)
+              .get()
+          ).docs,
+        ),
+      })),
+    );
+    return Subscription.getSuscriptionsFromSnapshots(snapshots);
   }
-  public async getSuscriptionDetail(): Promise<Array<SubscriptionDetailDto>> {
+  public async getSubscription(
+    filter: string,
+  ): Promise<Array<SubscriptionDetail>> {
     throw new Error('Method not implemented.');
   }
 }

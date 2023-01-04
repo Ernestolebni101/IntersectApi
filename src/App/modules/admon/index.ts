@@ -3,7 +3,10 @@ export {
   createBillingPeriodDto,
   updateBillingPeriod,
 } from './catalogs/billing-period/dtos/billing-period.dto';
-export { BillingPeriodDto } from './catalogs/billing-period/dtos/read-billing-period.dto';
+export {
+  BillingPeriodDto,
+  BillingIdentifierDto,
+} from './catalogs/billing-period/dtos/read-billing-period.dto';
 export { BillingPeriodRepository } from './catalogs/billing-period/repository/billing-period.repository';
 export { AdmonController } from './controllers/admon.controller';
 export { CatalogController } from './controllers/catalog.controller';
@@ -23,7 +26,9 @@ export {
   IReadable,
 } from './catalogs/catalog.interface';
 export {} from './catalogs/states/dtos';
+export { SubscriptionRepository } from './subscriptions/repository/subscription.repository';
 export {
   Subscription,
   SubscriptionDetail,
 } from './subscriptions/entities/subscription.entities';
+export { Detail } from './subscriptions/utils/suscriptionDetail';

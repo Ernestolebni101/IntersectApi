@@ -62,7 +62,7 @@ export class GroupContext {
             payload,
             plainToInstance(Group, foundDoc.data()),
           );
-          record['groupData'] = 'is private';
+          record['groupData'] = 'is private o certified';
           record['operationType'] = foundDoc.data()['isCertified']
             ? groupEnum.premium
             : groupEnum.request;

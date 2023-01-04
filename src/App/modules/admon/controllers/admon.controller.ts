@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Request as Req,
   Response as Res,
@@ -43,6 +44,11 @@ export class AdmonController {
     const response = (await this.userService.userSearch(search)).filter(
       (user) => user.uid != req.user['id'],
     );
+    return success(req, res, response, 200);
+  }
+  @Get('user-subscription')
+  public async userSubscriptions(@Req() req: Request, @Res() res: Response) {
+    const response = await this.suscriptionService.getUserSubscriptions();
     return success(req, res, response, 200);
   }
 }

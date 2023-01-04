@@ -4,10 +4,11 @@ import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription
 @Injectable()
 export class SubscriptionPipe implements PipeTransform {
   transform(value: createSubscriptionDto, metadata: ArgumentMetadata) {
-    value.suscriptionId = this.setId(value.userId);
+    value.subscriptionId = this.setId(value.userId);
     value.createdDate = new Date().getTime();
     value.detailReferences = value.subscriptionDetail.map((detail) => {
       detail.amount = 200;
+      detail.subscriptionId = value.subscriptionId;
       return (detail.subscriptionDetailId = uuid());
     });
     return value;

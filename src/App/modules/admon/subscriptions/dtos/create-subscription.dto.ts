@@ -1,7 +1,7 @@
 import { subscriptionState } from '../subscription.enum';
 export class createSubscriptionDto {
   constructor(
-    public suscriptionId: string, //automatico
+    public subscriptionId: string, //automatico
     public userId: string, // entrada
     public createdDate: number, // automaticamente
     public createdBy: string, // automaticamente
@@ -13,6 +13,7 @@ export class createSubscriptionDto {
 
 export class createSubscriptionDetailDto {
   constructor(
+    public subscriptionId: string,
     public subscriptionDetailId: string,
     public groupId: string,
     public paymentMethodId: string,

@@ -4,10 +4,13 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from 'src/App/Database';
 import { UpdateGroupDto } from '../../groups/dto/update-group.dto';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
-import { BillingIdentifierDto } from '../catalogs/billing-period/dtos/read-billing-period.dto';
-import { BillingPeriodRepository } from '../catalogs/billing-period/repository/billing-period.repository';
-import { createSubscriptionDto } from './dtos/create-subscription.dto';
-import { SubscriptionRepository } from './repository/subscription.repository';
+import {
+  SubscriptionRepository,
+  Subscription,
+  createSubscriptionDto,
+  BillingIdentifierDto,
+  BillingPeriodRepository,
+} from '../index';
 
 @Injectable()
 export class SubscriptionService {
@@ -45,4 +48,6 @@ export class SubscriptionService {
     this.unitOfWork.commitChanges();
     return suscriptionResult;
   }
+  public getUserSubscriptions = async (): Promise<Subscription[]> =>
+    await this.suscriptionRepo.getAllSuscriptions();
 }
