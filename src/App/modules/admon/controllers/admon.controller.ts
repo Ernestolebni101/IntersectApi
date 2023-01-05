@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Request as Req,
   Response as Res,
@@ -46,9 +47,13 @@ export class AdmonController {
     );
     return success(req, res, response, 200);
   }
-  @Get('user-subscription')
-  public async userSubscriptions(@Req() req: Request, @Res() res: Response) {
-    const response = await this.suscriptionService.getUserSubscriptions();
+  @Get('user-subscription/:filter')
+  public async userSubscriptions(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('filter') filter: string,
+  ) {
+    const response = await this.suscriptionService.getUserSubscriptions(filter);
     return success(req, res, response, 200);
   }
 }

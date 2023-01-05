@@ -11,7 +11,7 @@ import {
   DocumentReference,
 } from '../../../../Database/index';
 import { Inject, Injectable } from '@nestjs/common';
-import { instanceToPlain } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
 
 export interface ISubscription {
@@ -20,16 +20,16 @@ export interface ISubscription {
     period: Record<string, any>,
   ): Promise<createSubscriptionDto>;
   getAllSuscriptions(): Promise<Subscription[]>;
-  getSubscription(filter: string): Promise<Array<SubscriptionDetail>>;
+  getSubscriptions(filter: string): Promise<Subscription[]>;
 }
 @Injectable()
 export class SubscriptionRepository implements ISubscription {
   private readonly suscriptionCol: FirestoreCollection;
-  private readonly sucriptionDetailCol: FirestoreCollection;
+  private readonly subscriptionDetailCol: FirestoreCollection;
   private readonly groupCol: FirestoreCollection;
   constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
-    this.sucriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
+    this.subscriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
     this.groupCol = this.fireDb.collection('interGroups');
   }
   public newSuscription = async (
@@ -44,7 +44,7 @@ export class SubscriptionRepository implements ISubscription {
         const groupRefs: DocumentReference[] = [];
         tran.set(suscriptionRef, instanceToPlain(head));
         subscriptionDetail.forEach(async (detail, idx, arr) => {
-          const suscriptionRef = this.sucriptionDetailCol.doc(
+          const suscriptionRef = this.subscriptionDetailCol.doc(
             detail.subscriptionDetailId,
           );
           groupRefs.push(this.groupCol.doc(detail.groupId));
@@ -92,7 +92,7 @@ export class SubscriptionRepository implements ISubscription {
         ...sub.data(),
         details: await Promise.all(
           (
-            await this.sucriptionDetailCol
+            await this.subscriptionDetailCol
               .where('subscriptionId', '==', sub.data().subscriptionId)
               .get()
           ).docs,
@@ -101,9 +101,21 @@ export class SubscriptionRepository implements ISubscription {
     );
     return Subscription.getSuscriptionsFromSnapshots(snapshots);
   }
-  public async getSubscription(
-    filter: string,
-  ): Promise<Array<SubscriptionDetail>> {
-    throw new Error('Method not implemented.');
+  public async getSubscriptions(filter: string): Promise<Subscription[]> {
+    const docs = (await this.suscriptionCol.where('userId', '==', filter).get())
+      .docs;
+    const snapshots = await Promise.all(
+      docs.map(async (sub) => ({
+        ...sub.data(),
+        details: await Promise.all(
+          (
+            await this.subscriptionDetailCol
+              .where('subscriptionId', '==', sub.data().subscriptionId)
+              .get()
+          ).docs,
+        ),
+      })),
+    );
+    return Subscription.getSuscriptionsFromSnapshots(snapshots);
   }
 }

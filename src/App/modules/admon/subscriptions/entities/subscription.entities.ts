@@ -1,12 +1,12 @@
 import { Documents, DocumentData } from '../../../../Database/index';
-import { subscriptionState } from '../subscription.enum';
+// import { subscriptionState } from '../subscription.enum';
 
 export class Subscription {
-  private subscriptionId: string;
-  private userId: string;
-  private createdDate: string;
-  private createdBy: string;
-  private subscriptionDetail: Array<SubscriptionDetail>;
+  public subscriptionId: string;
+  public userId: string;
+  public createdDate: string;
+  public createdBy: string;
+  public subscriptionDetail: Array<SubscriptionDetail>;
   constructor(plainObject: Record<string, unknown>) {
     this.subscriptionId = plainObject['subscriptionId'] as string;
     this.userId = plainObject['userId'] as string;
@@ -22,15 +22,14 @@ export class Subscription {
 }
 
 export class SubscriptionDetail {
-  private subscriptionId: string;
-  private subscriptioDetailId: string;
-  private groupId: string;
-  private paymentMethodId: string;
-  private voucherUrl: string;
-  private description: string;
-  private amount: number;
-  private beginDate: Date;
-  private endDate: Date;
+  public subscriptionId: string;
+  public subscriptioDetailId: string;
+  public groupId: string;
+  public paymentMethodId: string;
+  public voucherUrl: string;
+  public description: string;
+  public amount: number;
+  public billingPeriodId: string
   // TODO private subscriptionState: subscriptionState;
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
@@ -40,8 +39,7 @@ export class SubscriptionDetail {
     this.voucherUrl = plainObject['voucherUrl'];
     this.description = plainObject['description'];
     this.amount = plainObject['amount'];
-    this.beginDate = plainObject['beginDate'];
-    this.endDate = plainObject['endDate'];
+    this.billingPeriodId = plainObject['billingPeriodId'];
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,
