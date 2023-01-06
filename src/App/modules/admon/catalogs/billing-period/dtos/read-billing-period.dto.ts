@@ -3,19 +3,16 @@ import { Documents } from '../../../../../Database/index';
 import { Exclude, plainToInstance } from 'class-transformer';
 import { Time } from '../../../../../../Utility/utility-time-zone';
 export class BillingPeriodDto implements IReadable {
-  constructor(
-    public periodId: string,
-    public periodName: string,
-    public startDate: number,
-    public endDate: number,
-    public isActive: boolean,
-    public duration: Record<string, string>,
-  ) {
-    duration = this.FormatedDates();
-  }
-  public FormatedDates = (): Record<string, string> => ({
+  public periodId: string;
+  public periodName: string;
+  public startDate: number;
+  public endDate: number;
+  public isActive: boolean;
+  public duration: Record<string, string>;
+  public FormatedDates = (): Record<string, unknown> => ({
     startDate: Time.getCustomDate(new Date(this.startDate), 'long'),
     endDate: Time.getCustomDate(new Date(this.endDate), 'long'),
+    restDays: Time.daysBetween({ endDate: new Date(this.endDate) }).toString(),
   });
   public static getFromSnapshot = (docs: Documents): BillingPeriodDto[] =>
     docs.map((doc) => plainToInstance(BillingPeriodDto, doc.data()));

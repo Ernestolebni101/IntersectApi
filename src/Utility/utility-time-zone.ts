@@ -9,7 +9,16 @@ export class Time {
     const strTime = hours + ':' + shortMin + ' ' + ampm;
     return strTime;
   }
-
+  public static daysBetween({
+    startDate = new Date(),
+    endDate = new Date(),
+  }): number {
+    const millisecondsPerDay = 86400000;
+    const startTimestamp = startDate.getTime();
+    const endTimestamp = endDate.getTime();
+    const difference = endTimestamp - startTimestamp;
+    return Math.floor(difference / millisecondsPerDay);
+  }
   public static getNextMonth(): Date {
     const now = new Date();
     const current = new Date(now.getFullYear(), now.getMonth() + 1, 3);

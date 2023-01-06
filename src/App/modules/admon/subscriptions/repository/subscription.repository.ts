@@ -19,8 +19,8 @@ export interface ISubscription {
     payload: createSubscriptionDto,
     period: Record<string, any>,
   ): Promise<createSubscriptionDto>;
-  getAllSuscriptions(): Promise<Subscription[]>;
-  getSubscriptions(filter: string): Promise<Subscription[]>;
+  getAllSuscriptions?(): Promise<Subscription[]>;
+  getSubscriptions?(filter: string): Promise<Subscription[]>;
 }
 @Injectable()
 export class SubscriptionRepository implements ISubscription {
@@ -85,7 +85,7 @@ export class SubscriptionRepository implements ISubscription {
     });
   }
 
-  public async getAllSuscriptions(): Promise<Subscription[]> {
+  public async getAllSuscriptions?(): Promise<Subscription[]> {
     const docs = (await this.suscriptionCol.get()).docs;
     const snapshots = await Promise.all(
       docs.map(async (sub) => ({
@@ -101,9 +101,11 @@ export class SubscriptionRepository implements ISubscription {
     );
     return Subscription.getSuscriptionsFromSnapshots(snapshots);
   }
-  public async getSubscriptions(filter: string): Promise<Subscription[]> {
+  //TODO: rules for firebase transactions, subscriptions, groups to avoid duplicate data
+  public async getSubscriptions?(filter: string): Promise<Subscription[]> {
     const docs = (await this.suscriptionCol.where('userId', '==', filter).get())
       .docs;
+    if (docs == null || docs == undefined) return null;
     const snapshots = await Promise.all(
       docs.map(async (sub) => ({
         ...sub.data(),

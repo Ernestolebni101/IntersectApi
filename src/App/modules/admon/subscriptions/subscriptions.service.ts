@@ -53,10 +53,11 @@ export class SubscriptionService {
     return suscriptionResult;
   }
   //TODO: MEJORAR EL CODIGO; El periodo de la suscripcion va en la cabecera y los estados de la suscripcion van en el detalle
-  public getUserSubscriptions = async (
+  public getUserSubscriptions? = async (
     filter: string,
   ): Promise<Record<string, unknown>[]> => {
     const subscription = await this.suscriptionRepo.getSubscriptions(filter);
+    if (subscription == null || subscription == undefined) return null;
     const [groups, users] = await Promise.all([
       await Descriptor.Distinct(
         subscription.flatMap((sub) => sub.subscriptionDetail),
@@ -70,7 +71,7 @@ export class SubscriptionService {
         subscriptionId: subHead.subscriptionId,
         transactionDetail: await Promise.all(
           subHead.subscriptionDetail.map(async (sub) => {
-            const { groupName } = groups[sub.groupId];
+            const { groupName, groupProfile } = groups[sub.groupId];
             const { firstName, lastName, nickName } = users;
             const period = await this.periodRepo.getByParam(
               plainToInstance(
@@ -80,13 +81,14 @@ export class SubscriptionService {
               ),
             );
             return {
+              ...subHead,
               ...sub,
-              beginDate: period[0].startDate,
-              endDate: period[0].endDate,
-              ownerInfo: {
+              decoratedDate: period.FormatedDates(),
+              groupInfo: {
                 name: `${firstName} ${lastName}`,
                 nickName: nickName,
                 group: groupName,
+                groupProfile: groupProfile,
               },
             };
           }),
@@ -95,4 +97,22 @@ export class SubscriptionService {
     );
     return usersWithSuscriptions;
   };
+
+  public async getGroupSubscriptions(
+    groupId: string,
+  ): Promise<Record<string, unknown>> {
+    const group = await this.Igroup.getById(groupId);
+    const subscriptions = (
+      await Promise.all(
+        group.users.map(async (u) => {
+          if (u != group.author) {
+            return await this.getUserSubscriptions(u);
+          }
+        }),
+      )
+    ).reduce((_acc, _iter) => {
+      return { ..._acc, ..._iter };
+    }, {});
+    return Promise.resolve({});
+  }
 }
