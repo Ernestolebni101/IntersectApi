@@ -34,12 +34,12 @@ export class BillingPeriodRepository
   }
   public async getByParam<TSet extends ICatalog>(
     payload: TSet,
-  ): Promise<BillingPeriodDto[]> {
+  ): Promise<BillingPeriodDto> {
     const param = payload.reflectData() as BillingIdentifierDto;
-    const docs = (
+    const doc = (
       await this.catalogCol.where('isActive', '==', param.isActive).get()
-    ).docs;
-    return BillingPeriodDto.getFromSnapshot(docs);
+    ).docs[0];
+    return plainToInstance(BillingPeriodDto, doc.data());
   }
   public async getAll(): Promise<BillingPeriodDto[]> {
     const foundDocs = (await this.catalogCol.get()).docs;

@@ -52,8 +52,8 @@ export class SubscriptionRepository implements ISubscription {
             new Detail(
               detail.subscriptionDetailId,
               200,
-              period['startDate'] as string,
-              period['endDate'] as string,
+              period['startDate'] as number,
+              period['endDate'] as number,
               period['periodId'] as string,
               period['periodName'] as string,
             ),

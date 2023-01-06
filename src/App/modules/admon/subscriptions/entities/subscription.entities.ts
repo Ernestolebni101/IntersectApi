@@ -29,7 +29,7 @@ export class SubscriptionDetail {
   public voucherUrl: string;
   public description: string;
   public amount: number;
-  public billingPeriodId: string
+  public billingPeriodId: string;
   // TODO private subscriptionState: subscriptionState;
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
