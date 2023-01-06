@@ -10,7 +10,10 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization;
-    if (!token || token == '') this.accessDenied(req, res);
+    if (token == undefined || token == '') {
+      this.accessDenied(req, res);
+      return;
+    }
     try {
       const decode = await this.app
         .auth()

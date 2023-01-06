@@ -35,7 +35,7 @@ export class SubscriptionService {
     );
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
-      instanceToPlain(periods[0]),
+      instanceToPlain(periods),
     );
     suscriptionResult.subscriptionDetail.forEach(async (detail) => {
       await this.Igroup.updateGroup(
@@ -73,7 +73,11 @@ export class SubscriptionService {
             const { groupName } = groups[sub.groupId];
             const { firstName, lastName, nickName } = users;
             const period = await this.periodRepo.getByParam(
-              plainToInstance(BillingIdentifierDto, { isActive: true }),
+              plainToInstance(
+                BillingIdentifierDto,
+                { isActive: true },
+                { ignoreDecorators: true },
+              ),
             );
             return {
               ...sub,
