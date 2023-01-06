@@ -3,12 +3,10 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from 'src/App/Database';
 import { UpdateGroupDto } from '../../groups/dto/update-group.dto';
-import { Group } from '../../groups/entities/group.entity';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { IUserRepository } from '../../users/repository/user.repository';
 import {
   SubscriptionRepository,
-  Subscription,
   createSubscriptionDto,
   BillingIdentifierDto,
   BillingPeriodRepository,
