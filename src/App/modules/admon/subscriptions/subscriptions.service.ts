@@ -10,9 +10,12 @@ import {
   createSubscriptionDto,
   BillingIdentifierDto,
   BillingPeriodRepository,
-  SubscriptionDto,
+  ICatalog,
 } from '../index';
 import { Descriptor } from './utils/descriptor.utils';
+import { Group } from '../../groups/entities/group.entity';
+import { GroupSubscriptors } from './helpers/groupSubscriptors.helper';
+import { UserSubscriptions } from './helpers/userSubscriptions.helper';
 
 @Injectable()
 export class SubscriptionService {
@@ -53,66 +56,50 @@ export class SubscriptionService {
     return suscriptionResult;
   }
   //TODO: MEJORAR EL CODIGO; El periodo de la suscripcion va en la cabecera y los estados de la suscripcion van en el detalle
-  public getUserSubscriptions? = async (
-    filter: string,
-  ): Promise<Record<string, unknown>[]> => {
-    const subscription = await this.suscriptionRepo.getSubscriptions(filter);
-    if (subscription == null || subscription == undefined) return null;
-    const [groups, users] = await Promise.all([
-      await Descriptor.Distinct(
-        subscription.flatMap((sub) => sub.subscriptionDetail),
-        'groupId',
-        this.Igroup.getById,
-      ),
-      await this.Iuser.getUserbyId(subscription[0].userId),
-    ]);
-    const usersWithSuscriptions = await Promise.all(
-      subscription.map(async (subHead) => ({
-        subscriptionId: subHead.subscriptionId,
-        transactionDetail: await Promise.all(
-          subHead.subscriptionDetail.map(async (sub) => {
-            const { groupName, groupProfile } = groups[sub.groupId];
-            const { firstName, lastName, nickName } = users;
-            const period = await this.periodRepo.getByParam(
-              plainToInstance(
-                BillingIdentifierDto,
-                { isActive: true },
-                { ignoreDecorators: true },
-              ),
-            );
-            return {
-              ...subHead,
-              ...sub,
-              decoratedDate: period.FormatedDates(),
-              groupInfo: {
-                name: `${firstName} ${lastName}`,
-                nickName: nickName,
-                group: groupName,
-                groupProfile: groupProfile,
-              },
-            };
-          }),
-        ),
-      })),
-    );
-    return usersWithSuscriptions;
-  };
 
+  public getUserSubscriptions? = async (
+    filter = '',
+    group: Group = null,
+  ): Promise<Record<string, unknown>[]> => {
+    const subscriptions = await this.suscriptionRepo.getSubscriptions(filter);
+    if (subscriptions == null || subscriptions == undefined) return null;
+    const subscriptor = await this.Iuser.getUserbyId(subscriptions[0].userId);
+    if (group != null) {
+      const groupSubscriptors = new GroupSubscriptors(
+        subscriptions,
+        (payload: ICatalog) => this.periodRepo.getByParam(payload),
+        subscriptor,
+        { [group.id]: group },
+      );
+      return groupSubscriptors.getSubscriptors();
+    }
+    const groups = (await Descriptor.Distinct(
+      subscriptions.flatMap((sub) => sub.subscriptionDetail),
+      'groupId',
+      this.Igroup.getById,
+    )) as Record<string, Group>;
+    const userSubscriptions = new UserSubscriptions(
+      subscriptions,
+      (payload: ICatalog) => this.periodRepo.getByParam(payload),
+      subscriptor,
+      groups,
+    );
+    return userSubscriptions.getSubscriptions();
+  };
+  // **get Active subscriptors from a group
   public async getGroupSubscriptions(
     groupId: string,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, unknown>[]> {
     const group = await this.Igroup.getById(groupId);
     const subscriptions = (
       await Promise.all(
         group.users.map(async (u) => {
           if (u != group.author) {
-            return await this.getUserSubscriptions(u);
+            return await this.getUserSubscriptions(u, group);
           }
         }),
       )
-    ).reduce((_acc, _iter) => {
-      return { ..._acc, ..._iter };
-    }, {});
-    return Promise.resolve({});
+    ).flat();
+    return subscriptions;
   }
 }

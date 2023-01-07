@@ -56,4 +56,15 @@ export class AdmonController {
     const response = await this.suscriptionService.getUserSubscriptions(filter);
     return success(req, res, response, 200);
   }
+  @Get('group-subscriptors/:groupId')
+  public async groupSubscriptors(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('groupId') groupId: string,
+  ) {
+    const response = await this.suscriptionService.getGroupSubscriptions(
+      groupId,
+    );
+    return success(req, res, response, 200);
+  }
 }

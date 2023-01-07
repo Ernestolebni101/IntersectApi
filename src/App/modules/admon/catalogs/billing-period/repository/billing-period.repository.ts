@@ -13,7 +13,7 @@ import {
 } from '../dtos/read-billing-period.dto';
 import { createBillingPeriodDto } from '../dtos/billing-period.dto';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable({ scope: Scope.TRANSIENT })
 export class BillingPeriodRepository
   implements ICatalogRepository<BillingPeriodDto>
 {
