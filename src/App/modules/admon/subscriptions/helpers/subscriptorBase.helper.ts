@@ -1,6 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { Group } from 'src/App/modules/groups/entities/group.entity';
 import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
+import { Time } from 'src/Utility/utility-time-zone';
 import {
   BillingIdentifierDto,
   BillingPeriodDto,
@@ -28,7 +29,7 @@ export class SubscriptorBase {
         );
         return {
           subscriptionId: subHead.subscriptionId,
-          joinDate: subHead.createdDate,
+          joinDate: Time.getCustomDate(new Date(subHead.createdDate), 'long'),
           transactionDetail,
         };
       }),
