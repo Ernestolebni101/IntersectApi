@@ -21,6 +21,9 @@ export interface ISubscription {
   ): Promise<createSubscriptionDto>;
   getAllSuscriptions?(): Promise<Subscription[]>;
   getSubscriptions?(filter: string): Promise<Subscription[]>;
+  getSubscriptionsDetail?(
+    billingPeriodId: string,
+  ): Promise<SubscriptionDetail[]>;
 }
 @Injectable()
 export class SubscriptionRepository implements ISubscription {
@@ -31,6 +34,16 @@ export class SubscriptionRepository implements ISubscription {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
     this.subscriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
     this.groupCol = this.fireDb.collection('interGroups');
+  }
+  public async getSubscriptionsDetail(
+    billingPeriodId: string,
+  ): Promise<SubscriptionDetail[]> {
+    const subscriptions = await this.subscriptionDetailCol
+      .where('billingPeriodId', '==', billingPeriodId)
+      .get();
+    return (
+      SubscriptionDetail.getDetailFromSnapshots(subscriptions.docs) ?? null
+    );
   }
   public newSuscription = async (
     payload: createSubscriptionDto,
@@ -93,7 +106,7 @@ export class SubscriptionRepository implements ISubscription {
         details: await Promise.all(
           (
             await this.subscriptionDetailCol
-              .where('subscriptionId', '==', sub.data().subscriptionId)
+              .where('subscriptionId', '==', sub.data().subscriptionI)
               .get()
           ).docs,
         ),

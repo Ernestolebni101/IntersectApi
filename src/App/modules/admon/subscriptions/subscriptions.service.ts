@@ -16,6 +16,8 @@ import { Descriptor } from './utils/descriptor.utils';
 import { Group } from '../../groups/entities/group.entity';
 import { GroupSubscriptors } from './helpers/groupSubscriptors.helper';
 import { UserSubscriptions } from './helpers/userSubscriptions.helper';
+import { Cron } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule/dist';
 
 @Injectable()
 export class SubscriptionService {
@@ -30,6 +32,7 @@ export class SubscriptionService {
     this.Igroup = this.unitOfWork.Repositories.groupsRepository;
     this.Iuser = this.unitOfWork.Repositories.userRepository;
   }
+  //#region
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
@@ -55,19 +58,19 @@ export class SubscriptionService {
     this.unitOfWork.commitChanges();
     return suscriptionResult;
   }
+  //#endregion
   // Get subscriptions and nested details o subscriptions by uid
-  public getUserSubscriptions? = async (
+  public getSubscriptionsInfo? = async (
     filter = '',
     group: Group = null,
   ): Promise<Record<string, unknown>[]> => {
     const subscriptions = await this.suscriptionRepo.getSubscriptions(filter);
     if (subscriptions == null) return null;
-    const subscriptor = await this.Iuser.getUserbyId(subscriptions[0].userId);
     if (group != null) {
       const groupSubscriptors = new GroupSubscriptors(
         subscriptions,
         (payload: ICatalog) => this.periodRepo.getByParam(payload),
-        subscriptor,
+        (id: string) => this.Iuser.getUserbyId(id),
         { [group.id]: group },
       );
       return groupSubscriptors.getSubscriptors();
@@ -80,7 +83,7 @@ export class SubscriptionService {
     const userSubscriptions = new UserSubscriptions(
       subscriptions,
       (payload: ICatalog) => this.periodRepo.getByParam(payload),
-      subscriptor,
+      (id: string) => this.Igroup.(id),
       groups,
     );
     return userSubscriptions.getSubscriptions();
@@ -94,11 +97,38 @@ export class SubscriptionService {
       await Promise.all(
         group.users.map(async (u) => {
           if (u != group.author) {
-            return await this.getUserSubscriptions(u, group);
+            return await this.getSubscriptionsInfo(u, group);
           }
         }),
       )
     ).flat();
     return subscriptions;
   }
+  //#region Cron Jobs
+  //** deactivate subscriptions */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+    name: 'deactivateSubscription',
+    timeZone: 'America/Managua',
+  })
+  public async Scheduler() {
+    const period = await this.periodRepo.getByParam(
+      plainToInstance(BillingIdentifierDto, { isActive: true }),
+    );
+    const restDays = Number(period.FormatedDates()['restDays']);
+    const subscriptions = await this.suscriptionRepo.getSubscriptionsDetail(
+      period.periodId,
+    );
+    switch (restDays) {
+      case 0:
+        console.log('A punto de terminar');
+        break;
+      case -3:
+        console.log('TERMINADA');
+        break;
+      default:
+        console.log(`${restDays} SOBREPASO LA FECHA`);
+        break;
+    }
+  }
+  //#endregion
 }

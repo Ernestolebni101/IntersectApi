@@ -11,12 +11,13 @@ import {
   Subscription,
   SubscriptionDetail,
 } from '../entities/subscription.entities';
-
+//TODO:  SEPARARLO A UNA INTERFAZ
 export class SubscriptorBase {
   constructor(
     private subcriptions: Subscription[],
     private periodCallback: (param: ICatalog) => Promise<BillingPeriodDto>,
-    public user: UserDto,
+    public user: Promise<Record<string, UserDto>>,
+    public isByGroup: boolean = false,
   ) {}
   protected async subscriptionInfo(
     groupArgs: Record<string, Group>,
@@ -26,6 +27,7 @@ export class SubscriptorBase {
         const transactionDetail = await this.getTransactionDetail(
           subHead.subscriptionDetail,
           groupArgs,
+          subHead.userId,
         );
         return {
           subscriptionId: subHead.subscriptionId,
@@ -39,11 +41,14 @@ export class SubscriptorBase {
   private getTransactionDetail(
     detail: SubscriptionDetail[],
     groupArgs: Record<string, Group>,
+    userId: string,
   ): Promise<Record<string, unknown>[]> {
     return Promise.all(
       detail.map(async (sub) => {
-        const { groupName, groupProfile } = groupArgs[sub.groupId];
-        const { firstName, lastName, nickName } = this.user;
+        const { groupName, groupProfile, author } = groupArgs[sub.groupId];
+        const userMap = await this.user;
+        const { firstName, lastName, nickName } =
+          userMap[!this.isByGroup ? author : userId];
         const period = await this.periodCallback(
           plainToInstance(
             BillingIdentifierDto,
@@ -54,7 +59,7 @@ export class SubscriptorBase {
         return {
           ...sub,
           decoratedDate: period.FormatedDates(),
-          groupInfo: {
+          additionalInfo: {
             name: `${firstName} ${lastName}`,
             nickName: nickName,
             group: groupName,

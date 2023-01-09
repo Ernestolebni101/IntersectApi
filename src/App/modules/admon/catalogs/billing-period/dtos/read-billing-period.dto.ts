@@ -12,7 +12,7 @@ export class BillingPeriodDto implements IReadable {
   public FormatedDates = (): Record<string, unknown> => ({
     startDate: Time.getCustomDate(new Date(this.startDate), 'long'),
     endDate: Time.getCustomDate(new Date(this.endDate), 'long'),
-    restDays: Time.daysBetween({ endDate: new Date(this.endDate) }).toString(),
+    restDays: Time.daysBetween({ endDate: new Date(this.endDate) }),
   });
   public static getFromSnapshot = (docs: Documents): BillingPeriodDto[] =>
     docs.map((doc) => plainToInstance(BillingPeriodDto, doc.data()));

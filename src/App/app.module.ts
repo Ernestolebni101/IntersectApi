@@ -1,10 +1,4 @@
-import {
-  Global,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { firebaseProvider } from './Database/database-providers/firebase.provider';
 import { AppService } from './app.service';
@@ -35,9 +29,11 @@ import { MultimediaController } from './modules/messages/controllers/multimedia.
 import { ChatsController } from './modules/chats/chats.controller';
 import { IntegrationController } from './modules/integration/integration.controller';
 import { WaitingListController } from './modules/groups/waiting-list/waiting-list.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 @Global()
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {

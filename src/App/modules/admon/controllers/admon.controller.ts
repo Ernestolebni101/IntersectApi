@@ -53,7 +53,7 @@ export class AdmonController {
     @Res() res: Response,
     @Param('filter') filter: string,
   ) {
-    const response = await this.suscriptionService.getUserSubscriptions(filter);
+    const response = await this.suscriptionService.getSubscriptionsInfo(filter);
     return success(req, res, response, 200);
   }
   @Get('group-subscriptors/:groupId')
