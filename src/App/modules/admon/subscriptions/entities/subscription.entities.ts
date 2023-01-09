@@ -4,13 +4,13 @@ import { Documents, DocumentData } from '../../../../Database/index';
 export class Subscription {
   public subscriptionId: string;
   public userId: string;
-  public createdDate: string;
+  public createdDate: number;
   public createdBy: string;
   public subscriptionDetail: Array<SubscriptionDetail>;
   constructor(plainObject: Record<string, unknown>) {
     this.subscriptionId = plainObject['subscriptionId'] as string;
     this.userId = plainObject['userId'] as string;
-    this.createdDate = plainObject['createdDate'] as string;
+    this.createdDate = plainObject['createdDate'] as number;
     this.createdBy = plainObject['createdBy'] as string;
     this.subscriptionDetail = SubscriptionDetail.getDetailFromSnapshots(
       plainObject['details'] as Documents,
