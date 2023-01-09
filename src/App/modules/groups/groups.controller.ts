@@ -115,14 +115,3 @@ export class GroupsController {
       .catch((e) => error(req, res, 'Unexpected Error', e));
   }
 }
-
-// return await this.groupsService
-//       .createOne(payload, author)
-//       .then(([data, statusCode]) => {
-//         if (statusCode === 204) {
-//           success(req, res, data, 201);
-//         } else {
-//           success(req, res, data, statusCode);
-//         }
-//       })
-//       .catch((e) => error(req, res, 'Unexpected Error Try again Later', e));

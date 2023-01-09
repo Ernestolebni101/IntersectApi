@@ -131,7 +131,7 @@ export class GroupsRepository
     }
     return transResult;
   }
-
+  //TODO: Reestructurar el metodo de Actualización. El dto tiene campos que no siempre se utilizan
   /**
    * @Author : Ernesto Miranda
    * @ModifiedDate :   2/17/2022
@@ -196,7 +196,6 @@ export class GroupsRepository
     }
     if (foundGroup.users.length === 0) {
       await this.runTransaction(async (tran) => {
-        await eventEmitter.emitAsync('onDeleteCacade', foundGroup.id);
         await tran.delete(foundGroup.id);
       });
     }

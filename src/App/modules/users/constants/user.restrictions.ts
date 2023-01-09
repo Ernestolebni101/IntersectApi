@@ -9,8 +9,8 @@ export const userCtrlresponse = {
   userExist: 'Este nombre de usuario no está disponible',
 };
 
-export const getKey = (value: userResponse): string => {
-  const index = Object.values(userResponse).indexOf(value);
-  const Key = Object.keys(userResponse)[index];
-  return Key;
-};
+// export const getKey = (value: userResponse): string => {
+//   const index = Object.values(userResponse).indexOf(value);
+//   const Key = Object.keys(userResponse)[index];
+//   return Key;
+// };

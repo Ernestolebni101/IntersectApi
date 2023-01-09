@@ -1,3 +1,4 @@
+import * as Exp from 'express';
 import {
   Controller,
   Get,
@@ -11,17 +12,18 @@ import {
   UploadedFile,
   Put,
   Logger,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserDto } from './dto/read-user.dto';
-import { error, success } from '../../../common/response';
-import * as Exp from 'express';
+  UserDto,
+  UsersService,
+  userCtrlresponse,
+  getKey,
+  CreateUserDto,
+  UpdateUserDto,
+  success,
+  error,
+  userResponse,
+} from './index';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { getKey, userCtrlresponse } from './constants/user.restrictions';
-
 @ApiTags('Módulo de Usuarios')
 @Controller('users/v1')
 export class UsersController {
@@ -43,7 +45,12 @@ export class UsersController {
     try {
       this.logger.log('Create User Request Starting');
       const response = await this.usersService.create(payload);
-      success(req, res, userCtrlresponse[getKey(response)], response);
+      success(
+        req,
+        res,
+        userCtrlresponse[getKey(userResponse, response)],
+        response,
+      );
     } catch (error) {
       this.logger.error('Error de Servidor', error, UsersController.name);
     }

@@ -55,14 +55,13 @@ export class SubscriptionService {
     this.unitOfWork.commitChanges();
     return suscriptionResult;
   }
-  //TODO: MEJORAR EL CODIGO; El periodo de la suscripcion va en la cabecera y los estados de la suscripcion van en el detalle
-
+  // Get subscriptions and nested details o subscriptions by uid
   public getUserSubscriptions? = async (
     filter = '',
     group: Group = null,
   ): Promise<Record<string, unknown>[]> => {
     const subscriptions = await this.suscriptionRepo.getSubscriptions(filter);
-    if (subscriptions == null || subscriptions == undefined) return null;
+    if (subscriptions == null) return null;
     const subscriptor = await this.Iuser.getUserbyId(subscriptions[0].userId);
     if (group != null) {
       const groupSubscriptors = new GroupSubscriptors(

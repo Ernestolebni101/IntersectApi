@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { GroupsController } from './groups.controller';
 import { MulterModule } from '@nestjs/platform-express';
@@ -12,7 +12,6 @@ import { RequestingStrategy } from './providers/providers.strategys/requesting.s
 import { AddingStrategy } from './providers/providers.strategys/adding.strategy';
 import { NotificationService } from '../../shared/notification';
 import { GroupListener } from './handlers/group.handler';
-import { AuthMiddleware } from 'src/App/Middlewares/auth/auth.middleware';
 
 @Module({
   imports: [

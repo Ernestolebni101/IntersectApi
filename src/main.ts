@@ -34,7 +34,6 @@ async function bootstrap() {
 }
 const fManager: Promise<FunctionsManagerService> = bootstrap();
 //#endregion
-
 //#region Firebase Functions
 export const onCreateGroup = functions.firestore
   .document(GPATHID)
