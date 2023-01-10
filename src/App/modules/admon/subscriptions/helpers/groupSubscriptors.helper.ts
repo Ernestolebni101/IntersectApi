@@ -11,16 +11,22 @@ export class GroupSubscriptors extends SubscriptorBase {
     private subscriptions: Subscription[],
     private fn: (param: ICatalog) => Promise<BillingPeriodDto>,
     private fn_userById: (id: string) => Promise<UserDto>,
-    private groupArgs: Record<string, Group>,
+    private groupMap: Record<string, Group>,
   ) {
-    const userInfo = Descriptor.Distinct(
-      subscriptions,
-      'userId',
-      fn_userById,
-    ) as Promise<Record<string, UserDto>>;
-    super(subscriptions, fn, userInfo, true);
+    super(subscriptions, fn, true);
   }
 
-  public getSubscriptors = async (): Promise<Record<string, unknown>[]> =>
-    await super.subscriptionInfo(this.groupArgs);
+  public getSubscriptors = async (): Promise<Record<string, unknown>[]> => {
+    const uids = Object.values(this.groupMap).flatMap((g) =>
+      g.users.filter((uid) => uid != g.author),
+    );
+    const users = await Promise.all(
+      uids.map(async (uid) => await this.fn_userById(uid)),
+    );
+    const userMap = Descriptor.toHashMap(users, 'uid') as Record<
+      string,
+      UserDto
+    >;
+    return await super.subscriptionInfo(this.groupMap, userMap);
+  };
 }

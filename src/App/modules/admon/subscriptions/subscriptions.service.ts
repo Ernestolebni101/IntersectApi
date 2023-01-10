@@ -32,7 +32,7 @@ export class SubscriptionService {
     this.Igroup = this.unitOfWork.Repositories.groupsRepository;
     this.Iuser = this.unitOfWork.Repositories.userRepository;
   }
-  //#region
+  //#region Write Operations
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
@@ -83,8 +83,8 @@ export class SubscriptionService {
     const userSubscriptions = new UserSubscriptions(
       subscriptions,
       (payload: ICatalog) => this.periodRepo.getByParam(payload),
-      (id: string) => this.Igroup.(id),
       groups,
+      (id: string) => this.Iuser.getUserbyId(id),
     );
     return userSubscriptions.getSubscriptions();
   };

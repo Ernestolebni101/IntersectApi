@@ -5,23 +5,26 @@ import { ICatalog } from '../../catalogs/catalog.interface';
 import { Subscription } from '../entities/subscription.entities';
 import { Descriptor } from '../utils/descriptor.utils';
 import { SubscriptorBase } from './subscriptorBase.helper';
+//** Aca solo se manda la informacion de subscripcion por cada grupo, por lo que es necesario la informacion de los owners
 export class UserSubscriptions extends SubscriptorBase {
   constructor(
     private subscriptions: Subscription[],
-    private fn: (param: ICatalog) => Promise<BillingPeriodDto>,
-    private fn_group: (id: string) => Promise<Group>,
+    private fn: (param: ICatalog) => Promise<BillingPeriodDto>, // necesario
+    private groupMap: Record<string, Group>, // necesario -> filtro de todos los usuarios por grupo
     private fn_user: (id: string) => Promise<UserDto>,
-    private group: Record<string, Group>,
   ) {
-    const groups = Descriptor.Distinct(
-      subscriptions.map((sub) => sub.subscriptionDetail).flat(),
-      'groupId',
-      fn_group,
-    ) as Promise<Record<string, UserDto>>;
-    const userInfo = {} as Promise<Record<string, UserDto>>;
-    super(subscriptions, fn, userInfo, false);
+    super(subscriptions, fn, false);
   }
 
-  public getSubscriptions = async (): Promise<Record<string, unknown>[]> =>
-    await super.subscriptionInfo(this.group);
+  public getSubscriptions = async (): Promise<Record<string, unknown>[]> => {
+    const users = await Promise.all(
+      Object.values(this.groupMap).map(
+        async (g) => await this.fn_user(g.author),
+      ),
+    );
+    return await super.subscriptionInfo(
+      this.groupMap,
+      Descriptor.toHashMap(users, 'uid'),
+    );
+  };
 }

@@ -16,17 +16,18 @@ export class SubscriptorBase {
   constructor(
     private subcriptions: Subscription[],
     private periodCallback: (param: ICatalog) => Promise<BillingPeriodDto>,
-    public user: Promise<Record<string, UserDto>>,
     public isByGroup: boolean = false,
   ) {}
   protected async subscriptionInfo(
     groupArgs: Record<string, Group>,
+    userArgs: Record<string, UserDto>,
   ): Promise<Record<string, unknown>[]> {
     const userWithSubscription = await Promise.all(
       this.subcriptions.map(async (subHead) => {
         const transactionDetail = await this.getTransactionDetail(
           subHead.subscriptionDetail,
           groupArgs,
+          userArgs,
           subHead.userId,
         );
         return {
@@ -40,13 +41,13 @@ export class SubscriptorBase {
   }
   private getTransactionDetail(
     detail: SubscriptionDetail[],
-    groupArgs: Record<string, Group>,
+    groupMap: Record<string, Group>,
+    userMap: Record<string, UserDto>,
     userId: string,
   ): Promise<Record<string, unknown>[]> {
     return Promise.all(
       detail.map(async (sub) => {
-        const { groupName, groupProfile, author } = groupArgs[sub.groupId];
-        const userMap = await this.user;
+        const { groupName, groupProfile, author } = groupMap[sub.groupId];
         const { firstName, lastName, nickName } =
           userMap[!this.isByGroup ? author : userId];
         const period = await this.periodCallback(

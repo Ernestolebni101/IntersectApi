@@ -1,4 +1,3 @@
-
 export class SubscriptionDto {
   public subscriptionId: string;
   public userId: string;

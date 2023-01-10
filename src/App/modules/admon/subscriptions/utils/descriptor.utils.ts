@@ -14,4 +14,13 @@ export class Descriptor {
       return { ..._acc, ..._iter };
     }, {});
   }
+  public static toHashMap<T extends Array<any>, K extends keyof any>(
+    iterable: T,
+    prop: K,
+  ): Record<string, any> {
+    return iterable.reduce((_acc, _iter) => {
+      _acc[_iter[prop]] = _iter;
+      return _acc;
+    }, {} as Record<string, any>);
+  }
 }
