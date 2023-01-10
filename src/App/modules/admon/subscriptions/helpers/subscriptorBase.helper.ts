@@ -3,15 +3,13 @@ import { Group } from 'src/App/modules/groups/entities/group.entity';
 import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
 import { Time } from 'src/Utility/utility-time-zone';
 import {
-  BillingIdentifierDto,
-  BillingPeriodDto,
-} from '../../catalogs/billing-period/dtos/read-billing-period.dto';
-import { ICatalog } from '../../catalogs/catalog.interface';
-import {
   Subscription,
   SubscriptionDetail,
-} from '../entities/subscription.entities';
-//TODO:  SEPARARLO A UNA INTERFAZ
+  ICatalog,
+  BillingPeriodDto,
+  BillingIdentifierDto,
+} from '../../index';
+
 export class SubscriptorBase {
   constructor(
     private subcriptions: Subscription[],
@@ -48,7 +46,7 @@ export class SubscriptorBase {
     return Promise.all(
       detail.map(async (sub) => {
         const { groupName, groupProfile, author } = groupMap[sub.groupId];
-        const { firstName, lastName, nickName } =
+        const { firstName, lastName, nickName, profilePic } =
           userMap[!this.isByGroup ? author : userId];
         const period = await this.periodCallback(
           plainToInstance(
@@ -64,7 +62,7 @@ export class SubscriptorBase {
             name: `${firstName} ${lastName}`,
             nickName: nickName,
             group: groupName,
-            groupProfile: groupProfile,
+            profileUrl: !this.isByGroup ? groupProfile : profilePic,
           },
         };
       }),

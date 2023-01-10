@@ -25,10 +25,18 @@ export {
   ICatalogRepository,
   IReadable,
 } from './catalogs/catalog.interface';
-export {} from './catalogs/states/dtos';
+export {} from './catalogs/states/entities';
 export { SubscriptionRepository } from './subscriptions/repository/subscription.repository';
 export {
   Subscription,
   SubscriptionDetail,
 } from './subscriptions/entities/subscription.entities';
 export { Detail } from './subscriptions/utils/suscriptionDetail';
+export { StateParamDto } from './catalogs/states/dtos/status-param.dto';
+export {
+  createStateDto,
+  status,
+} from './catalogs/states/entities/create-state.entities';
+export { State } from './catalogs/states/entities/read-state.entities';
+export { StateCatalogRepository } from './catalogs/states/repository/state.repository';
+export { updateSubscriptionDetailDto } from './subscriptions/dtos/update-subscription.dto';

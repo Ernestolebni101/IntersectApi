@@ -1,4 +1,4 @@
-import { subscriptionState } from '../subscription.enum';
+import { status } from '../../catalogs/states/entities/create-state.entities';
 export class createSubscriptionDto {
   constructor(
     public subscriptionId: string, //automatico
@@ -19,8 +19,8 @@ export class createSubscriptionDetailDto {
     public paymentMethodId: string,
     public voucherUrl: string,
     public description: string,
-    public suscriptionState: subscriptionState, // por defecto
     public amount: number,
     public billingPeriodId: string,
+    public subscriptionStatus: status,
   ) {}
 }

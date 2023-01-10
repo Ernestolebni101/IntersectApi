@@ -11,6 +11,7 @@ import {
   BillingIdentifierDto,
   BillingPeriodRepository,
   ICatalog,
+  status,
 } from '../index';
 import { Descriptor } from './utils/descriptor.utils';
 import { Group } from '../../groups/entities/group.entity';
@@ -18,6 +19,7 @@ import { GroupSubscriptors } from './helpers/groupSubscriptors.helper';
 import { UserSubscriptions } from './helpers/userSubscriptions.helper';
 import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
+import { scheduler } from './helpers/scheduler-details.helpers';
 
 @Injectable()
 export class SubscriptionService {
@@ -36,12 +38,8 @@ export class SubscriptionService {
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
-    const periods = await this.periodRepo.getByParam(
-      plainToInstance(BillingIdentifierDto, { isActive: true }),
-    );
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
-      instanceToPlain(periods),
     );
     suscriptionResult.subscriptionDetail.forEach(async (detail) => {
       await this.Igroup.updateGroup(
@@ -59,12 +57,17 @@ export class SubscriptionService {
     return suscriptionResult;
   }
   //#endregion
+  //#region  //* Read Operation
   // Get subscriptions and nested details o subscriptions by uid
   public getSubscriptionsInfo? = async (
     filter = '',
+    subStatus = status.ACTIVE,
     group: Group = null,
   ): Promise<Record<string, unknown>[]> => {
-    const subscriptions = await this.suscriptionRepo.getSubscriptions(filter);
+    const subscriptions = await this.suscriptionRepo.getSubscriptions(
+      filter,
+      subStatus,
+    );
     if (subscriptions == null) return null;
     if (group != null) {
       const groupSubscriptors = new GroupSubscriptors(
@@ -91,17 +94,20 @@ export class SubscriptionService {
   // **get Active subscriptors from a group
   public async getGroupSubscriptions(
     groupId: string,
+    status: status.ACTIVE,
   ): Promise<Record<string, unknown>[]> {
     const group = await this.Igroup.getById(groupId);
     const subscriptions = (
       await Promise.all(
         group.users.map(async (u) => {
           if (u != group.author) {
-            return await this.getSubscriptionsInfo(u, group);
+            return await this.getSubscriptionsInfo(u, status, group);
           }
         }),
       )
-    ).flat();
+    )
+      .flat()
+      .filter((sub) => sub != null);
     return subscriptions;
   }
   //#region Cron Jobs
@@ -114,21 +120,20 @@ export class SubscriptionService {
     const period = await this.periodRepo.getByParam(
       plainToInstance(BillingIdentifierDto, { isActive: true }),
     );
-    const restDays = Number(period.FormatedDates()['restDays']);
-    const subscriptions = await this.suscriptionRepo.getSubscriptionsDetail(
-      period.periodId,
-    );
-    switch (restDays) {
-      case 0:
-        console.log('A punto de terminar');
-        break;
-      case -3:
-        console.log('TERMINADA');
-        break;
-      default:
-        console.log(`${restDays} SOBREPASO LA FECHA`);
-        break;
-    }
+    const restDays = period.FormatedDates()['restDays'];
+    const subscriptionDetails =
+      await this.suscriptionRepo.getSubscriptionsDetail(period.periodId);
+    subscriptionDetails.forEach(async (sub) => {
+      try {
+        const setStatus =
+          scheduler[Number(restDays) < -3 ? '-3' : JSON.stringify(restDays)];
+        sub.subscriptionStatus = setStatus;
+        await this.suscriptionRepo.modifySubscriptions(sub);
+      } catch (error) {
+        //TODO: Inadmisible no controlar cualquier excepcion
+        console.error(error);
+      }
+    });
   }
   //#endregion
 }

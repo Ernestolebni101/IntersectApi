@@ -33,6 +33,8 @@ export class MessageListener {
         messageGroupEvent.group.author,
         messageGroupEvent.group.groupProfile,
         messageGroupEvent.group.isPrivate,
+        messageGroupEvent.group.groupName,
+        messageGroupEvent.group.isActive,
       );
       await messageGroupEvent.executeFunction();
       await this.notificationSvc.sendToDevices({

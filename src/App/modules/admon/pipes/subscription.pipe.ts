@@ -1,5 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
+import { status } from '..';
 import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription.dto';
 @Injectable()
 export class SubscriptionPipe implements PipeTransform {
@@ -9,6 +10,7 @@ export class SubscriptionPipe implements PipeTransform {
     value.detailReferences = value.subscriptionDetail.map((detail) => {
       detail.amount = 200;
       detail.subscriptionId = value.subscriptionId;
+      detail.subscriptionStatus = status.ACTIVE;
       return (detail.subscriptionDetailId = uuid());
     });
     return value;

@@ -25,3 +25,39 @@ https://www.youtube.com/watch?v=wdsp7BNmJRc
   //   .build();
   // const document = SwaggerModule.createDocument(app, config);
   // SwaggerModule.setup('docs', app, document);
+//TODO: VERIFICAR ESTE Codigo
+   private createDetail(
+    detail: Detail[],
+    reference: DocumentReference[],
+    tran: FirebaseFirestore.Transaction,
+  ): void {
+    detail.forEach((det, idx) => {
+      tran.set(
+        reference[idx],
+        { billingData: [instanceToPlain(det)] },
+        { merge: true },
+      );
+    });
+  }
+
+
+ if (idx == arr.length - 1)
+            this.createDetail(detailGroups, groupRefs, tran);
+
+
+ detailGroups.push(
+            new Detail(
+              detail.subscriptionDetailId,
+              200,
+              period['startDate'] as number,
+              period['endDate'] as number,
+              period['periodId'] as string,
+              period['periodName'] as string,
+            ),
+          );
+
+
+Video
+Vistas de las subscripciones a punto de terminar
+Generación del Codigo promocional desde backend para concluirse mañana
+Vista de subscripciones desde la app movil

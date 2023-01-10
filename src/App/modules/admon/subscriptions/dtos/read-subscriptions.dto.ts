@@ -1,3 +1,5 @@
+import { status } from '../..';
+
 export class SubscriptionDto {
   public subscriptionId: string;
   public userId: string;
@@ -16,5 +18,5 @@ export class SubscriptionDetailDto {
   public amount: number;
   public beginDate: Date;
   public endDate: Date;
-  //TODO public subscriptionState: subscriptionState;
+  public subscriptionStatus: status;
 }

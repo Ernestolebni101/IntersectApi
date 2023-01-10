@@ -13,7 +13,11 @@ export class GroupSubscriptors extends SubscriptorBase {
     private fn_userById: (id: string) => Promise<UserDto>,
     private groupMap: Record<string, Group>,
   ) {
-    super(subscriptions, fn, true);
+    const groupKey = Object.keys(groupMap)[0];
+    const sub = subscriptions.filter((subHead) =>
+      subHead.subscriptionDetail.find((detail) => detail.groupId == groupKey),
+    );
+    super(sub, fn, true);
   }
 
   public getSubscriptors = async (): Promise<Record<string, unknown>[]> => {

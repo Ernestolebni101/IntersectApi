@@ -57,6 +57,8 @@ export class GroupNotification {
     public author: string,
     public groupProfile: string,
     public isPrivate: boolean,
+    public groupName?: string,
+    public isActive?: boolean,
   ) {}
 }
 

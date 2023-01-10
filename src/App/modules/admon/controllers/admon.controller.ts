@@ -16,6 +16,7 @@ import { UsersService } from '../../users/users.service';
 import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription.dto';
 import { SubscriptionPipe } from '../pipes/subscription.pipe';
 import { SubscriptionService } from '../subscriptions/subscriptions.service';
+import { status } from '..';
 @Controller('admon/v1/')
 export class AdmonController {
   constructor(
@@ -61,9 +62,11 @@ export class AdmonController {
     @Req() req: Request,
     @Res() res: Response,
     @Param('groupId') groupId: string,
+    @Param('status') subStatus = status.ACTIVE,
   ) {
     const response = await this.suscriptionService.getGroupSubscriptions(
       groupId,
+      Number(subStatus),
     );
     return success(req, res, response, 200);
   }

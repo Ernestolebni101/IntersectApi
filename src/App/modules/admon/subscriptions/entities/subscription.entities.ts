@@ -1,6 +1,5 @@
 import { Documents, DocumentData } from '../../../../Database/index';
-// import { subscriptionState } from '../subscription.enum';
-
+import { status } from '../../index';
 export class Subscription {
   public subscriptionId: string;
   public userId: string;
@@ -30,7 +29,8 @@ export class SubscriptionDetail {
   public description: string;
   public amount: number;
   public billingPeriodId: string;
-  // TODO private subscriptionState: subscriptionState;
+  public subscriptionStatus: status;
+
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
     this.subscriptioDetailId = plainObject['subscriptionDetailId'];
