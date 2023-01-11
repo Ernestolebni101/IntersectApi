@@ -6,7 +6,10 @@ import {
   Post,
   Request as Req,
   Response as Res,
+  UploadedFile,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { success } from 'src/common/response';
@@ -17,22 +20,26 @@ import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription
 import { SubscriptionPipe } from '../pipes/subscription.pipe';
 import { SubscriptionService } from '../subscriptions/subscriptions.service';
 import { status } from '..';
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('admon/v1/')
 export class AdmonController {
   constructor(
     private readonly suscriptionService: SubscriptionService,
     private readonly userService: UsersService,
   ) {}
-  @hasRoles(roles.ADMIN, roles.SA)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @hasRoles(roles.ADMIN, roles.SA)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('new-subscription')
+  @UseInterceptors(FileInterceptor('voucherFiles'))
   public async newSubscription(
     @Req() req: Request,
     @Res() res: Response,
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Body(SubscriptionPipe) payload: createSubscriptionDto,
   ) {
+    console.log(files);
     payload.createdBy = req.user['id'];
-    await this.suscriptionService.newSuscription(payload);
+    await this.suscriptionService.newSuscription(payload, files);
     return success(req, res, 'login success', 201);
   }
   @hasRoles(roles.ADMIN, roles.SA)

@@ -1,6 +1,5 @@
 import {
   createSubscriptionDto,
-  updateSubscriptionDetailDto,
   status,
   Subscription,
   SubscriptionDetail,
@@ -9,12 +8,10 @@ import {
   FIRESTORE_DB,
   firestoreDb,
   FirestoreCollection,
-  DocumentReference,
 } from '../../../../Database/index';
 import { Inject, Injectable } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
-
 export interface ISubscription {
   newSuscription(
     payload: createSubscriptionDto,
@@ -30,11 +27,9 @@ export interface ISubscription {
 export class SubscriptionRepository implements ISubscription {
   private readonly suscriptionCol: FirestoreCollection;
   private readonly subscriptionDetailCol: FirestoreCollection;
-  private readonly groupCol: FirestoreCollection;
   constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
     this.subscriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
-    this.groupCol = this.fireDb.collection('interGroups');
   }
   //#region //* Write Operations
   //TODO: Verificar si el acumulativo de suscripciones es valido para el uso requerido
@@ -45,13 +40,11 @@ export class SubscriptionRepository implements ISubscription {
       try {
         const { subscriptionDetail, ...head } = payload;
         const suscriptionRef = this.suscriptionCol.doc(payload.subscriptionId);
-        const groupRefs: DocumentReference[] = [];
         tran.set(suscriptionRef, instanceToPlain(head));
         subscriptionDetail.forEach(async (detail) => {
           const suscriptionRef = this.subscriptionDetailCol.doc(
             detail.subscriptionDetailId,
           );
-          groupRefs.push(this.groupCol.doc(detail.groupId));
           tran.set(suscriptionRef, instanceToPlain(detail));
         });
         return true;
@@ -71,6 +64,7 @@ export class SubscriptionRepository implements ISubscription {
       const writeResult = await this.subscriptionDetailCol
         .doc(subscriptions.subscriptioDetailId)
         .update(instanceToPlain(subscriptions));
+      console.log(writeResult.writeTime);
     } catch (error) {
       console.error(error);
     }
@@ -101,20 +95,24 @@ export class SubscriptionRepository implements ISubscription {
     const docs = (await this.suscriptionCol.where('userId', '==', filter).get())
       .docs;
     if (docs == null || docs == undefined) return null;
-    const snapshots = await Promise.all(
-      docs.map(async (sub) => ({
-        ...sub.data(),
-        details: await Promise.all(
-          (
-            await this.subscriptionDetailCol
-              .where('subscriptionId', '==', sub.data().subscriptionId)
-              .where('subscriptionStatus', '==', status)
-              .get()
-          ).docs,
-        ),
-      })),
-    );
-    return Subscription.getSuscriptionsFromSnapshots(snapshots);
+    const snapshots = (
+      await Promise.all(
+        docs.map(async (sub) => ({
+          ...sub.data(),
+          details: await Promise.all(
+            (
+              await this.subscriptionDetailCol
+                .where('subscriptionId', '==', sub.data().subscriptionId)
+                .where('subscriptionStatus', '==', status)
+                .get()
+            ).docs,
+          ),
+        })),
+      )
+    ).filter((snap) => snap.details.length != 0);
+    return snapshots.length != 0
+      ? Subscription.getSuscriptionsFromSnapshots(snapshots)
+      : null;
   }
   /** //*Get details of a transactions inside the subscriptions */
   public async getSubscriptionsDetail(

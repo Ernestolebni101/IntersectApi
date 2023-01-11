@@ -10,7 +10,6 @@ import {
   Delete,
   UploadedFiles,
   Res,
-  Query,
 } from '@nestjs/common';
 import { MessagesService } from '../services/messages.service';
 import { CreateMessageDto } from '../dto/create-message.dto';

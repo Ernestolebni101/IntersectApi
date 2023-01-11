@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { File } from '../../../../Utility/utility-createFile';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from 'src/App/Database';
 import { UpdateGroupDto } from '../../groups/dto/update-group.dto';
@@ -37,7 +38,12 @@ export class SubscriptionService {
   //#region Write Operations
   public async newSuscription(
     payload: createSubscriptionDto,
+    file: Array<Express.Multer.File>,
   ): Promise<createSubscriptionDto> {
+    const urls = await File.uploadFile(file, await this.unitOfWork.getBucket());
+    payload.subscriptionDetail.forEach(
+      (detail, idx) => (detail.voucherUrl = urls[idx]),
+    );
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
     );
