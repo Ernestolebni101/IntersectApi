@@ -1,6 +1,7 @@
 import { status } from '../../catalogs/states/entities/create-state.entities';
 export class createSubscriptionDto {
   constructor(
+    public voucheFiles: Express.Multer.File[],
     public subscriptionId: string, //automatico
     public userId: string, // entrada
     public createdDate: number, // automaticamente
