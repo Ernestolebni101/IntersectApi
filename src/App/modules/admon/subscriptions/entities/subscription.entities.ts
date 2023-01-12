@@ -1,10 +1,13 @@
 import { Documents, DocumentData } from '../../../../Database/index';
+import { subscriptionType } from '../../catalogs/states/entities/create-state.entities';
 import { status } from '../../index';
+import { Beneficiary } from '../dtos/create-subscription.dto';
 export class Subscription {
   public subscriptionId: string;
   public userId: string;
   public createdDate: number;
   public createdBy: string;
+  public beneficiaryId?: Beneficiary[] = [];
   public subscriptionDetail: Array<SubscriptionDetail>;
   constructor(plainObject: Record<string, unknown>) {
     this.subscriptionId = plainObject['subscriptionId'] as string;
@@ -30,7 +33,8 @@ export class SubscriptionDetail {
   public amount: number;
   public billingPeriodId: string;
   public subscriptionStatus: status;
-
+  public subscriptionType: subscriptionType;
+  public applyBeneficiary: boolean;
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
     this.subscriptioDetailId = plainObject['subscriptionDetailId'];
@@ -40,6 +44,8 @@ export class SubscriptionDetail {
     this.description = plainObject['description'];
     this.amount = plainObject['amount'];
     this.billingPeriodId = plainObject['billingPeriodId'];
+    this.subscriptionType = plainObject['subscriptionType'];
+    this.applyBeneficiary = plainObject['applyBeneficiary'];
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,

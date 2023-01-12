@@ -19,4 +19,5 @@ export class SubscriptionDetailDto {
   public beginDate: Date;
   public endDate: Date;
   public subscriptionStatus: status;
+  public applyBeneficiary: boolean;
 }

@@ -23,6 +23,7 @@ export class Group {
   public groupSettings: Array<Record<string, unknown>> = new Array<
     Record<string, unknown>
   >();
+  public freeUsers?: Array<string> = new Array<string>();
 }
 
 // declare global {

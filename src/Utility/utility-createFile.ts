@@ -1,13 +1,11 @@
 /* eslint-disable prefer-const */
 import { Bucket } from '@google-cloud/storage';
-// import { ImageAnnotatorClient } from '@google-cloud/vision';
-// import * as path from 'path';
-// // import { restrictions } from 'src/common/constants/constants';
-// import * as os from 'os';
+import * as fs from 'fs';
+import { v4 as uuid } from 'uuid';
 
 export class File {
   public static async submitFile(
-    file: Express.Multer.File,
+    file: Express.Multer.File | any,
     bucket: Bucket,
   ): Promise<string> {
     return await new Promise((resolve, reject) => {
@@ -82,29 +80,17 @@ export class File {
       .catch((err) => console.error(`Failed to remove photo, error: ${err}`));
   }
 
-  // public static async validateImageContent(
-  //   file: any,
-  //   fileRoot: string,
-  //   bucket: Bucket,
-  // ) {
-  //   try {
-  //     const visionClient = new ImageAnnotatorClient();
-  //     const tmpDirectory = path.join(os.tmpdir(), file.originalname);
-  //     const normalized = fileRoot.split('/').slice(-1).toString();
-  //     const response = bucket.file(normalized);
-  //     await response.download({
-  //       destination: tmpDirectory,
-  //     });
-  //   } catch (e) {
-  //     console.error(`Error al escanear la imagen: ${e}`);
-  //     throw new Error(e);
-  //   }
-  // }
-  // public static resultValidate(result: any) {
-  //   return (
-  //     result !== restrictions.POSSIBLE &&
-  //     result !== restrictions.LIKELY &&
-  //     result !== restrictions.VERY_LIKELY
-  //   );
-  // }
+  public static base64ToImage(base64String: string): Record<string, any> {
+    let base64Image = base64String.split(';base64,').pop();
+    const path = `./${uuid().split('-')[0]}.png`;
+    fs.writeFileSync(path, base64Image, {
+      encoding: 'base64',
+    });
+    const buffer = fs.readFileSync(path);
+    return {
+      originalname: `${path.replace('/', '').replace('.', '')}`,
+      mimetype: 'image/jpeg',
+      buffer: buffer,
+    };
+  }
 }

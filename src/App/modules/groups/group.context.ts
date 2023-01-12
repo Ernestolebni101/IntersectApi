@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { UnitOfWorkAdapter } from 'src/App/Database';
 import { firebaseClient } from '../../Database/database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT, GPATH } from '../../Database/database.constants';
-import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
+import { UpdateUserDto } from '../users';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from './entities/group.entity';
 import { AddingStrategy } from './providers/providers.strategys/adding.strategy';
@@ -18,10 +19,10 @@ export class GroupContext {
     private readonly managerServices: firebaseClient,
     private readonly requestingStrategy: RequestingStrategy,
     private readonly addingStrategy: AddingStrategy,
-    private readonly adapter: UnitOfWorkAdapter,
+    private readonly unitofwork: UnitOfWorkAdapter,
   ) {
     this.db = this.managerServices.firestore();
-    this.groupRepo = this.adapter.Repositories.groupsRepository;
+    this.groupRepo = this.unitofwork.Repositories.groupsRepository;
   }
   /**
    * Este metodo es desencadenado cuando se escribe en la main(crear grupos), desencadena varios

@@ -10,4 +10,5 @@ export class UpdateUserDto {
   public token: string;
   public onlineStatus: boolean;
   public roleId: string;
+  public joinHistory: string[];
 }

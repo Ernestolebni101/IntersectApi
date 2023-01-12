@@ -1,9 +1,12 @@
-import { status } from '../../catalogs/states/entities/create-state.entities';
+import {
+  status,
+  subscriptionType,
+} from '../../catalogs/states/entities/create-state.entities';
 export class createSubscriptionDto {
   constructor(
-    public voucheFiles: Express.Multer.File[],
     public subscriptionId: string, //automatico
     public userId: string, // entrada
+    public beneficiarys: Beneficiary[],
     public createdDate: number, // automaticamente
     public createdBy: string, // automaticamente
     public modifiedBy: string, // automatico
@@ -23,5 +26,12 @@ export class createSubscriptionDetailDto {
     public amount: number,
     public billingPeriodId: string,
     public subscriptionStatus: status,
+    public subscriptionType: subscriptionType,
+    public rawContent: Record<string, unknown>,
+    public applyBeneficiary: boolean,
   ) {}
+}
+
+export class Beneficiary {
+  constructor(public userId: string, public groupId: string) {}
 }

@@ -21,6 +21,7 @@ import { UserSubscriptions } from './helpers/userSubscriptions.helper';
 import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
+import { subscriptionType } from '../catalogs/states/entities/create-state.entities';
 
 @Injectable()
 export class SubscriptionService {
@@ -38,11 +39,18 @@ export class SubscriptionService {
   //#region Write Operations
   public async newSuscription(
     payload: createSubscriptionDto,
-    file: Array<Express.Multer.File>,
   ): Promise<createSubscriptionDto> {
-    const urls = await File.uploadFile(file, await this.unitOfWork.getBucket());
-    payload.subscriptionDetail.forEach(
-      (detail, idx) => (detail.voucherUrl = urls[idx]),
+    payload.subscriptionDetail = await Promise.all(
+      payload.subscriptionDetail.map(async (detail) => {
+        detail.voucherUrl =
+          detail.subscriptionType == subscriptionType.FREE
+            ? ''
+            : await File.submitFile(
+                detail.rawContent,
+                await this.unitOfWork.getBucket(),
+              );
+        return detail;
+      }),
     );
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,

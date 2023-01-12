@@ -33,11 +33,10 @@ export class AdmonController {
   public async newSubscription(
     @Req() req: Request,
     @Res() res: Response,
-    @UploadedFiles() voucherFiles: Express.Multer.File[],
     @Body(SubscriptionPipe) payload: createSubscriptionDto,
   ) {
     payload.createdBy = req.user['id'];
-    await this.suscriptionService.newSuscription(payload, voucherFiles);
+    await this.suscriptionService.newSuscription(payload);
     return success(req, res, 'login success', 201);
   }
   @hasRoles(roles.ADMIN, roles.SA)

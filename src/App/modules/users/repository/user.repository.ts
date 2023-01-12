@@ -79,7 +79,7 @@ export class UsersRepository
         return Promise.resolve(payload.profilePic);
       }
     } catch (error) {
-      throw new Error(error);
+      return 'No se pudo actualizar correctamente';
     }
   }
   public async helperPatch(payload: UpdateUserDto, bucket: Bucket = null) {
@@ -104,6 +104,7 @@ export class UsersRepository
       foundUser.token = payload.token ?? foundUser.token;
       foundUser.onlineStatus = payload.onlineStatus ?? foundUser.onlineStatus;
       foundUser.roleId = payload.roleId ?? foundUser.roleId;
+      foundUser.joinHistory = payload.joinHistory ?? foundUser.joinHistory;
       await this.update(foundUser);
       this.logger.log(
         '******Update Proceess ended******',

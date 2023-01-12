@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { plainToInstance } from 'class-transformer';
 import {
   NotificationService,
   DataModel,
   GroupNotification,
   FcmModel,
 } from '../../../shared/notification';
+import { UpdateUserDto } from '../../users';
 import { UsersService } from '../../users/users.service';
 import { GroupsService } from '../groups.service';
 
@@ -131,6 +133,13 @@ export class GroupListener {
           mss,
           new DataModel(null, notification),
         ),
+      );
+      await this.userService.update(
+        undefined,
+        plainToInstance(UpdateUserDto, {
+          uid: applicant.uid,
+          joinHistory: [group.id],
+        }),
       );
     } catch (e) {
       console.error(`Error encontrado al desatar el evento onAccess ${e}`);

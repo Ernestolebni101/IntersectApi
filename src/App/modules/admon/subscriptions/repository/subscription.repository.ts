@@ -16,7 +16,10 @@ export interface ISubscription {
   newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto>;
-  modifySubscriptions(subscriptions: SubscriptionDetail): Promise<void>;
+  modifySubscriptions(
+    subscriptions: SubscriptionDetail,
+    callback?: () => Promise<void>,
+  ): Promise<void>;
   getAllSuscriptions?(): Promise<Subscription[]>;
   getSubscriptions?(filter: string, status: status): Promise<Subscription[]>;
   getSubscriptionsDetail?(
@@ -59,6 +62,7 @@ export class SubscriptionRepository implements ISubscription {
   /** //* Modify fields of a subscription */
   public async modifySubscriptions(
     subscriptions: SubscriptionDetail,
+    callback?: () => Promise<void>,
   ): Promise<void> {
     try {
       const writeResult = await this.subscriptionDetailCol

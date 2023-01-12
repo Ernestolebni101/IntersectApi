@@ -12,4 +12,5 @@ export class User {
   public token: string;
   public onlineStatus = false;
   public roleId: string;
+  public joinHistory: string[] = [];
 }

@@ -16,3 +16,8 @@ export enum status {
   TOEXPIRE = 1,
   EXPIRED = 2,
 }
+
+export enum subscriptionType {
+  FREE = 0,
+  PREM = 1,
+}

@@ -21,6 +21,8 @@ export class UserDto {
   public onlineStatus: boolean;
   @ApiProperty()
   public readonly roleId: string;
+  @ApiProperty()
+  public readonly joinHistory: string[];
 }
 
 export class UserPartialDto {

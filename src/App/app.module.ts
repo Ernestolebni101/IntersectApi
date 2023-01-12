@@ -96,16 +96,14 @@ export class AppModule implements NestModule {
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(
-        UsersController,
-        GroupsController,
-        MessagesController,
-        MultimediaController,
-        ChatsController,
-        IntegrationController,
-        WaitingListController,
-      );
+    consumer.apply(AuthMiddleware).forRoutes(
+      UsersController,
+      // GroupsController,
+      MessagesController,
+      MultimediaController,
+      ChatsController,
+      IntegrationController,
+      WaitingListController,
+    );
   }
 }

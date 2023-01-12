@@ -31,21 +31,25 @@ export class GroupsService {
    * @ReadOperations => Segmento de Operaciones de  Lectura
    */
   public findAllAsync = async ({ filter = '' }): Promise<Array<GroupDto>> => {
-    const groups = (await this.groupsRepository.getAllAsync(filter)) ?? null;
-    const foundGroups = await Promise.all(
-      groups.map(async (g) => {
-        const users = await this.usersRepository.getUsersByUids(g.users);
-        const owner = await this.usersRepository.getUserbyId(g.author);
-        return GroupDto.GroupInstance(
-          g,
-          users.map((user: User) =>
-            UserPartialDto.Factory(plainToInstance(UserDto, user)),
-          ),
-          plainToInstance(UserPartialDto, owner),
-        );
-      }),
-    );
-    return foundGroups;
+    try {
+      const groups = (await this.groupsRepository.getAllAsync(filter)) ?? null;
+      const foundGroups = await Promise.all(
+        groups.map(async (g) => {
+          const users = await this.usersRepository.getUsersByUids(g.users);
+          const owner = await this.usersRepository.getUserbyId(g.author);
+          return GroupDto.GroupInstance(
+            g,
+            users.map((user: User) =>
+              UserPartialDto.Factory(plainToInstance(UserDto, user)),
+            ),
+            plainToInstance(UserPartialDto, owner),
+          );
+        }),
+      );
+      return foundGroups;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**
