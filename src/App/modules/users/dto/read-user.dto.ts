@@ -47,3 +47,17 @@ export class UserPartialDto {
     return model;
   }
 }
+export class UserJoined {
+  constructor(
+    public readonly uid: string,
+    public readonly nickName: string,
+    public readonly profilePic: string,
+    public readonly joinType: joinType,
+    public readonly onlineStatus: boolean,
+  ) {}
+}
+
+export enum joinType {
+  FREE = 'Freemium',
+  PRE = 'Premium',
+}

@@ -19,14 +19,12 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GroupContext } from './group.context';
 import { Query } from '@nestjs/common/decorators';
-import { SubscriptionService } from '../admon/subscriptions/subscriptions.service';
 
 @ApiTags('Módulo de Grupos')
 @Controller('groups/v1')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService,
-    private readonly groupContext:GroupContext,
-    private readonly subscriptionService: SubscriptionService) {}
+    private readonly groupContext:GroupContext) {}
   /**
    * ======================= @ReadOperations => Segmento de Operaciones de Lectura
    */
@@ -52,6 +50,21 @@ export class GroupsController {
   ) {
     return await this.groupsService
       .findOneAsync(groupId)
+      .then((data) => {
+        success(req, res, data);
+      })
+      .catch((e) => error(req, res, 'Unexpected Error', e));
+  }
+
+  @Get('/mix-users/:groupId')
+  @ApiOperation({ summary: 'Devuelve un Grupo con los usuarios intersectados' })
+  public async findUserJoined(
+    @Request() req,
+    @Response() res,
+    @Param('groupId') groupId: string,
+  ) {
+    return await this.groupsService
+      .finJoinedUsers(groupId)
       .then((data) => {
         success(req, res, data);
       })
@@ -105,19 +118,6 @@ export class GroupsController {
   @ApiOperation({ summary: 'Actualiza selectivamente las prop del grupo... ' })
   @UseInterceptors(FileInterceptor('file'))
   async update(
-    @Request() req,
-    @Response() res,
-    @UploadedFile() file,
-    @Body() payload: UpdateGroupDto,
-  ) {
-    payload.memberOption = Number(payload.memberOption) ;
-    return this.groupsService
-      .updateGroupData(file, payload)
-      .then((data) => success(req, res, data, 204))
-      .catch((e) => error(req, res, 'Unexpected Error', e));
-  }
-  @Put('/free-join')
-  async freeJoin(
     @Request() req,
     @Response() res,
     @UploadedFile() file,

@@ -10,7 +10,7 @@ import {
   FirestoreCollection,
 } from '../../../../Database/index';
 import { Inject, Injectable } from '@nestjs/common';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
 export interface ISubscription {
   newSuscription(
@@ -23,7 +23,8 @@ export interface ISubscription {
   getAllSuscriptions?(): Promise<Subscription[]>;
   getSubscriptions?(filter: string, status: status): Promise<Subscription[]>;
   getSubscriptionsDetail?(
-    billingPeriodId: string,
+    propertyName: string,
+    Identifier: string,
   ): Promise<SubscriptionDetail[]>;
   getSubscriptionDetail?(id: string): Promise<SubscriptionDetail>;
 }
@@ -37,7 +38,9 @@ export class SubscriptionRepository implements ISubscription {
   }
   public async getSubscriptionDetail?(id: string): Promise<SubscriptionDetail> {
     const subscription = await this.subscriptionDetailCol.doc(id).get();
-    return subscription.exists ? new SubscriptionDetail(subscription) : null;
+    return subscription.exists
+      ? new SubscriptionDetail(subscription.data())
+      : null;
   }
   //#region //* Write Operations
   //TODO: Verificar si el acumulativo de suscripciones es valido para el uso requerido
@@ -125,10 +128,11 @@ export class SubscriptionRepository implements ISubscription {
   }
   /** //*Get details of a transactions inside the subscriptions */
   public async getSubscriptionsDetail(
-    billingPeriodId: string,
+    propertyName: string,
+    Identifier: string,
   ): Promise<SubscriptionDetail[]> {
     const subscriptions = await this.subscriptionDetailCol
-      .where('billingPeriodId', '==', billingPeriodId)
+      .where(propertyName, '==', Identifier)
       .get();
     return (
       SubscriptionDetail.getDetailFromSnapshots(subscriptions.docs) ?? null

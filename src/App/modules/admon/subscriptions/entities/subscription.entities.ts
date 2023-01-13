@@ -1,7 +1,6 @@
 import { Documents, DocumentData } from '../../../../Database/index';
 import { subscriptionType } from '../../catalogs/states/entities/create-state.entities';
 import { status } from '../../index';
-import { Beneficiary } from '../dtos/create-subscription.dto';
 export class Subscription {
   public subscriptionId: string;
   public userId: string;
@@ -47,7 +46,7 @@ export class SubscriptionDetail {
     this.subscriptionType = plainObject['subscriptionType'];
     this.applyBeneficiary = plainObject['applyBeneficiary'];
     this.applyBeneficiary = plainObject['applyBeneficiary'];
-    this.beneficiaryId = plainObject['beneficiaryId'];
+    this.beneficiaryId = plainObject['beneficiaryId'] ?? null;
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,

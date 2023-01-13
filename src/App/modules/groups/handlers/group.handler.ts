@@ -142,7 +142,7 @@ export class GroupListener {
         }),
       );
     } catch (e) {
-      console.error(`Error encontrado al desatar el evento onAccess ${e}`);
+      console.error(`Error encontrado al activar el evento onAccess ${e}`);
       throw new Error(e);
     }
   }

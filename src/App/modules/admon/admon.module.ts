@@ -19,10 +19,19 @@ import * as Multer from 'multer';
     }),
   ],
   providers: [
-    SubscriptionRepository,
+    SubscriptionService,
+    {
+      provide: 'SUBREPO',
+      useClass: SubscriptionRepository,
+    },
     UsersService,
     BillingPeriodRepository,
-    SubscriptionService,
+  ],
+  exports: [
+    {
+      provide: 'SUBREPO',
+      useClass: SubscriptionRepository,
+    },
   ],
 })
 export class AdmonModule {}

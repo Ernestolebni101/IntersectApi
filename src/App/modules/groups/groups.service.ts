@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UnitOfWorkAdapter } from '../../Database/UnitOfWork/adapter.implements';
-import { UserDto, UserPartialDto } from '../users/dto/read-user.dto';
+import {
+  joinType,
+  UserDto,
+  UserJoined,
+  UserPartialDto,
+} from '../users/dto/read-user.dto';
 import { IUserRepository } from '../users/repository/user.repository';
 import { GroupDto } from './dto/read-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -11,22 +16,25 @@ import { IMessageRepository } from '../messages/repository/message.repository';
 import { Time } from '../../../Utility/utility-time-zone';
 import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
+import { SubscriptionRepository } from '../admon';
 
 @Injectable()
 export class GroupsService {
   private readonly groupsRepository: IGroupsRepository;
-  private readonly usersRepository: IUserRepository;
+  private readonly Iuser: IUserRepository;
   private readonly messageRepository: IMessageRepository;
   private readonly bucket: Promise<Bucket>;
   constructor(
     private readonly adapter: UnitOfWorkAdapter,
     private readonly eventEmitter: EventEmitter2,
+    private readonly subRepo: SubscriptionRepository,
   ) {
     this.groupsRepository = this.adapter.Repositories.groupsRepository;
-    this.usersRepository = this.adapter.Repositories.userRepository;
+    this.Iuser = this.adapter.Repositories.userRepository;
     this.messageRepository = this.adapter.Repositories.messageRepository;
     this.bucket = this.adapter.getBucket();
   }
+  //#region Read Operations
   /**
    * @ReadOperations => Segmento de Operaciones de  Lectura
    */
@@ -35,8 +43,8 @@ export class GroupsService {
       const groups = (await this.groupsRepository.getAllAsync(filter)) ?? null;
       const foundGroups = await Promise.all(
         groups.map(async (g) => {
-          const users = await this.usersRepository.getUsersByUids(g.users);
-          const owner = await this.usersRepository.getUserbyId(g.author);
+          const users = await this.Iuser.getUsersByUids(g.users);
+          const owner = await this.Iuser.getUserbyId(g.author);
           return GroupDto.GroupInstance(
             g,
             users.map((user: User) =>
@@ -87,9 +95,9 @@ export class GroupsService {
   public findOneAsync = async (uid: string): Promise<GroupDto> => {
     const group = await this.groupsRepository.getById(uid);
     const creator = UserPartialDto.Factory(
-      await this.usersRepository.getUserbyId(group.author),
+      await this.Iuser.getUserbyId(group.author),
     );
-    const users = await this.usersRepository.getAllAsync();
+    const users = await this.Iuser.getAllAsync();
     const partialUsers = new Array<UserPartialDto>();
     group.users.forEach((u) => {
       const currentIndex = users.findIndex((x) => x.uid == u);
@@ -98,6 +106,42 @@ export class GroupsService {
     });
     const groupDto = GroupDto.GroupInstance(group, partialUsers, creator);
     return groupDto;
+  };
+  /** get mix of user joined */
+  public finJoinedUsers = async (id: string): Promise<UserJoined[]> => {
+    const group = await this.groupsRepository.getById(id);
+    const uidSet = new Set();
+    const freeUsers = await Promise.all(
+      (
+        await this.subRepo.getSubscriptionsDetail('groupId', group.id)
+      ).map(async (sub) => {
+        const freeUser = await this.Iuser.getUserbyId(sub.beneficiaryId);
+        uidSet.add(freeUser.uid);
+        return new UserJoined(
+          freeUser.uid,
+          freeUser.nickName,
+          freeUser.profilePic,
+          joinType.FREE,
+          freeUser.onlineStatus,
+        );
+      }),
+    );
+    const premiumUsers = await Promise.all(
+      group.users.map(async (uid) => {
+        if (!uidSet.has(uid)) {
+          const premiumUser = await this.Iuser.getUserbyId(uid);
+          return new UserJoined(
+            uid,
+            premiumUser.nickName,
+            premiumUser.profilePic,
+            joinType.PRE,
+            premiumUser.onlineStatus,
+          );
+        }
+      }),
+    );
+    const users = [...freeUsers, ...premiumUsers];
+    return users.filter((u) => u != null);
   };
   // /**
   //  *

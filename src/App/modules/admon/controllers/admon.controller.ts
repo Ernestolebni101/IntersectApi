@@ -4,14 +4,13 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Request as Req,
   Response as Res,
-  UploadedFiles,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { success } from 'src/common/response';
+import { error, success } from 'src/common/response';
 import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../../auth/index';
 import { SearchPipe } from '../pipes/search.pipe';
 import { UsersService } from '../../users/users.service';
@@ -19,7 +18,7 @@ import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription
 import { SubscriptionPipe } from '../pipes/subscription.pipe';
 import { SubscriptionService } from '../subscriptions/subscriptions.service';
 import { status } from '..';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { updateDetialDto } from '../subscriptions/dtos/update-subscription.dto';
 @Controller('admon/v1/')
 export class AdmonController {
   constructor(
@@ -29,7 +28,6 @@ export class AdmonController {
   @hasRoles(roles.ADMIN, roles.SA)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('new-subscription')
-  @UseInterceptors(FilesInterceptor('voucherFiles', 20))
   public async newSubscription(
     @Req() req: Request,
     @Res() res: Response,
@@ -73,5 +71,16 @@ export class AdmonController {
       Number(subStatus),
     );
     return success(req, res, response, 200);
+  }
+  @Put('freemium-join')
+  public async freeJoin(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() payload: updateDetialDto,
+  ) {
+    return this.suscriptionService
+      .updateSubscriptionDetail(payload)
+      .then((data) => success(req, res, data, 200))
+      .catch((e) => error(req, res, 'Unexpected Error', e));
   }
 }

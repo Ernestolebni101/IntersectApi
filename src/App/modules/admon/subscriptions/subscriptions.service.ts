@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { File } from '../../../../Utility/utility-createFile';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
@@ -31,7 +31,7 @@ export class SubscriptionService {
   private readonly Iuser: IUserRepository;
   constructor(
     private readonly unitOfWork: UnitOfWorkAdapter,
-    private readonly suscriptionRepo: SubscriptionRepository,
+    @Inject('SUBREPO') private readonly suscriptionRepo: SubscriptionRepository,
     private readonly periodRepo: BillingPeriodRepository,
     private readonly emmiter: EventEmitter2,
   ) {
@@ -73,12 +73,14 @@ export class SubscriptionService {
     return suscriptionResult;
   }
   //TODO: DEVOLVER EN EL CONTROLADOR EL GRUPO PARA QUE LO INTERSECTE usando el codigo promocional
-  public async updateSubscriptionDetail(
+  public async updateSubscriptionDetail?(
     payload: updateDetialDto,
-  ): Promise<void> {
+  ): Promise<Group> {
     const subscriptionDetail = await this.suscriptionRepo.getSubscriptionDetail(
       payload.code,
     );
+    if (subscriptionDetail == null || subscriptionDetail.beneficiaryId != null)
+      throw new NotFoundException();
     subscriptionDetail.beneficiaryId = payload.userId;
     await this.suscriptionRepo.modifySubscriptions(subscriptionDetail);
     await this.Igroup.updateGroup(
@@ -91,6 +93,7 @@ export class SubscriptionService {
       undefined,
       this.emmiter,
     );
+    return await this.Igroup.getById(subscriptionDetail.groupId);
   }
   //#endregion
 
@@ -160,7 +163,10 @@ export class SubscriptionService {
     );
     const restDays = period.FormatedDates()['restDays'];
     const subscriptionDetails =
-      await this.suscriptionRepo.getSubscriptionsDetail(period.periodId);
+      await this.suscriptionRepo.getSubscriptionsDetail(
+        'billingPeriodId',
+        period.periodId,
+      );
     subscriptionDetails.forEach(async (sub) => {
       try {
         const setStatus =

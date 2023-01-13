@@ -12,6 +12,8 @@ import { RequestingStrategy } from './providers/providers.strategys/requesting.s
 import { AddingStrategy } from './providers/providers.strategys/adding.strategy';
 import { NotificationService } from '../../shared/notification';
 import { GroupListener } from './handlers/group.handler';
+import { AdmonModule } from '../admon/admon.module';
+import { SubscriptionRepository } from '../admon';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { GroupListener } from './handlers/group.handler';
     GroupContext,
     RequestingStrategy,
     AddingStrategy,
+    SubscriptionRepository,
     GroupsService,
     NotificationService,
     GroupListener,
