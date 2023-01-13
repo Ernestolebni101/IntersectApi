@@ -72,6 +72,7 @@ export class SubscriptionService {
     this.unitOfWork.commitChanges();
     return suscriptionResult;
   }
+  //TODO: DEVOLVER EN EL CONTROLADOR EL GRUPO PARA QUE LO INTERSECTE usando el codigo promocional
   public async updateSubscriptionDetail(
     payload: updateDetialDto,
   ): Promise<void> {
