@@ -6,7 +6,6 @@ export class createSubscriptionDto {
   constructor(
     public subscriptionId: string, //automatico
     public userId: string, // entrada
-    public beneficiarys: Beneficiary[],
     public createdDate: number, // automaticamente
     public createdBy: string, // automaticamente
     public modifiedBy: string, // automatico
@@ -29,6 +28,7 @@ export class createSubscriptionDetailDto {
     public subscriptionType: subscriptionType,
     public rawContent: Record<string, unknown>,
     public applyBeneficiary: boolean,
+    public beneficiaryId?: string,
   ) {}
 }
 

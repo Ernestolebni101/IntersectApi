@@ -3,7 +3,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { File } from '../../../../Utility/utility-createFile';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from 'src/App/Database';
-import { UpdateGroupDto } from '../../groups/dto/update-group.dto';
+import { MemberOpt, UpdateGroupDto } from '../../groups/dto/update-group.dto';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { IUserRepository } from '../../users/repository/user.repository';
 import {
@@ -13,6 +13,7 @@ import {
   BillingPeriodRepository,
   ICatalog,
   status,
+  updateSubscriptionDetailDto,
 } from '../index';
 import { Descriptor } from './utils/descriptor.utils';
 import { Group } from '../../groups/entities/group.entity';
@@ -22,6 +23,7 @@ import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
 import { subscriptionType } from '../catalogs/states/entities/create-state.entities';
+import { updateDetialDto } from './dtos/update-subscription.dto';
 
 @Injectable()
 export class SubscriptionService {
@@ -70,8 +72,28 @@ export class SubscriptionService {
     this.unitOfWork.commitChanges();
     return suscriptionResult;
   }
+  public async updateSubscriptionDetail(
+    payload: updateDetialDto,
+  ): Promise<void> {
+    const subscriptionDetail = await this.suscriptionRepo.getSubscriptionDetail(
+      payload.code,
+    );
+    subscriptionDetail.beneficiaryId = payload.userId;
+    await this.suscriptionRepo.modifySubscriptions(subscriptionDetail);
+    await this.Igroup.updateGroup(
+      undefined,
+      plainToInstance(UpdateGroupDto, {
+        id: subscriptionDetail.groupId,
+        userId: payload.userId,
+        memberOption: MemberOpt.addMember,
+      }),
+      undefined,
+      this.emmiter,
+    );
+  }
   //#endregion
-  //#region  //* Read Operation
+
+  //#region //* Read Operation
   // Get subscriptions and nested details o subscriptions by uid
   public getSubscriptionsInfo? = async (
     filter = '',
@@ -124,6 +146,7 @@ export class SubscriptionService {
       .filter((sub) => sub != null);
     return subscriptions;
   }
+  //#endregion
   //#region Cron Jobs
   //** deactivate subscriptions */
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {

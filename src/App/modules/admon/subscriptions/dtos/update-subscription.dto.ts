@@ -9,3 +9,11 @@ export class updateSubscriptionDetailDto {
   @IsNotEmpty()
   public subscriptionStatus: status;
 }
+export class updateDetialDto {
+  @IsString()
+  @IsNotEmpty()
+  public code: string;
+  @IsString()
+  @IsNotEmpty()
+  public userId: string;
+}

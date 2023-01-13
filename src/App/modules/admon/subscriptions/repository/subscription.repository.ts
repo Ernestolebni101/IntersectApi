@@ -10,7 +10,7 @@ import {
   FirestoreCollection,
 } from '../../../../Database/index';
 import { Inject, Injectable } from '@nestjs/common';
-import { instanceToPlain } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
 export interface ISubscription {
   newSuscription(
@@ -25,6 +25,7 @@ export interface ISubscription {
   getSubscriptionsDetail?(
     billingPeriodId: string,
   ): Promise<SubscriptionDetail[]>;
+  getSubscriptionDetail?(id: string): Promise<SubscriptionDetail>;
 }
 @Injectable()
 export class SubscriptionRepository implements ISubscription {
@@ -33,6 +34,10 @@ export class SubscriptionRepository implements ISubscription {
   constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
     this.subscriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
+  }
+  public async getSubscriptionDetail?(id: string): Promise<SubscriptionDetail> {
+    const subscription = await this.subscriptionDetailCol.doc(id).get();
+    return subscription.exists ? new SubscriptionDetail(subscription) : null;
   }
   //#region //* Write Operations
   //TODO: Verificar si el acumulativo de suscripciones es valido para el uso requerido

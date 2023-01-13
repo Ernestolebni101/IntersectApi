@@ -7,7 +7,6 @@ export class Subscription {
   public userId: string;
   public createdDate: number;
   public createdBy: string;
-  public beneficiaryId?: Beneficiary[] = [];
   public subscriptionDetail: Array<SubscriptionDetail>;
   constructor(plainObject: Record<string, unknown>) {
     this.subscriptionId = plainObject['subscriptionId'] as string;
@@ -35,6 +34,7 @@ export class SubscriptionDetail {
   public subscriptionStatus: status;
   public subscriptionType: subscriptionType;
   public applyBeneficiary: boolean;
+  public beneficiaryId?: string;
   constructor(plainObject: DocumentData) {
     this.subscriptionId = plainObject['subscriptionId'];
     this.subscriptioDetailId = plainObject['subscriptionDetailId'];
@@ -46,6 +46,8 @@ export class SubscriptionDetail {
     this.billingPeriodId = plainObject['billingPeriodId'];
     this.subscriptionType = plainObject['subscriptionType'];
     this.applyBeneficiary = plainObject['applyBeneficiary'];
+    this.applyBeneficiary = plainObject['applyBeneficiary'];
+    this.beneficiaryId = plainObject['beneficiaryId'];
   }
   public static getDetailFromSnapshots = (
     snapshot: Documents,
