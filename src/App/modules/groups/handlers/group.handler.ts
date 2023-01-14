@@ -130,23 +130,17 @@ export class GroupListener {
         group.groupProfile,
         group.isPrivate,
       );
-      await this.notification.sendMessage(
-        FcmModel.fcmPayload(
-          applicant.token,
-          group.groupName,
-          '',
-          mss,
-          new DataModel(null, notification),
-        ),
-      );
-      await this.userService.update(
-        undefined,
-        plainToInstance(UpdateUserDto, {
-          uid: applicant.uid,
-          joinHistory: [group.id],
-        }),
-      );
       if (mss.includes(',')) {
+        await this.notification.sendMessage(
+          FcmModel.fcmPayload(
+            applicant.token,
+            group.groupName,
+            '',
+            mss.split(',')[0],
+            new DataModel(null, notification),
+          ),
+        );
+
         await this.notification.sendMessage(
           FcmModel.fcmPayload(
             group.author.token,
@@ -156,7 +150,24 @@ export class GroupListener {
             new DataModel(null, notification),
           ),
         );
+      } else {
+        await this.notification.sendMessage(
+          FcmModel.fcmPayload(
+            applicant.token,
+            group.groupName,
+            '',
+            mss,
+            new DataModel(null, notification),
+          ),
+        );
       }
+      await this.userService.update(
+        undefined,
+        plainToInstance(UpdateUserDto, {
+          uid: applicant.uid,
+          joinHistory: [group.id],
+        }),
+      );
     } catch (e) {
       console.error(`Error encontrado al activar el evento onAccess ${e}`);
       throw new Error(e);
