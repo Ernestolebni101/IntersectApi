@@ -40,3 +40,5 @@ export {
 export { State } from './catalogs/states/entities/read-state.entities';
 export { StateCatalogRepository } from './catalogs/states/repository/state.repository';
 export { updateSubscriptionDetailDto } from './subscriptions/dtos/update-subscription.dto';
+export { Descriptor } from './subscriptions/utils/descriptor.utils';
+export { Group } from 'src/App/modules/groups/entities/group.entity';

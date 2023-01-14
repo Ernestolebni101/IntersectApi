@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { File } from '../../../../Utility/utility-createFile';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from 'src/App/Database';
 import { MemberOpt, UpdateGroupDto } from '../../groups/dto/update-group.dto';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
@@ -13,7 +13,6 @@ import {
   BillingPeriodRepository,
   ICatalog,
   status,
-  updateSubscriptionDetailDto,
 } from '../index';
 import { Descriptor } from './utils/descriptor.utils';
 import { Group } from '../../groups/entities/group.entity';

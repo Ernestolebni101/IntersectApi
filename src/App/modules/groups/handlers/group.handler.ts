@@ -10,6 +10,7 @@ import {
 import { UpdateUserDto } from '../../users';
 import { UsersService } from '../../users/users.service';
 import { GroupsService } from '../groups.service';
+import { messageNotification } from '../helpers/group.helper';
 
 @Injectable()
 export class GroupListener {
@@ -118,7 +119,11 @@ export class GroupListener {
       const group = await this.groupService.findOneAsync(groupId);
       const applicant = await this.userService.findOne(userId);
       const owner = group.author;
-      const mss = `${owner.nickName} te ha dado acceso para unirte a ${group.groupName}`;
+      const mss = messageNotification[0](
+        owner.nickName,
+        group.groupName,
+        group.isCertified,
+      );
       const notification = new GroupNotification(
         group.id,
         group.author.uid,

@@ -10,3 +10,19 @@ export enum groupEnum {
   request = 2, // el grupo es privado,
   createNew = 3, // El grupo no existe
 }
+
+export const messageNotification = {
+  0: (nick: string, group: string, flag: boolean) => {
+    let mss = '';
+    switch (flag) {
+      case true:
+        mss = `has ingresado a ${group} \u2655`;
+        break;
+      case false:
+        mss = `${nick} te ha dado acceso \u26BF para unirte a ${group}`;
+        break;
+    }
+    return mss;
+  },
+  1: (group: string) => `has ingresado a ${group} \u2655`,
+};
