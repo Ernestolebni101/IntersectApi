@@ -116,14 +116,16 @@ export class GroupsService {
         await this.subRepo.getSubscriptionsDetail('groupId', group.id)
       ).map(async (sub) => {
         const freeUser = await this.Iuser.getUserbyId(sub.beneficiaryId);
-        uidSet.add(freeUser.uid);
-        return new UserJoined(
-          freeUser.uid,
-          freeUser.nickName,
-          freeUser.profilePic,
-          joinType.FREE,
-          freeUser.onlineStatus,
-        );
+        if (freeUser != null) {
+          uidSet.add(freeUser.uid);
+          return new UserJoined(
+            freeUser.uid,
+            freeUser.nickName,
+            freeUser.profilePic,
+            joinType.FREE,
+            freeUser.onlineStatus,
+          );
+        }
       }),
     );
     const premiumUsers = await Promise.all(
@@ -140,7 +142,7 @@ export class GroupsService {
         }
       }),
     );
-    const users = [...freeUsers, ...premiumUsers];
+    const users = [...premiumUsers, ...freeUsers];
     return users.filter((u) => u != null);
   };
   // /**

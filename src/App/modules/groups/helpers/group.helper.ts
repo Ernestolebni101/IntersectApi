@@ -12,17 +12,17 @@ export enum groupEnum {
 }
 
 export const messageNotification = {
-  0: (nick: string, group: string, flag: boolean) => {
+  0: (nick: string[], group: string, flag: boolean) => {
     let mss = '';
     switch (flag) {
       case true:
-        mss = `has ingresado a ${group} \u2655`;
+        mss = `has sido suscrito a ${group} 👑, ${nick[0]} se ha unido a tu comunidad 👑`;
         break;
       case false:
-        mss = `${nick} te ha dado acceso \u26BF para unirte a ${group}`;
+        mss = `${nick} te ha dado acceso 🔑 para unirte a ${group}`;
         break;
     }
     return mss;
   },
-  1: (group: string) => `has ingresado a ${group} \u2655`,
+  1: (group: string) => `has ingresado a ${group} 👑`, // este no
 };

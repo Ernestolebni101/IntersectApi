@@ -120,7 +120,7 @@ export class GroupListener {
       const applicant = await this.userService.findOne(userId);
       const owner = group.author;
       const mss = messageNotification[0](
-        owner.nickName,
+        [applicant.nickName, owner.nickName],
         group.groupName,
         group.isCertified,
       );
@@ -146,6 +146,17 @@ export class GroupListener {
           joinHistory: [group.id],
         }),
       );
+      if (mss.includes(',')) {
+        await this.notification.sendMessage(
+          FcmModel.fcmPayload(
+            group.author.token,
+            group.groupName,
+            '',
+            mss.split(',')[1],
+            new DataModel(null, notification),
+          ),
+        );
+      }
     } catch (e) {
       console.error(`Error encontrado al activar el evento onAccess ${e}`);
       throw new Error(e);
