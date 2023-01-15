@@ -124,39 +124,29 @@ export class GroupListener {
         group.groupName,
         group.isCertified,
       );
+      const isPremium = mss.includes(',');
       const notification = new GroupNotification(
         group.id,
         group.author.uid,
         group.groupProfile,
         group.isPrivate,
       );
-      if (mss.includes(',')) {
+      await this.notification.sendMessage(
+        FcmModel.fcmPayload(
+          applicant.token,
+          group.groupName,
+          '',
+          isPremium ? mss.split(',')[1] : mss,
+          new DataModel(null, notification),
+        ),
+      );
+      if (isPremium) {
         await this.notification.sendMessage(
           FcmModel.fcmPayload(
             applicant.token,
             group.groupName,
             '',
             mss.split(',')[0],
-            new DataModel(null, notification),
-          ),
-        );
-
-        await this.notification.sendMessage(
-          FcmModel.fcmPayload(
-            group.author.token,
-            group.groupName,
-            '',
-            mss.split(',')[1],
-            new DataModel(null, notification),
-          ),
-        );
-      } else {
-        await this.notification.sendMessage(
-          FcmModel.fcmPayload(
-            applicant.token,
-            group.groupName,
-            '',
-            mss,
             new DataModel(null, notification),
           ),
         );
