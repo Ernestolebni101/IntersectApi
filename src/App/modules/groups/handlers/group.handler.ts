@@ -9,8 +9,8 @@ import {
 } from '../../../shared/notification';
 import { UpdateUserDto } from '../../users';
 import { UsersService } from '../../users/users.service';
+import { OnAccesGroup } from '../events/onAcces.event';
 import { GroupsService } from '../groups.service';
-import { messageNotification } from '../helpers/group.helper';
 
 @Injectable()
 export class GroupListener {
@@ -114,48 +114,16 @@ export class GroupListener {
   }
 
   @OnEvent('onAccess', { async: true })
-  public async handleAccess(userId: string, groupId: string) {
+  public async handleAccess(event: OnAccesGroup) {
     try {
-      const group = await this.groupService.findOneAsync(groupId);
-      const applicant = await this.userService.findOne(userId);
-      const owner = group.author;
-      const mss = messageNotification[0](
-        [applicant.nickName, owner.nickName],
-        group.groupName,
-        group.isCertified,
-      );
-      const isPremium = mss.includes(',');
-      const notification = new GroupNotification(
-        group.id,
-        group.author.uid,
-        group.groupProfile,
-        group.isPrivate,
-      );
-      await this.notification.sendMessage(
-        FcmModel.fcmPayload(
-          applicant.token,
-          group.groupName,
-          '',
-          isPremium ? mss.split(',')[1] : mss,
-          new DataModel(null, notification),
-        ),
-      );
-      if (isPremium) {
-        await this.notification.sendMessage(
-          FcmModel.fcmPayload(
-            applicant.token,
-            group.groupName,
-            '',
-            mss.split(',')[0],
-            new DataModel(null, notification),
-          ),
-        );
-      }
+      event.applicant = await this.userService.findOne(event.userId);
+      event.owner = await this.userService.findOne(event.group.author);
+      event.executeByContext(this.notification.sendMessage);
       await this.userService.update(
         undefined,
         plainToInstance(UpdateUserDto, {
-          uid: applicant.uid,
-          joinHistory: [group.id],
+          uid: event.applicant.uid,
+          joinHistory: [event.group.id],
         }),
       );
     } catch (e) {

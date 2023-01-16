@@ -7,6 +7,7 @@ import { Bucket } from '@google-cloud/storage';
 import { MemberOpt, UpdateGroupDto } from '../dto/update-group.dto';
 import { File } from '../../../../Utility/utility-createFile';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { OnAccesGroup } from '../events/onAcces.event';
 
 export const FIRSTGROUP = 'IGROUPSERVICE';
 
@@ -217,8 +218,7 @@ export class GroupsRepository
           foundGroup.users.push(payload.userId);
           await eventEmitter.emitAsync(
             'onAccess',
-            payload.userId,
-            foundGroup.id,
+            new OnAccesGroup(foundGroup, payload.userId),
           );
         }
         return foundGroup;
