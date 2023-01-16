@@ -50,7 +50,7 @@ export class OnAccesGroup {
     this.group.isCertified &&
       (await fn_ntf(
         FcmModel.fcmPayload(
-          this.applicant.token,
+          this.owner.token,
           this.group.groupName,
           '',
           this.observeString(0),

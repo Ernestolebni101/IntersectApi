@@ -21,7 +21,6 @@ import { UserSubscriptions } from './helpers/userSubscriptions.helper';
 import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
-import { subscriptionType } from '../catalogs/states/entities/create-state.entities';
 import { updateDetialDto } from './dtos/update-subscription.dto';
 
 @Injectable()
@@ -41,15 +40,25 @@ export class SubscriptionService {
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
-    const suscriptionResult = await this.suscriptionRepo.newSuscription(
+    payload.subscriptionDetail = await Promise.all(
+      payload.subscriptionDetail.map(async (detail) => {
+        detail.voucherUrl = await File.submitFile(
+          detail.rawContent,
+          await this.unitOfWork.getBucket(),
+        );
+        delete detail.rawContent;
+        return detail;
+      }),
+    );
+    const subscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
     );
-    suscriptionResult.subscriptionDetail.forEach(async (detail) => {
+    subscriptionResult.subscriptionDetail.forEach(async (detail) => {
       await this.Igroup.updateGroup(
         undefined,
         plainToInstance(UpdateGroupDto, {
           id: detail.groupId,
-          userId: suscriptionResult.userId,
+          userId: subscriptionResult.userId,
           memberOption: 0,
         }),
         undefined,
@@ -57,7 +66,7 @@ export class SubscriptionService {
       );
     });
     this.unitOfWork.commitChanges();
-    return suscriptionResult;
+    return subscriptionResult;
   }
   //TODO: DEVOLVER EN EL CONTROLADOR EL GRUPO PARA QUE LO INTERSECTE usando el codigo promocional
   public async updateSubscriptionDetail?(

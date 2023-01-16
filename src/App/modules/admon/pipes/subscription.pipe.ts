@@ -1,6 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { UnitOfWorkAdapter } from 'src/App/Database';
-import * as FILES from 'src/Utility/utility-createFile';
+import { File } from 'src/Utility/utility-createFile';
 import { v4 as uuid } from 'uuid';
 import { status } from '..';
 import { IUserRepository } from '../../users';
@@ -23,6 +23,8 @@ export class SubscriptionPipe implements PipeTransform {
       detail.subscriptionStatus = status.ACTIVE;
       detail.subscriptionType = subscriptionType.PREM;
       detail.beneficiaryId = null;
+      detail.rawContent = File.base64ToImage(detail.voucherUrl);
+      detail.voucherUrl = '';
       detail.applyBeneficiary = !joinHistory.includes(detail.groupId);
       return (detail.subscriptionDetailId = uuid());
     });

@@ -83,10 +83,7 @@ export class File {
   public static base64ToImage(base64String: string): Record<string, any> {
     let base64Image = base64String.split(';base64,').pop();
     const path = `./${uuid().split('-')[0]}.png`;
-    fs.writeFileSync(path, base64Image, {
-      encoding: 'base64',
-    });
-    const buffer = fs.readFileSync(path);
+    const buffer = Buffer.from(base64Image, 'base64');
     return {
       originalname: `${path.replace('/', '').replace('.', '')}`,
       mimetype: 'image/jpeg',
@@ -94,3 +91,7 @@ export class File {
     };
   }
 }
+// fs.writeFileSync(path, base64Image, {
+//   encoding: 'base64',
+// });
+// const buffer = fs.readFileSync(path);

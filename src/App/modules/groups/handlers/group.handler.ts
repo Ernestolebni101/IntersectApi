@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
+import { messaging } from 'firebase-admin';
 import {
   NotificationService,
   DataModel,
@@ -118,7 +119,9 @@ export class GroupListener {
     try {
       event.applicant = await this.userService.findOne(event.userId);
       event.owner = await this.userService.findOne(event.group.author);
-      event.executeByContext(this.notification.sendMessage);
+      event.executeByContext((payload: messaging.Message) =>
+        this.notification.sendMessage(payload),
+      );
       await this.userService.update(
         undefined,
         plainToInstance(UpdateUserDto, {
