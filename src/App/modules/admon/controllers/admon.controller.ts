@@ -50,6 +50,7 @@ export class AdmonController {
     );
     return success(req, res, response, 200);
   }
+  //TODO: Middleware de Seguridad
   @Get('user-subscription/:filter')
   public async userSubscriptions(
     @Req() req: Request,
@@ -59,6 +60,7 @@ export class AdmonController {
     const response = await this.suscriptionService.getSubscriptionsInfo(filter);
     return success(req, res, response, 200);
   }
+  //TODO: Middleware de Seguridad
   @Get('group-subscriptors/:groupId')
   public async groupSubscriptors(
     @Req() req: Request,

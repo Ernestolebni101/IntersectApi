@@ -50,13 +50,13 @@ export class SubscriptionRepository implements ISubscription {
     const tran = await this.fireDb.runTransaction(async (tran) => {
       try {
         const { subscriptionDetail, ...head } = payload;
-        const suscriptionRef = this.suscriptionCol.doc(payload.subscriptionId);
-        tran.set(suscriptionRef, instanceToPlain(head));
+        const subscriptionRef = this.suscriptionCol.doc(payload.subscriptionId);
+        tran.set(subscriptionRef, instanceToPlain(head));
         subscriptionDetail.forEach(async (detail) => {
-          const suscriptionRef = this.subscriptionDetailCol.doc(
+          const detailRef = this.subscriptionDetailCol.doc(
             detail.subscriptionDetailId,
           );
-          tran.set(suscriptionRef, instanceToPlain(detail));
+          tran.set(detailRef, instanceToPlain(detail));
         });
         return true;
       } catch (error) {

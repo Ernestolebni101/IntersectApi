@@ -41,18 +41,6 @@ export class SubscriptionService {
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
-    payload.subscriptionDetail = await Promise.all(
-      payload.subscriptionDetail.map(async (detail) => {
-        detail.voucherUrl =
-          detail.subscriptionType == subscriptionType.FREE
-            ? ''
-            : await File.submitFile(
-                detail.rawContent,
-                await this.unitOfWork.getBucket(),
-              );
-        return detail;
-      }),
-    );
     const suscriptionResult = await this.suscriptionRepo.newSuscription(
       payload,
     );
