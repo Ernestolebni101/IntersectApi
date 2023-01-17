@@ -37,25 +37,29 @@ export class OnAccesGroup {
   public async executeByContext(
     fn_ntf: (model: messaging.Message) => Promise<void>,
   ): Promise<void> {
-    this.loadNotificationMessage();
-    await fn_ntf(
-      FcmModel.fcmPayload(
-        this.applicant.token,
-        this.group.groupName,
-        '',
-        this.observeString(1),
-        new DataModel(null, this.groupNotification),
-      ),
-    );
-    this.group.isCertified &&
-      (await fn_ntf(
+    try {
+      this.loadNotificationMessage();
+      await fn_ntf(
         FcmModel.fcmPayload(
-          this.owner.token,
+          this.applicant.token,
           this.group.groupName,
           '',
-          this.observeString(0),
+          this.observeString(1),
           new DataModel(null, this.groupNotification),
         ),
-      ));
+      );
+      this.group.isCertified &&
+        (await fn_ntf(
+          FcmModel.fcmPayload(
+            this.owner.token,
+            this.group.groupName,
+            '',
+            this.observeString(0),
+            new DataModel(null, this.groupNotification),
+          ),
+        ));
+    } catch (error) {
+      //TODO: Implementar el guardado de logs en otro espacio
+    }
   }
 }

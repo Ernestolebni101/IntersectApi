@@ -1,23 +1,24 @@
-import { status } from '../..';
+import { IReadable, status } from '../..';
 
-export class SubscriptionDto {
+export class Subscription implements IReadable {
   public subscriptionId: string;
   public userId: string;
   public createdDate: number;
   public createdBy: string;
   public modifiedBy: string;
-  public subscriptionDetail: Array<SubscriptionDetailDto>;
+  public Details: SubscriptionDetail[];
 }
 
-export class SubscriptionDetailDto {
+export class SubscriptionDetail implements IReadable {
+  public subscriptionId: string;
   public subscriptioDetailId: string;
   public groupId: string;
   public paymentMethodId: string;
   public voucherUrl: string;
   public description: string;
   public amount: number;
-  public beginDate: Date;
-  public endDate: Date;
+  public billingPeriodId: string;
   public subscriptionStatus: status;
   public applyBeneficiary: boolean;
+  public beneficiaryId?: string;
 }

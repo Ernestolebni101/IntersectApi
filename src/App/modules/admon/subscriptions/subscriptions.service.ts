@@ -22,6 +22,7 @@ import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
 import { updateDetialDto } from './dtos/update-subscription.dto';
+import { SubscriptionDetailRepository } from './repository/subscription-detail.repository';
 
 @Injectable()
 export class SubscriptionService {
@@ -30,6 +31,8 @@ export class SubscriptionService {
   constructor(
     private readonly unitOfWork: UnitOfWorkAdapter,
     @Inject('SUBREPO') private readonly suscriptionRepo: SubscriptionRepository,
+    @Inject('DETAILREPO')
+    private readonly subDetailRepo: SubscriptionDetailRepository,
     private readonly periodRepo: BillingPeriodRepository,
     private readonly emmiter: EventEmitter2,
   ) {

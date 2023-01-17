@@ -48,6 +48,7 @@ export class GroupListener {
       );
       await this.notification.sendMessage(fcmModel);
     } catch (error) {
+      //TODO: Implementar el guardado de logs
       console.error(`Error de evento: ${error}`);
     }
   }
@@ -81,6 +82,7 @@ export class GroupListener {
         ),
       );
     } catch (e) {
+      //TODO: Implementar el guardado de logs
       console.error(`Error encontrado al desatar el evento onExit ${e}`);
       throw new Error(e);
     }
@@ -109,6 +111,7 @@ export class GroupListener {
         ),
       );
     } catch (e) {
+      //TODO: Implementar el guardado de logs
       console.error(`Error encontrado al desatar el evento onAddMember ${e}`);
       throw new Error(e);
     }
@@ -130,6 +133,7 @@ export class GroupListener {
         }),
       );
     } catch (e) {
+      //TODO: Implementar el guardado de logs
       console.error(`Error encontrado al activar el evento onAccess ${e}`);
       throw new Error(e);
     }

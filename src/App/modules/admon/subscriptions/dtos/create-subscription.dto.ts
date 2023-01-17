@@ -1,3 +1,4 @@
+import { IParam } from 'src/App/shared/utils/query.interface';
 import {
   status,
   subscriptionType,
@@ -14,7 +15,7 @@ export class createSubscriptionDto {
   ) {}
 }
 
-export class createSubscriptionDetailDto {
+export class createSubscriptionDetailDto implements IParam {
   constructor(
     public subscriptionId: string,
     public subscriptionDetailId: string,
@@ -30,8 +31,13 @@ export class createSubscriptionDetailDto {
     public applyBeneficiary: boolean,
     public beneficiaryId?: string,
   ) {}
+  public reflectData = (): unknown => this;
 }
 
-export class Beneficiary {
-  constructor(public userId: string, public groupId: string) {}
+export class getDetail implements IParam {
+  public docId?: string;
+  public value?: string;
+  public fieldName?: string;
+  public status: status;
+  public reflectData = (): unknown => this;
 }
