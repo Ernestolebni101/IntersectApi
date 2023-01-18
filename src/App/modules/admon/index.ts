@@ -17,10 +17,6 @@ export {
   createSubscriptionDto,
 } from './subscriptions/dtos/create-subscription.dto';
 export {
-  SubscriptionDetailDto,
-  SubscriptionDto,
-} from './subscriptions/dtos/read-subscriptions.dto';
-export {
   ICatalog,
   ICatalogRepository,
   IReadable,

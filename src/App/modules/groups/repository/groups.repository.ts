@@ -8,6 +8,7 @@ import { MemberOpt, UpdateGroupDto } from '../dto/update-group.dto';
 import { File } from '../../../../Utility/utility-createFile';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { OnAccesGroup } from '../events/onAcces.event';
+import { Injectable } from '@nestjs/common';
 
 export const FIRSTGROUP = 'IGROUPSERVICE';
 
@@ -29,12 +30,14 @@ export interface IGroupsRepository {
   ): Promise<string>;
   createGroup(payload: CreateGroupDto): Promise<Group>;
 }
-
 @CustomRepository(Group)
 export class GroupsRepository
   extends BaseFirestoreRepository<Group>
   implements IGroupsRepository
 {
+  constructor() {
+    super(Group);
+  }
   /**
    *
    *  *+++++++++++++++++++++++++++++++ @ReadOperations => Segmento de Operaciones de Lectura

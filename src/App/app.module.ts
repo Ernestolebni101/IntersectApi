@@ -1,16 +1,12 @@
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { firebaseProvider } from './Database/database-providers/firebase.provider';
-import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
-import { UnitOfWorkAdapter } from './Database/UnitOfWork/adapter.implements';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GroupsModule } from 'src/App/modules/groups/groups.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { IntersectGateway } from './app.gateway';
 import { SharedModule } from './shared/shared.module';
-import { FunctionsManagerService } from './Database/firebase/functionManager';
 import { LoggerModule } from 'nestjs-pino';
 import { IntegrationModule } from './modules/integration/index';
 import {
@@ -23,13 +19,15 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './Middlewares/auth/auth.middleware';
 import { AdmonModule } from './modules/admon/admon.module';
 import { UsersController } from './modules/users/users.controller';
-import { GroupsController } from './modules/groups/groups.controller';
 import { MessagesController } from './modules/messages/controllers/messages.controller';
 import { MultimediaController } from './modules/messages/controllers/multimedia.controller';
 import { ChatsController } from './modules/chats/chats.controller';
 import { IntegrationController } from './modules/integration/integration.controller';
 import { WaitingListController } from './modules/groups/waiting-list/waiting-list.controller';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DatabaseModule } from './Database/database.module';
+import { GroupsController } from './modules/groups/groups.controller';
+import { AppService } from './app.service';
 @Global()
 @Module({
   imports: [
@@ -60,6 +58,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
+    DatabaseModule,
     SharedModule,
     UsersModule,
     GroupsModule,
@@ -70,19 +69,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     AdmonModule,
   ],
   controllers: [AppController],
-  providers: [
-    ...firebaseProvider,
-    UnitOfWorkAdapter,
-    AppService,
-    FunctionsManagerService,
-    IntersectGateway,
-  ],
-  exports: [
-    ...firebaseProvider,
-    FunctionsManagerService,
-    UnitOfWorkAdapter,
-    IntersectGateway,
-  ],
+  providers: [IntersectGateway, AppService],
+  exports: [IntersectGateway],
 })
 /**
  * TODO: Implementar Clases de configuración y Módulo de Base de Datos
@@ -96,14 +84,16 @@ export class AppModule implements NestModule {
   }
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationMiddleware).forRoutes('*');
-    consumer.apply(AuthMiddleware).forRoutes(
-      UsersController,
-      // GroupsController,
-      MessagesController,
-      MultimediaController,
-      ChatsController,
-      IntegrationController,
-      WaitingListController,
-    );
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        UsersController,
+        GroupsController,
+        MessagesController,
+        MultimediaController,
+        ChatsController,
+        IntegrationController,
+        WaitingListController,
+      );
   }
 }

@@ -35,7 +35,7 @@ export class SubscriptionRepository
   }
   public async modifyData<TParam extends IParam>(
     payload: TParam,
-  ): Promise<Subscription> {
+  ): Promise<void> {
     throw new Error('Method not implemented.');
   }
   public async createNew<TParam extends IParam>(

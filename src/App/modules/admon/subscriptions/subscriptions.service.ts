@@ -81,7 +81,7 @@ export class SubscriptionService {
     if (subscriptionDetail == null || subscriptionDetail.beneficiaryId != null)
       throw new NotFoundException();
     subscriptionDetail.beneficiaryId = payload.userId;
-    await this.suscriptionRepo.modifySubscriptions(subscriptionDetail);
+    // await this.suscriptionRepo.modifySubscriptions(subscriptionDetail);
     await this.Igroup.updateGroup(
       undefined,
       plainToInstance(UpdateGroupDto, {
@@ -171,7 +171,7 @@ export class SubscriptionService {
         const setStatus =
           scheduler[Number(restDays) < -3 ? '-3' : JSON.stringify(restDays)];
         sub.subscriptionStatus = setStatus;
-        await this.suscriptionRepo.modifySubscriptions(sub);
+        // await this.suscriptionRepo.modifySubscriptions(sub);
       } catch (error) {
         //TODO: Inadmisible no controlar cualquier excepcion
         console.error(error);

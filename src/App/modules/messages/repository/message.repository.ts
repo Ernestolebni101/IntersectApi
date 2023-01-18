@@ -5,6 +5,7 @@ import { Message } from '../entities/message.entity';
 import { Bucket } from '@google-cloud/storage';
 import { plainToClass } from 'class-transformer';
 import { File } from '../../../../Utility/utility-createFile';
+import { Injectable } from '@nestjs/common';
 
 export interface IMessageRepository {
   addMessage(
@@ -20,12 +21,14 @@ export interface IMessageRepository {
   getByGroups(groupId: string): Promise<Message[]>;
   deleteMessages(id: string): Promise<void>;
 }
-
 @CustomRepository(Message)
 export class MessageRepository
   extends BaseFirestoreRepository<Message>
   implements IMessageRepository
 {
+  constructor() {
+    super(Message);
+  }
   public async saveMessages(
     files: Array<Express.Multer.File>,
     payload: CreateMessageDto,

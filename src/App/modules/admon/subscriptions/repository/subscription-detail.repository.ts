@@ -1,25 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
 import {
   IAbstractRepository,
   IParam,
 } from 'src/App/shared/utils/query.interface';
 import { SubscriptionDetail } from '../dtos/read-subscriptions.dto';
-import {
-  firestoreDb,
-  FirestoreCollection,
-  FIRESTORE_DB,
-} from '../../../../Database/index';
+import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
 import {
   createSubscriptionDetailDto,
   getDetail,
 } from '../dtos/create-subscription.dto';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-@Injectable()
 export class SubscriptionDetailRepository
   implements IAbstractRepository<SubscriptionDetail>
 {
   private readonly collection: FirestoreCollection;
-  constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
+  constructor(private readonly fireDb: firestoreDb) {
     this.collection = this.fireDb.collection('SuscriptionDetails');
   }
   public async getByParam<TParam extends IParam>(
@@ -50,19 +44,35 @@ export class SubscriptionDetailRepository
   }
   public async modifyData<TParam extends IParam>(
     payload: TParam,
-  ): Promise<SubscriptionDetail> {
-    throw new Error('Method not implemented.');
+  ): Promise<void> {
+    try {
+      const data = payload.reflectData() as SubscriptionDetail;
+      await this.collection
+        .doc(data.subscriptioDetailId)
+        .update(instanceToPlain(data));
+    } catch (error) {
+      console.error(error);
+    }
   }
   public async createNew<TParam extends IParam>(
     payload: TParam,
   ): Promise<SubscriptionDetail> {
     const data = payload.reflectData() as createSubscriptionDetailDto;
     delete data.rawContent;
-    await this.fireDb.runTransaction(async (tran) => {
+    const tranResult = await this.fireDb.runTransaction(async (tran) => {
       try {
         const docRef = this.collection.doc(data.subscriptionDetailId);
-        tran.set(docRef, instanceToPlain(data));
-      } catch (error) {}
+        const period = (
+          await tran.get(
+            this.fireDb.collection('BillingPeriod').doc(data.billingPeriodId),
+          )
+        ).data();
+        if (period.isActive) tran.set(docRef, instanceToPlain(data));
+        return plainToInstance(SubscriptionDetail, data);
+      } catch (error) {
+        //TODO: LOGS
+      }
     });
+    return tranResult;
   }
 }

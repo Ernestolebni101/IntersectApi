@@ -1,4 +1,5 @@
 import { IReadable, status } from '../..';
+import { subscriptionType } from '../../catalogs/states/entities/create-state.entities';
 
 export class Subscription implements IReadable {
   public subscriptionId: string;
@@ -21,4 +22,5 @@ export class SubscriptionDetail implements IReadable {
   public subscriptionStatus: status;
   public applyBeneficiary: boolean;
   public beneficiaryId?: string;
+  public subscriptionType: subscriptionType;
 }

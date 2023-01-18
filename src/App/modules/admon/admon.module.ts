@@ -24,6 +24,10 @@ import * as Multer from 'multer';
       provide: 'SUBREPO',
       useClass: SubscriptionRepository,
     },
+    {
+      provide: 'DETAILREPO',
+      useClass: SubscriptionRepository,
+    },
     UsersService,
     BillingPeriodRepository,
   ],

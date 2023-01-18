@@ -4,6 +4,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WaitingList } from '../entities/waiting-list.entity';
 import { CreateWaitingListDto } from '../dto/create-waiting-list.dto';
 import { UpdateWaitingListDto } from '../dto/update-waiting-list.dto';
+import { Injectable } from '@nestjs/common';
 
 export interface IWaitListRepository {
   insertList(payload: CreateWaitingListDto): Promise<WaitingList>;
@@ -16,12 +17,14 @@ export interface IWaitListRepository {
   fetchBannedUsers?(groupId: string): Promise<Array<WaitingList>>;
   fetchAllByGroups(groupId: string): Promise<Array<WaitingList>>;
 }
-
 @CustomRepository(WaitingList)
 export class WaitListRepository
   extends BaseFirestoreRepository<WaitingList>
   implements IWaitListRepository
 {
+  constructor() {
+    super(WaitingList);
+  }
   public fetchAllByGroups = async (groupId: string): Promise<WaitingList[]> =>
     await this.whereEqualTo((w) => w.groupId, groupId).find();
 

@@ -16,10 +16,6 @@ export interface ISubscription {
   newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto>;
-  modifySubscriptions(
-    subscriptions: SubscriptionDetail,
-    callback?: () => Promise<void>,
-  ): Promise<void>;
   getAllSuscriptions?(): Promise<Subscription[]>;
   getSubscriptions?(filter: string, status: status): Promise<Subscription[]>;
   getSubscriptionsDetail?(
@@ -67,20 +63,6 @@ export class SubscriptionRepository implements ISubscription {
     if (!tran) throw new BadRequestException();
     return payload;
   };
-  /** //* Modify fields of a subscription */
-  public async modifySubscriptions(
-    subscriptions: SubscriptionDetail,
-    callback?: () => Promise<void>,
-  ): Promise<void> {
-    try {
-      const writeResult = await this.subscriptionDetailCol
-        .doc(subscriptions.subscriptioDetailId)
-        .update(instanceToPlain(subscriptions));
-      console.log(writeResult.writeTime);
-    } catch (error) {
-      console.error(error);
-    }
-  }
   //#endregion
   //#region  Read Operations
   public async getAllSuscriptions?(): Promise<Subscription[]> {

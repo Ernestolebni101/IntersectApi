@@ -17,6 +17,9 @@ export class ChatRepository
   extends BaseFirestoreRepository<Chat>
   implements IChatRepository
 {
+  constructor() {
+    super(Chat);
+  }
   public getChatAsync = async (chatId: string): Promise<Chat> =>
     await this.findById(chatId);
 

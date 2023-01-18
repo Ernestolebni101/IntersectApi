@@ -1,8 +1,6 @@
 import {
   File,
   Bucket,
-  BaseFirestoreRepository,
-  CustomRepository,
   CreateUserDto,
   UpdateUserDto,
   UserDto,
@@ -11,6 +9,8 @@ import {
   Logger,
   plainToClass,
 } from '../index';
+import { CustomRepository, BaseFirestoreRepository } from 'fireorm';
+
 export interface IUserRepository {
   createOne(payload: CreateUserDto): Promise<number>;
   getAllAsync(): Promise<UserDto[]>;
@@ -23,16 +23,15 @@ export interface IUserRepository {
   ): Promise<string>; // ===> esto debe ser mediante un trigger
   ifExist(nickName: string): Promise<number>;
 }
-
 @CustomRepository(User)
 export class UsersRepository
   extends BaseFirestoreRepository<User>
   implements IUserRepository
 {
-  constructor(private readonly logger: Logger) {
+  private logger = new Logger();
+  constructor() {
     super(User);
   }
-
   public getUsersByUids = async (uids: string[]): Promise<User[]> => {
     const users = await this.find();
     const selectedUsers = new Array<User>();
