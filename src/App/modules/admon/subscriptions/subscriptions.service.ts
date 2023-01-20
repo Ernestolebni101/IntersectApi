@@ -22,7 +22,7 @@ import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
 import { updateDetialDto } from './dtos/update-subscription.dto';
-import { ISubscription } from './repository/subscription.repository';
+import { ISubscription } from './repository/subrepository';
 
 @Injectable()
 export class SubscriptionService {
@@ -31,12 +31,12 @@ export class SubscriptionService {
   private readonly Isub: ISubscription;
   private readonly Iperiod: ICatalogRepository<BillingPeriodDto>;
   constructor(
-    // private readonly unitOfWork: UnitOfWorkAdapter,
+    private readonly unitOfWork: UnitOfWorkAdapter,
     private readonly emmiter: EventEmitter2,
   ) {
-    // this.Igroup = this.unitOfWork.Repositories.groupsRepository;
-    // this.Isub = this.unitOfWork.Repositories.subRepo;
-    // this.Iuser = this.unitOfWork.Repositories.userRepository;
+    this.Igroup = this.unitOfWork.Repositories.groupsRepository;
+    this.Iuser = this.unitOfWork.Repositories.userRepository;
+    this.Isub = this.unitOfWork.Repositories.subRepo;
   }
   //   //#region Write Operations
   //   public async newSuscription(

@@ -4,9 +4,9 @@ import {
   Subscription,
   SubscriptionDetail,
 } from '../../index';
-import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
 export interface ISubscription {
   newSuscription(
     payload: createSubscriptionDto,
@@ -19,7 +19,7 @@ export interface ISubscription {
   ): Promise<SubscriptionDetail[]>;
   getSubscriptionDetail?(id: string): Promise<SubscriptionDetail>;
 }
-export class SubscriptionRepository implements ISubscription {
+export class SubRepository implements ISubscription {
   private readonly suscriptionCol: FirestoreCollection;
   private readonly subscriptionDetailCol: FirestoreCollection;
   constructor(private readonly fireDb: firestoreDb) {

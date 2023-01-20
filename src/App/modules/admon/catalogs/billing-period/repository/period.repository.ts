@@ -1,9 +1,7 @@
 import {
-  FIRESTORE_DB,
   firestoreDb,
   FirestoreCollection,
 } from '../../../../../Database/index';
-import { Inject, Injectable, Scope } from '@nestjs/common';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { InternalServerErrorException } from '@nestjs/common/exceptions';
 import { ICatalog, ICatalogRepository } from '../../catalog.interface';

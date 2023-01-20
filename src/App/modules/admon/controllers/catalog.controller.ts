@@ -13,7 +13,7 @@ import { Response, Request } from 'express';
 import { success } from 'src/common/response';
 import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../../auth/index';
 import { CatalogPipe } from '../pipes/catalog.pipe';
-import { UnitOfWorkAdapter } from 'src/App/Database';
+import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
 @Controller('catalogs/v1/')
 export class CatalogController {
   constructor(private readonly unitOfwork: UnitOfWorkAdapter) {}
@@ -30,8 +30,8 @@ export class CatalogController {
       await this.unitOfwork.Repositories.billingRepo.newCatalogElement(payload);
     return success(req, res, response, 201);
   }
-  // @hasRoles(roles.ADMIN, roles.SA)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('billing-period')
   public async getAllCatalogs(
     @Req() req: Request,

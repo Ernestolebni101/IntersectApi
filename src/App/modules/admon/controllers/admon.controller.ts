@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -18,9 +19,13 @@ import { SubscriptionPipe } from '../pipes/subscription.pipe';
 import { SubscriptionService } from '../subscriptions/subscriptions.service';
 import { status } from '..';
 import { updateDetialDto } from '../subscriptions/dtos/update-subscription.dto';
+import { UsersService } from '../../users';
 @Controller('admon/v1/')
 export class AdmonController {
-  constructor(private readonly suscriptionService: SubscriptionService) {}
+  constructor(
+    private readonly suscriptionService: SubscriptionService,
+    @Inject('USERS') private readonly userService: UsersService,
+  ) {}
   // @hasRoles(roles.ADMIN, roles.SA)
   // @UseGuards(JwtAuthGuard, RolesGuard)
   // @Post('new-subscription')
@@ -33,19 +38,19 @@ export class AdmonController {
   //   await this.suscriptionService.newSuscription(payload);
   //   return success(req, res, 'login success', 201);
   // }
-  // // @hasRoles(roles.ADMIN, roles.SA)
-  // // @UseGuards(JwtAuthGuard, RolesGuard)
-  // // @Post('users-search')
-  // // public async userSearch(
-  // //   @Req() req: Request,
-  // //   @Res() res: Response,
-  // //   @Body(SearchPipe) search: string,
-  // // ) {
-  // //   const response = (await this.userService.userSearch(search)).filter(
-  // //     (user) => user.uid != req.user['id'],
-  // //   );
-  // //   return success(req, res, response, 200);
-  // // }
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post('users-search')
+  public async userSearch(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body(SearchPipe) search: string,
+  ) {
+    const response = (await this.userService.userSearch(search)).filter(
+      (user) => user.uid != req.user['id'],
+    );
+    return success(req, res, response, 200);
+  }
   // //TODO: Middleware de Seguridad
   // @Get('user-subscription/:filter')
   // public async userSubscriptions(

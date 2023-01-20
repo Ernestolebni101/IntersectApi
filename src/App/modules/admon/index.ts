@@ -7,7 +7,6 @@ export {
   BillingPeriodDto,
   BillingIdentifierDto,
 } from './catalogs/billing-period/dtos/read-billing-period.dto';
-export { BillingPeriodRepository } from './catalogs/billing-period/repository/billing-period.repository';
 export { AdmonController } from './controllers/admon.controller';
 export { CatalogController } from './controllers/catalog.controller';
 export { SearchPipe } from './pipes/search.pipe';
@@ -22,7 +21,6 @@ export {
   IReadable,
 } from './catalogs/catalog.interface';
 export {} from './catalogs/states/entities';
-export { SubscriptionRepository } from './subscriptions/repository/subscription.repository';
 export {
   Subscription,
   SubscriptionDetail,
@@ -38,3 +36,5 @@ export { StateCatalogRepository } from './catalogs/states/repository/state.repos
 export { updateSubscriptionDetailDto } from './subscriptions/dtos/update-subscription.dto';
 export { Descriptor } from './subscriptions/utils/descriptor.utils';
 export { Group } from 'src/App/modules/groups/entities/group.entity';
+export { SubscriptionDetailRepository } from './subscriptions/repository/subscription-detail.repository';
+export { BillingPeriodRepository } from './catalogs/billing-period/repository/period.repository';

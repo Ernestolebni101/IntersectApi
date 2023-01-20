@@ -1,6 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { SubscriptionDetailRepository } from '../modules/admon/subscriptions/repository/subscription-detail.repository';
-import { repositories } from './database-providers/repository.provider';
 import {
   firebaseProvider,
   UnitOfWorkAdapter,
@@ -8,17 +6,7 @@ import {
 } from './index';
 @Global()
 @Module({
-  providers: [
-    ...firebaseProvider,
-    UnitOfWorkAdapter,
-    FunctionsManagerService,
-    ...repositories,
-  ],
-  exports: [
-    ...firebaseProvider,
-    FunctionsManagerService,
-    ...repositories,
-    UnitOfWorkAdapter,
-  ],
+  providers: [...firebaseProvider, UnitOfWorkAdapter, FunctionsManagerService],
+  exports: [...firebaseProvider, FunctionsManagerService, UnitOfWorkAdapter],
 })
 export class DatabaseModule {}

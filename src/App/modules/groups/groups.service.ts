@@ -16,7 +16,7 @@ import { IMessageRepository } from '../messages/repository/message.repository';
 import { Time } from '../../../Utility/utility-time-zone';
 import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
-import { ISubscription } from '../admon/subscriptions/repository/subscription.repository';
+import { ISubscription } from '../admon/subscriptions/repository/subrepository';
 
 @Injectable()
 export class GroupsService {
