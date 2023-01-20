@@ -13,7 +13,7 @@ export class SubscriptionDetailRepository
   implements IAbstractRepository<SubscriptionDetail>
 {
   private readonly collection: FirestoreCollection;
-  constructor(private readonly fireDb: firestoreDb) {
+  constructor(private fireDb: firestoreDb) {
     this.collection = this.fireDb.collection('SuscriptionDetails');
   }
   public async getByParam<TParam extends IParam>(

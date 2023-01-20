@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersService } from '../users/users.service';
 import { PassportModule } from '@nestjs/passport/dist';
 import { SessionSerializer } from './guards/serializer/session.serializer';
 import { LocalStrategy } from './guards/local.strategy.guard';
@@ -12,6 +11,7 @@ import { RoleRepository } from './repository/auth.role.repository';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local.auth.guard';
+import { UsersService } from '../users';
 @Module({
   imports: [
     PassportModule.register({ session: true }),
@@ -28,10 +28,13 @@ import { LocalAuthGuard } from './guards/local.auth.guard';
   controllers: [AuthController],
   providers: [
     RoleRepository,
-    UsersService,
     SessionSerializer,
     RolesGuard,
     JwtAuthGuard,
+    {
+      provide: 'USERS',
+      useClass: UsersService,
+    },
     {
       provide: 'AUTH',
       useClass: AuthService,

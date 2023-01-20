@@ -4,7 +4,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WaitingList } from '../entities/waiting-list.entity';
 import { CreateWaitingListDto } from '../dto/create-waiting-list.dto';
 import { UpdateWaitingListDto } from '../dto/update-waiting-list.dto';
-import { Injectable } from '@nestjs/common';
 
 export interface IWaitListRepository {
   insertList(payload: CreateWaitingListDto): Promise<WaitingList>;

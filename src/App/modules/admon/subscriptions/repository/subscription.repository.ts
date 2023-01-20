@@ -4,12 +4,7 @@ import {
   Subscription,
   SubscriptionDetail,
 } from '../../index';
-import {
-  FIRESTORE_DB,
-  firestoreDb,
-  FirestoreCollection,
-} from '../../../../Database/index';
-import { Inject, Injectable } from '@nestjs/common';
+import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
 export interface ISubscription {
@@ -24,11 +19,10 @@ export interface ISubscription {
   ): Promise<SubscriptionDetail[]>;
   getSubscriptionDetail?(id: string): Promise<SubscriptionDetail>;
 }
-@Injectable()
 export class SubscriptionRepository implements ISubscription {
   private readonly suscriptionCol: FirestoreCollection;
   private readonly subscriptionDetailCol: FirestoreCollection;
-  constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
+  constructor(private readonly fireDb: firestoreDb) {
     this.suscriptionCol = this.fireDb.collection('Suscriptions');
     this.subscriptionDetailCol = this.fireDb.collection('SuscriptionDetails');
   }

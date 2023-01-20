@@ -12,6 +12,7 @@ import {
   FIRESTORE_DB,
   SETTINGS,
 } from '../database.constants';
+import { Scope } from '@nestjs/common/interfaces';
 export type firebaseClient = app.App;
 export type firestoreDb = firebase.firestore.Firestore;
 export const firebaseProvider: Provider[] = [
@@ -20,13 +21,15 @@ export const firebaseProvider: Provider[] = [
       return !firebase.apps.length
         ? firebase.initializeApp({
             credential: firebase.credential.cert(creds as ServiceAccount),
-            databaseURL: config.get('DB_URL'),
-            storageBucket: config.get('BUCKET_URL'),
+            databaseURL: config.get<string>('DB_URL'),
+            storageBucket: config.get<string>('BUCKET_URL'),
+            projectId: config.get<string>('PID'),
           })
         : firebase.app();
     },
     provide: FIREBASE_APP_CLIENT,
     inject: [ConfigService],
+    scope: Scope.DEFAULT,
   },
   {
     useFactory: (app: firebaseClient): firestoreDb => {
@@ -36,5 +39,6 @@ export const firebaseProvider: Provider[] = [
     },
     provide: FIRESTORE_DB,
     inject: [FIREBASE_APP_CLIENT],
+    scope: Scope.DEFAULT,
   },
 ];

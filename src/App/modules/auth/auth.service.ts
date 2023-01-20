@@ -1,12 +1,13 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { AuthResponse } from './dto/response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RoleRepository } from './repository/auth.role.repository';
+import { UsersService } from '../users';
+import { Inject } from '@nestjs/common/decorators';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UsersService,
+    @Inject('USERS') private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly roleRepository: RoleRepository,
   ) {}

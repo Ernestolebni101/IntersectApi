@@ -8,24 +8,26 @@ import {
   Response as Res,
   UseGuards,
 } from '@nestjs/common';
-import { BillingPeriodRepository, createBillingPeriodDto } from '../index';
+import { createBillingPeriodDto } from '../index';
 import { Response, Request } from 'express';
 import { success } from 'src/common/response';
 import { roles, hasRoles, RolesGuard, JwtAuthGuard } from '../../auth/index';
 import { CatalogPipe } from '../pipes/catalog.pipe';
+import { UnitOfWorkAdapter } from 'src/App/Database';
 @Controller('catalogs/v1/')
 export class CatalogController {
-  constructor(private readonly billingRepository: BillingPeriodRepository) {}
+  constructor(private readonly unitOfwork: UnitOfWorkAdapter) {}
   //#region  Periods
-  // @hasRoles(roles.ADMIN, roles.SA)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('billing-period')
   public async NewPeriod(
     @Req() req: Request,
     @Res() res: Response,
     @Body(CatalogPipe) payload: createBillingPeriodDto,
   ) {
-    const response = await this.billingRepository.newCatalogElement(payload);
+    const response =
+      await this.unitOfwork.Repositories.billingRepo.newCatalogElement(payload);
     return success(req, res, response, 201);
   }
   // @hasRoles(roles.ADMIN, roles.SA)
@@ -36,7 +38,7 @@ export class CatalogController {
     @Res() res: Response,
     @Param('isActive') isActive = true,
   ) {
-    const catalogs = await this.billingRepository.getAll();
+    const catalogs = await this.unitOfwork.Repositories.billingRepo.getAll();
     return success(
       req,
       res,

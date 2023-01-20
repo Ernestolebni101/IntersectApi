@@ -1,11 +1,10 @@
 import { PassportSerializer } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/App/modules/users/users.service';
-import { UserDto } from 'src/App/modules/users/dto/read-user.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { UsersService } from 'src/App/modules/users';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-  constructor(private readonly userService: UsersService) {
+  constructor(@Inject('USERS') private readonly userService: UsersService) {
     super();
   }
   serializeUser(user: any, done: (err: Error, user: any) => void): any {

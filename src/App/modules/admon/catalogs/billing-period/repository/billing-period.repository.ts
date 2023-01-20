@@ -12,13 +12,11 @@ import {
   BillingPeriodDto,
 } from '../dtos/read-billing-period.dto';
 import { createBillingPeriodDto } from '../dtos/billing-period.dto';
-
-@Injectable({ scope: Scope.TRANSIENT })
 export class BillingPeriodRepository
   implements ICatalogRepository<BillingPeriodDto>
 {
   private readonly catalogCol: FirestoreCollection;
-  constructor(@Inject(FIRESTORE_DB) private readonly fireDb: firestoreDb) {
+  constructor(private fireDb: firestoreDb) {
     this.catalogCol = this.fireDb.collection('BillingPeriod');
   }
   public async newCatalogElement<TSet extends ICatalog>(

@@ -5,13 +5,14 @@ import { UnitOfWorkRepository } from './repositories.implements';
 import { FIRESTORE_DB } from '../database.constants';
 import { firestoreDb } from '../database-providers/firebase.provider';
 import { Bucket } from '@google-cloud/storage';
+import { repo } from '../database-providers/repository.provider';
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable({ scope: Scope.DEFAULT })
 export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
   public _transaction: firebase.firestore.WriteBatch;
   constructor(
     @Inject(FIRESTORE_DB) private readonly db: firestoreDb,
-    public readonly Repositories: UnitOfWorkRepository,
+    @Inject(repo.REPOS) public readonly Repositories: UnitOfWorkRepository,
   ) {
     this._transaction = this.db.batch();
   }

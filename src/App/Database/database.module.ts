@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
+import { SubscriptionDetailRepository } from '../modules/admon/subscriptions/repository/subscription-detail.repository';
 import { repositories } from './database-providers/repository.provider';
 import {
   firebaseProvider,
   UnitOfWorkAdapter,
   FunctionsManagerService,
-  UnitOfWorkRepository,
 } from './index';
 @Global()
 @Module({
@@ -12,14 +12,12 @@ import {
     ...firebaseProvider,
     UnitOfWorkAdapter,
     FunctionsManagerService,
-    UnitOfWorkRepository,
     ...repositories,
   ],
   exports: [
     ...firebaseProvider,
     FunctionsManagerService,
     ...repositories,
-    UnitOfWorkRepository,
     UnitOfWorkAdapter,
   ],
 })

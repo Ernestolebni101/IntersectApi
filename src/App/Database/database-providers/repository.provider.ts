@@ -8,92 +8,32 @@ import { FIRESTORE_DB } from '../database.constants';
 import * as fireorm from 'fireorm';
 import { firestoreDb } from './firebase.provider';
 import { SubscriptionDetailRepository } from 'src/App/modules/admon/subscriptions/repository/subscription-detail.repository';
+import { UnitOfWorkRepository } from '..';
+import { SubscriptionRepository } from '../../modules/admon/subscriptions/repository/subscription.repository';
+import { BillingPeriodRepository } from 'src/App/modules/admon';
 
 export enum repo {
-  CHATS = 'CHATS',
-  SUBDETAIL = 'SUBDETAIL',
-  SUBS = 'SUBS',
-  WAITLIST = 'WAITLIST',
-  MESSAGES = 'MESSAGES',
-  GROUPS = 'GROUPS',
-  USERS = 'USERS',
+  REPOS = 'REPOS',
+  DETAIL = 'DETAIL',
+  SUB = 'SUB',
 }
-
 export const repositories: Provider[] = [
   {
-    provide: repo.SUBDETAIL,
-    useValue: (db: firestoreDb) => new SubscriptionDetailRepository(db),
-    scope: Scope.TRANSIENT,
-    inject: [FIRESTORE_DB],
-  },
-  {
-    provide: repo.USERS,
-    useValue: (db: firestoreDb) => {
-      try {
-        const repo = new UsersRepository();
-        return repo;
-      } catch (error) {
-        fireorm.initialize(db);
-        return new UsersRepository();
-      }
+    provide: repo.REPOS,
+    useFactory: (db: firestoreDb): UnitOfWorkRepository => {
+      fireorm.initialize(db);
+      return new UnitOfWorkRepository(
+        new UsersRepository(),
+        new GroupsRepository(),
+        new MessageRepository(),
+        new WaitListRepository(),
+        new ChatRepository(),
+        new SubscriptionDetailRepository(db),
+        new BillingPeriodRepository(db),
+        // new SubscriptionRepository(db),
+      );
     },
-    scope: Scope.TRANSIENT,
-    inject: [FIRESTORE_DB],
-  },
-  {
-    provide: repo.GROUPS,
-    useValue: (db: firestoreDb) => {
-      try {
-        const repo = new GroupsRepository();
-        return repo;
-      } catch (error) {
-        fireorm.initialize(db);
-        return new GroupsRepository();
-      }
-    },
-    scope: Scope.TRANSIENT,
-    inject: [FIRESTORE_DB],
-  },
-  {
-    provide: repo.MESSAGES,
-    useValue: (db: firestoreDb) => {
-      try {
-        const repo = new MessageRepository();
-        return repo;
-      } catch (error) {
-        fireorm.initialize(db);
-        return new MessageRepository();
-      }
-    },
-    scope: Scope.TRANSIENT,
-    inject: [FIRESTORE_DB],
-  },
-  {
-    provide: repo.WAITLIST,
-    useValue: (db: firestoreDb) => {
-      try {
-        const repo = new WaitListRepository();
-        return repo;
-      } catch (error) {
-        fireorm.initialize(db);
-        return new WaitListRepository();
-      }
-    },
-    scope: Scope.TRANSIENT,
-    inject: [FIRESTORE_DB],
-  },
-  {
-    provide: repo.CHATS,
-    useValue: (db: firestoreDb) => {
-      try {
-        const repo = new ChatRepository();
-        return repo;
-      } catch (error) {
-        fireorm.initialize(db);
-        return new ChatRepository();
-      }
-    },
-    scope: Scope.TRANSIENT,
+    scope: Scope.DEFAULT,
     inject: [FIRESTORE_DB],
   },
 ];

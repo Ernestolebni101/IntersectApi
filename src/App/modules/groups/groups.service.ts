@@ -16,7 +16,7 @@ import { IMessageRepository } from '../messages/repository/message.repository';
 import { Time } from '../../../Utility/utility-time-zone';
 import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
-import { SubscriptionRepository } from '../admon';
+import { ISubscription } from '../admon/subscriptions/repository/subscription.repository';
 
 @Injectable()
 export class GroupsService {
@@ -24,14 +24,16 @@ export class GroupsService {
   private readonly Iuser: IUserRepository;
   private readonly messageRepository: IMessageRepository;
   private readonly bucket: Promise<Bucket>;
+  private readonly Isub: ISubscription;
+
   constructor(
     private readonly adapter: UnitOfWorkAdapter,
     private readonly eventEmitter: EventEmitter2,
-    private readonly subRepo: SubscriptionRepository,
   ) {
     this.groupsRepository = this.adapter.Repositories.groupsRepository;
     this.Iuser = this.adapter.Repositories.userRepository;
     this.messageRepository = this.adapter.Repositories.messageRepository;
+    this.Isub = this.adapter.Repositories.subRepo;
     this.bucket = this.adapter.getBucket();
   }
   //#region Read Operations
@@ -113,7 +115,7 @@ export class GroupsService {
     const uidSet = new Set();
     const freeUsers = await Promise.all(
       (
-        await this.subRepo.getSubscriptionsDetail('groupId', group.id)
+        await this.Isub.getSubscriptionsDetail('groupId', group.id)
       ).map(async (sub) => {
         const freeUser = await this.Iuser.getUserbyId(sub.beneficiaryId);
         if (freeUser != null) {
