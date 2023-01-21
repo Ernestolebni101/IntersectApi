@@ -1,7 +1,9 @@
+import { IParam } from 'src/App/shared/utils/query.interface';
 import { IReadable, status } from '../..';
 import { subscriptionType } from '../../catalogs/states/entities/create-state.entities';
 
-export class Subscription implements IReadable {
+export class Subscription implements IReadable, IParam {
+  reflectData = (): unknown => this;
   public subscriptionId: string;
   public userId: string;
   public createdDate: number;
@@ -10,7 +12,8 @@ export class Subscription implements IReadable {
   public Details: SubscriptionDetail[];
 }
 
-export class SubscriptionDetail implements IReadable {
+export class SubscriptionDetail implements IReadable, IParam {
+  reflectData = (): unknown => this;
   public subscriptionId: string;
   public subscriptioDetailId: string;
   public groupId: string;

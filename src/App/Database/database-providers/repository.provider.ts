@@ -9,6 +9,8 @@ import * as fireorm from 'fireorm';
 import { firestoreDb } from './firebase.provider';
 import { SubscriptionDetailRepository } from 'src/App/modules/admon/subscriptions/repository/subscription-detail.repository';
 import { UnitOfWorkRepository } from '..';
+import { BillingPeriodRepository } from 'src/App/modules/admon/catalogs/billing-period/repository/period.repository';
+import { SubRepository } from 'src/App/modules/admon/subscriptions/repository/subrepository';
 
 export enum repo {
   REPOS = 'REPOS',
@@ -27,8 +29,8 @@ export const repositories: Provider[] = [
         new WaitListRepository(),
         new ChatRepository(),
         new SubscriptionDetailRepository(db),
-        // new BillingPeriodRepository(db),
-        // new SubscriptionRepository(db),
+        new BillingPeriodRepository(db),
+        new SubRepository(db),
       );
     },
     scope: Scope.DEFAULT,
