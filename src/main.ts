@@ -8,7 +8,11 @@ import { FunctionsManagerService } from './App/Database/firebase/functionManager
 import { Logger } from 'nestjs-pino';
 import * as sessions from 'express-session';
 import * as passport from 'passport';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  NotImplementedException,
+  ValidationPipe,
+} from '@nestjs/common';
 //#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -61,5 +65,11 @@ export const onMessageGroups = functions.firestore
   .onCreate(async (snap, context) => {
     console.log(context.eventId);
     await (await fManager).onMessageMultimedia(snap);
+  });
+//TODO: MISSING OPERATION FOR PROMOTIONAL CODES
+export const onSubscriptions = functions.firestore
+  .document('SuscriptionDetails/{id}')
+  .onWrite(async (snap, ctx) => {
+    await (await fManager).onSubscriptions(snap);
   });
 //#endregion

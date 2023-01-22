@@ -1,6 +1,6 @@
 export const getKey = <TObject extends object>(
   obj: TObject,
-  value: number,
+  value: number | string,
 ): string => {
   const index = Object.values(obj).indexOf(value);
   const Key = Object.keys(obj)[index];

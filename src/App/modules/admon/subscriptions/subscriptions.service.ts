@@ -40,9 +40,10 @@ export class SubscriptionService {
   ) {
     this.Igroup = this.unitOfWork.Repositories.groupsRepository;
     this.Iuser = this.unitOfWork.Repositories.userRepository;
+    this.Iperiod = this.unitOfWork.Repositories.billingRepo;
     this.Isub = this.unitOfWork.Repositories.subRepo;
   }
-  //#region Write Operations
+  //#region Write Opera tions
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {

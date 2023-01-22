@@ -15,6 +15,7 @@ export class Subscription implements IReadable, IParam {
 export class SubscriptionDetail implements IReadable, IParam {
   reflectData = (): unknown => this;
   public subscriptionId: string;
+  public subscription: Subscription;
   public subscriptioDetailId: string;
   public groupId: string;
   public paymentMethodId: string;

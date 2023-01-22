@@ -17,6 +17,7 @@ import { Time } from '../../../Utility/utility-time-zone';
 import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 import { ISubscription } from '../admon/subscriptions/repository/subrepository';
+import { subscriptionType } from '../admon/catalogs/states/entities/create-state.entities';
 
 @Injectable()
 export class GroupsService {
@@ -110,63 +111,22 @@ export class GroupsService {
     return groupDto;
   };
   /** get mix of user joined */
-  public finJoinedUsers = async (id: string): Promise<UserJoined[]> => {
+  public findJoinedUsers = async (id: string): Promise<UserJoined[]> => {
     const group = await this.groupsRepository.getById(id);
-    const uidSet = new Set();
-    const freeUsers = await Promise.all(
-      (
-        await this.Isub.getSubscriptionsDetail('groupId', group.id)
-      ).map(async (sub) => {
-        const freeUser = await this.Iuser.getUserbyId(sub.beneficiaryId);
-        if (freeUser != null) {
-          uidSet.add(freeUser.uid);
-          return new UserJoined(
-            freeUser.uid,
-            freeUser.nickName,
-            freeUser.profilePic,
-            joinType.FREE,
-            freeUser.onlineStatus,
-          );
-        }
+    const joinedUsers = await Promise.all(
+      Object.keys(group.groupMembers).map(async (uid) => {
+        const { id, nickName, profilePic, onlineStatus } =
+          await this.Iuser.getUserbyId(uid);
+        const joinT =
+          group.groupMembers.get(uid) == subscriptionType.FREE
+            ? joinType.FREE
+            : joinType.PRE;
+        return new UserJoined(id, nickName, profilePic, joinT, onlineStatus);
       }),
     );
-    const premiumUsers = await Promise.all(
-      group.users.map(async (uid) => {
-        if (!uidSet.has(uid)) {
-          const premiumUser = await this.Iuser.getUserbyId(uid);
-          return new UserJoined(
-            uid,
-            premiumUser.nickName,
-            premiumUser.profilePic,
-            joinType.PRE,
-            premiumUser.onlineStatus,
-          );
-        }
-      }),
-    );
-    const users = [...premiumUsers, ...freeUsers];
-    return users.filter((u) => u != null);
+    return joinedUsers;
   };
-  // /**
-  //  *
-  //  */
-  // public setGroupSettings = async (
-  //   payload: UpsertSettingsDto,
-  // ): Promise<GroupSettings> => {
-  //   const foundGroup = await this.groupsRepository.getById(payload.groupId);
-  //   const foundSettings = await foundGroup.groupSettings
-  //     .whereEqualTo((s) => s.userId, payload.user)
-  //     .findOne();
-  //   if (foundSettings != undefined) {
-  //     foundSettings.isNotify = payload.isNotify ?? foundSettings.isNotify;
-  //     await foundGroup.groupSettings.update(foundSettings);
-  //     return foundSettings;
-  //   }
-  //   const inserted = await foundGroup.groupSettings.create(
-  //     plainToInstance(GroupSettings, payload),
-  //   );
-  //   return inserted;
-  // };
+
   /**
    *
    * @param file Archivo multimedia
@@ -186,3 +146,23 @@ export class GroupsService {
     return str;
   };
 }
+// /**
+//  *
+//  */
+// public setGroupSettings = async (
+//   payload: UpsertSettingsDto,
+// ): Promise<GroupSettings> => {
+//   const foundGroup = await this.groupsRepository.getById(payload.groupId);
+//   const foundSettings = await foundGroup.groupSettings
+//     .whereEqualTo((s) => s.userId, payload.user)
+//     .findOne();
+//   if (foundSettings != undefined) {
+//     foundSettings.isNotify = payload.isNotify ?? foundSettings.isNotify;
+//     await foundGroup.groupSettings.update(foundSettings);
+//     return foundSettings;
+//   }
+//   const inserted = await foundGroup.groupSettings.create(
+//     plainToInstance(GroupSettings, payload),
+//   );
+//   return inserted;
+// };

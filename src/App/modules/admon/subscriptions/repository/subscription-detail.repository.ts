@@ -2,7 +2,10 @@ import {
   IAbstractRepository,
   IParam,
 } from 'src/App/shared/utils/query.interface';
-import { SubscriptionDetail } from '../dtos/read-subscriptions.dto';
+import {
+  Subscription,
+  SubscriptionDetail,
+} from '../dtos/read-subscriptions.dto';
 import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
 import {
   createSubscriptionDetailDto,
@@ -13,8 +16,10 @@ export class SubscriptionDetailRepository
   implements IAbstractRepository<SubscriptionDetail>
 {
   private readonly collection: FirestoreCollection;
+  private readonly sub: FirestoreCollection;
   constructor(private fireDb: firestoreDb) {
     this.collection = this.fireDb.collection('SuscriptionDetails');
+    this.sub = this.fireDb.collection('Suscriptions');
   }
   public async getByParam<TParam extends IParam>(
     payload: TParam,
@@ -33,9 +38,13 @@ export class SubscriptionDetailRepository
   ): Promise<SubscriptionDetail> {
     const param = payload.reflectData() as getDetail;
     const foundDetail = await this.collection.doc(param.docId).get();
-    return foundDetail.exists
-      ? plainToInstance(SubscriptionDetail, foundDetail.data())
-      : null;
+    if (!foundDetail.exists) return null;
+    const detail = plainToInstance(SubscriptionDetail, foundDetail.data());
+    detail.subscription = plainToInstance(
+      Subscription,
+      (await this.sub.doc(detail.subscriptionId).get()).data(),
+    );
+    return detail;
   }
   public async getAll<TParam extends IParam>(
     payload: TParam,

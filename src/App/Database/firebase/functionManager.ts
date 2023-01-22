@@ -9,6 +9,7 @@ import { User } from '../../modules/users/entities/user.entity';
 import { Bucket } from '@google-cloud/storage';
 import * as functions from 'firebase-functions';
 import { MutimediaRepository } from '../../modules/messages/repository/multimedia.repository';
+import { UnitOfWorkAdapter } from '..';
 
 @Injectable()
 export class FunctionsManagerService {
@@ -17,7 +18,8 @@ export class FunctionsManagerService {
   public readonly storage: Bucket;
   constructor(
     @Inject(FIREBASE_APP_CLIENT) private readonly app: firebaseClient,
-    private readonly config: ConfigService, // private readonly mediaService: MultimediaService,
+    private readonly config: ConfigService,
+    private readonly unitOfWork: UnitOfWorkAdapter,
   ) {
     this.db = this.app.firestore();
     this.storage = this.app
@@ -85,5 +87,18 @@ export class FunctionsManagerService {
     } catch (error) {
       functions.logger.error(error);
     }
+  };
+  public onSubscriptions = async (snap: any) => {
+    const group = await this.unitOfWork.Repositories.groupsRepository.getById(
+      snap.groupId,
+    );
+    const subscription =
+      await this.unitOfWork.Repositories.subDetailRepo.getById(
+        snap.subscriptionDetailId,
+      );
+    group.groupMembers.set(
+      snap.beneficiaryId || subscription.subscription.userId,
+      subscription.subscriptionType,
+    );
   };
 }

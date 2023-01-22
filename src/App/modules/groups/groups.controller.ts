@@ -64,7 +64,7 @@ export class GroupsController {
     @Param('groupId') groupId: string,
   ) {
     return await this.groupsService
-      .finJoinedUsers(groupId)
+      .findJoinedUsers(groupId)
       .then((data) => {
         success(req, res, data);
       })
