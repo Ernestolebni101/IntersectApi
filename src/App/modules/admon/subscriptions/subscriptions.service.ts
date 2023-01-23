@@ -23,8 +23,10 @@ import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
 import { scheduler } from './helpers/scheduler-details.helpers';
 import { updateDetialDto } from './dtos/update-subscription.dto';
-import { ISubscription } from './repository/subrepository';
-import { IAbstractRepository } from 'src/App/shared/utils/query.interface';
+import {
+  IAbstractRepository,
+  ISubscription,
+} from 'src/App/shared/utils/query.interface';
 import { SubscriptionDetail } from './dtos/read-subscriptions.dto';
 
 @Injectable()

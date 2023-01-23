@@ -7,6 +7,7 @@ import { ChatRepository } from 'src/App/modules/chats/repository/chat-repository
 import { SubscriptionDetailRepository } from 'src/App/modules/admon/subscriptions/repository/subscription-detail.repository';
 import { BillingPeriodRepository } from 'src/App/modules/admon/catalogs/billing-period/repository/period.repository';
 import { SubRepository } from 'src/App/modules/admon/subscriptions/repository/subrepository';
+import { Generic } from 'src/App/modules/admon/subscriptions/repository/gener';
 
 export class UnitOfWorkRepository implements IUnitOfWorkRepository {
   constructor(
@@ -18,5 +19,6 @@ export class UnitOfWorkRepository implements IUnitOfWorkRepository {
     public readonly subDetailRepo?: SubscriptionDetailRepository,
     public readonly billingRepo?: BillingPeriodRepository,
     public readonly subRepo?: SubRepository,
+    public readonly generic?: Generic,
   ) {}
 }

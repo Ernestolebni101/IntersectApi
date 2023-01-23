@@ -14,6 +14,7 @@ import * as fireorm from 'fireorm';
 import { SubscriptionDetailRepository } from 'src/App/modules/admon/subscriptions/repository/subscription-detail.repository';
 import { BillingPeriodRepository } from 'src/App/modules/admon/catalogs/billing-period/repository/period.repository';
 import { SubRepository } from 'src/App/modules/admon/subscriptions/repository/subrepository';
+import { Generic } from 'src/App/modules/admon/subscriptions/repository/gener';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
@@ -30,7 +31,8 @@ export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
       new ChatRepository(),
       new SubscriptionDetailRepository(db),
       new BillingPeriodRepository(db),
-      // new SubRepository(db),
+      new SubRepository(db),
+      new Generic(db),
     );
   }
   public commitChanges = async (): Promise<void> => {

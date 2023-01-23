@@ -6,19 +6,10 @@ import {
 } from '../../index';
 import { instanceToPlain } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { firestoreDb, FirestoreCollection } from '../../../../Database/index';
-export interface ISubscription {
-  newSuscription(
-    payload: createSubscriptionDto,
-  ): Promise<createSubscriptionDto>;
-  getAllSuscriptions?(): Promise<Subscription[]>;
-  getSubscriptions?(filter: string, status: status): Promise<Subscription[]>;
-  getSubscriptionsDetail?(
-    propertyName: string,
-    Identifier: string,
-  ): Promise<SubscriptionDetail[]>;
-  getSubscriptionDetail?(id: string): Promise<SubscriptionDetail>;
-}
+import { FirestoreCollection } from '../../../../Database/index';
+import { firestoreDb } from '../../../../Database/database-providers/firebase.provider';
+import { ISubscription } from 'src/App/shared/utils/query.interface';
+
 export class SubRepository implements ISubscription {
   private readonly suscriptionCol: FirestoreCollection;
   private readonly subscriptionDetailCol: FirestoreCollection;

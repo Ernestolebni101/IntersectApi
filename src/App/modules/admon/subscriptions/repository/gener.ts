@@ -13,9 +13,7 @@ import {
 } from '../dtos/create-subscription.dto';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 //#region detail
-export class SubscriptionDetailRepository
-  implements IAbstractRepository<SubscriptionDetail>
-{
+export class Generic implements IAbstractRepository<SubscriptionDetail> {
   private readonly collection: FirestoreCollection;
   private readonly sub: FirestoreCollection;
   constructor(private fireDb: firestoreDb) {

@@ -9,8 +9,7 @@ import { User } from '../../modules/users/entities/user.entity';
 import { Bucket } from '@google-cloud/storage';
 import * as functions from 'firebase-functions';
 import { MutimediaRepository } from '../../modules/messages/repository/multimedia.repository';
-import { UnitOfWorkAdapter } from '..';
-import { cmd } from 'src/App/shared/utils/enum.keys';
+import { UnitOfWorkAdapter } from '../UnitOfWork/adapter.implements';
 import {
   status,
   subscriptionType,

@@ -16,7 +16,6 @@ import { IMessageRepository } from '../messages/repository/message.repository';
 import { Time } from '../../../Utility/utility-time-zone';
 import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
-import { ISubscription } from '../admon/subscriptions/repository/subrepository';
 import { subscriptionType } from '../admon/catalogs/states/entities/create-state.entities';
 
 @Injectable()
@@ -25,7 +24,6 @@ export class GroupsService {
   private readonly Iuser: IUserRepository;
   private readonly messageRepository: IMessageRepository;
   private readonly bucket: Promise<Bucket>;
-  private readonly Isub: ISubscription;
 
   constructor(
     private readonly adapter: UnitOfWorkAdapter,
@@ -34,7 +32,6 @@ export class GroupsService {
     this.groupsRepository = this.adapter.Repositories.groupsRepository;
     this.Iuser = this.adapter.Repositories.userRepository;
     this.messageRepository = this.adapter.Repositories.messageRepository;
-    this.Isub = this.adapter.Repositories.subRepo;
     this.bucket = this.adapter.getBucket();
   }
   //#region Read Operations

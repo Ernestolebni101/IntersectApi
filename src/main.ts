@@ -1,4 +1,4 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './App/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { initAdapters } from './adapter.init';
@@ -8,11 +8,7 @@ import { FunctionsManagerService } from './App/Database/firebase/functionManager
 import { Logger } from 'nestjs-pino';
 import * as sessions from 'express-session';
 import * as passport from 'passport';
-import {
-  ClassSerializerInterceptor,
-  NotImplementedException,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 //#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -33,7 +29,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   await app.init();
-  // await app.listen(process.env.PORT || 5001);
+  await app.listen(process.env.PORT || 5001);
   return app.get(FunctionsManagerService);
 }
 const fManager: Promise<FunctionsManagerService> = bootstrap();

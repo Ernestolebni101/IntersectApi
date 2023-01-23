@@ -24,17 +24,8 @@ export class Group {
   public groupSettings: Array<Record<string, unknown>> = new Array<
     Record<string, unknown>
   >();
-  public groupMembers: Map<string, subscriptionType>;
+  public groupMembers: Map<string, subscriptionType> = new Map<
+    string,
+    subscriptionType
+  >();
 }
-
-// declare global {
-//   interface Number {
-//     milesSep(): string;
-//   }
-// }
-// Number.prototype.milesSep = function (): string {
-//   return Number(this)
-//     .toString()
-//     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-// };
-// export {};

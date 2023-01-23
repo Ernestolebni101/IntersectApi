@@ -1,12 +1,11 @@
 import { Global, Module } from '@nestjs/common';
-import {
-  firebaseProvider,
-  UnitOfWorkAdapter,
-  FunctionsManagerService,
-} from './index';
+import { firebaseProvider } from './database-providers/firebase.provider';
+import { UnitOfWorkAdapter } from './UnitOfWork/adapter.implements';
+import { FunctionsManagerService } from './firebase/functionManager';
+
 @Global()
 @Module({
   providers: [...firebaseProvider, UnitOfWorkAdapter, FunctionsManagerService],
-  exports: [...firebaseProvider, FunctionsManagerService, UnitOfWorkAdapter],
+  exports: [...firebaseProvider, UnitOfWorkAdapter, FunctionsManagerService],
 })
 export class DatabaseModule {}
