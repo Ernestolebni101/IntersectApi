@@ -6,3 +6,9 @@ export const getKey = <TObject extends object>(
   const Key = Object.keys(obj)[index];
   return Key;
 };
+
+export enum cmd {
+  CREATE = 0,
+  UPDATE = 1,
+  DELETE = 2,
+}

@@ -10,6 +10,11 @@ import { Bucket } from '@google-cloud/storage';
 import * as functions from 'firebase-functions';
 import { MutimediaRepository } from '../../modules/messages/repository/multimedia.repository';
 import { UnitOfWorkAdapter } from '..';
+import { cmd } from 'src/App/shared/utils/enum.keys';
+import {
+  status,
+  subscriptionType,
+} from 'src/App/modules/admon/catalogs/states/entities/create-state.entities';
 
 @Injectable()
 export class FunctionsManagerService {
@@ -88,17 +93,41 @@ export class FunctionsManagerService {
       functions.logger.error(error);
     }
   };
-  public onSubscriptions = async (snap: any) => {
+  public onCreateSubscription = async (snap: any) => {
     const group = await this.unitOfWork.Repositories.groupsRepository.getById(
       snap.groupId,
     );
-    const subscription =
+    const subHead = (
+      await this.db.collection('Suscriptions').doc(snap.subscriptionId).get()
+    ).data();
+    group.groupMembers.set(subHead.userId, subscriptionType.PREM);
+  };
+
+  public onUpdateSubscription = async (snap: any) => {
+    const group = await this.unitOfWork.Repositories.groupsRepository.getById(
+      snap.groupId,
+    );
+    const { subscription, beneficiaryId, subscriptionStatus } =
       await this.unitOfWork.Repositories.subDetailRepo.getById(
         snap.subscriptionDetailId,
       );
-    group.groupMembers.set(
-      snap.beneficiaryId || subscription.subscription.userId,
-      subscription.subscriptionType,
-    );
+    const { userId } = subscription;
+    switch (subscriptionStatus) {
+      case status.EXPIRED:
+        if (beneficiaryId != null) {
+          group.users = group.users.filter((uid) => uid != beneficiaryId);
+          group.groupMembers.delete(beneficiaryId); // for subscriptors read in group service
+        }
+        group.users = group.users.filter((uid) => uid != userId);
+        group.groupMembers.delete(userId);
+        break;
+      case status.ACTIVE:
+        if (beneficiaryId != null) {
+          group.groupMembers.set(beneficiaryId, subscriptionType.FREE);
+        }
+        group.groupMembers.set(userId, subscriptionType.PREM);
+        break;
+    }
+    await this.unitOfWork.Repositories.groupsRepository.update(group);
   };
 }

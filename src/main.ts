@@ -33,7 +33,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   await app.init();
-  await app.listen(process.env.PORT || 5001);
+  // await app.listen(process.env.PORT || 5001);
   return app.get(FunctionsManagerService);
 }
 const fManager: Promise<FunctionsManagerService> = bootstrap();
@@ -66,10 +66,18 @@ export const onMessageGroups = functions.firestore
     console.log(context.eventId);
     await (await fManager).onMessageMultimedia(snap);
   });
-//TODO: MISSING OPERATION FOR PROMOTIONAL CODES
-export const onSubscriptions = functions.firestore
+
+export const onCreateSubscription = functions.firestore
   .document('SuscriptionDetails/{id}')
-  .onWrite(async (snap, ctx) => {
-    await (await fManager).onSubscriptions(snap);
+  .onCreate(async (snap, ctx) => {
+    console.log(ctx.eventType);
+    await (await fManager).onCreateSubscription(snap);
+  });
+
+export const onUpdateSubscriptions = functions.firestore
+  .document('SuscriptionDetails/{id}')
+  .onUpdate(async (snap, ctx) => {
+    console.log(ctx.eventType);
+    await (await fManager).onUpdateSubscription(snap);
   });
 //#endregion
