@@ -16,10 +16,10 @@ export const messageNotification = {
     let mss = '';
     switch (flag) {
       case true:
-        mss = `has sido suscrito a ${group} 👑, ${nick[0]} se ha unido a tu comunidad 👑`;
+        mss = `Has sido suscrito a ${group} 👑, ${nick[0]} se ha unido a tu comunidad 👑`;
         break;
       case false:
-        mss = `${nick} te ha dado acceso 🔑 para unirte a ${group}`;
+        mss = `${nick} Se te ha dado acceso 🔑 para unirte a ${group}`;
         break;
     }
     return mss;

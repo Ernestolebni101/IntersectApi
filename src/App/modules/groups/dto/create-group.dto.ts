@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IGroupEntity } from 'src/App/shared/strategys/istrategy.interface';
+import { subscriptionType } from '../../admon/catalogs/states/entities/create-state.entities';
 import { Group } from '../entities/group.entity';
 
 export class CreateGroupDto implements IGroupEntity {

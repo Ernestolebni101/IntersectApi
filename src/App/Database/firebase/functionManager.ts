@@ -1,4 +1,4 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { firebaseClient } from '../database-providers/firebase.provider';
 import { FIREBASE_APP_CLIENT } from '../database.constants';
 import { Group } from '../../modules/groups/entities/group.entity';
@@ -14,7 +14,6 @@ import {
   status,
   subscriptionType,
 } from 'src/App/modules/admon/catalogs/states/entities/create-state.entities';
-
 @Injectable()
 export class FunctionsManagerService {
   public readonly db: FirebaseFirestore.Firestore;
@@ -93,38 +92,46 @@ export class FunctionsManagerService {
     }
   };
   public onCreateSubscription = async (snap: any) => {
+    functions.logger.info(`Data from update: ${snap}`);
     const group = await this.unitOfWork.Repositories.groupsRepository.getById(
       snap.groupId,
     );
+    functions.logger.info(`Data from query Group: ${group}`);
     const subHead = (
       await this.db.collection('Suscriptions').doc(snap.subscriptionId).get()
     ).data();
-    group.groupMembers.set(subHead.userId, subscriptionType.PREM);
+    group.groupMembers[subHead.userId] = snap.subscriptionType;
+    await this.unitOfWork.Repositories.groupsRepository.update(group);
   };
 
   public onUpdateSubscription = async (snap: any) => {
+    functions.logger.info(`Data from update: ${snap}`);
     const group = await this.unitOfWork.Repositories.groupsRepository.getById(
       snap.groupId,
     );
+    functions.logger.info(`Data from query Group: ${group}`);
     const { subscription, beneficiaryId, subscriptionStatus } =
       await this.unitOfWork.Repositories.subDetailRepo.getById(
         snap.subscriptionDetailId,
       );
+    functions.logger.info(`Data from query subscription: ${subscription}`);
     const { userId } = subscription;
     switch (subscriptionStatus) {
       case status.EXPIRED:
         if (beneficiaryId != null) {
           group.users = group.users.filter((uid) => uid != beneficiaryId);
-          group.groupMembers.delete(beneficiaryId); // for subscriptors read in group service
+          delete group.groupMembers[beneficiaryId]; // for subscriptors read in group service
         }
         group.users = group.users.filter((uid) => uid != userId);
-        group.groupMembers.delete(userId);
+        delete group.groupMembers[userId];
+        functions.logger.info(`EXPIRED SUBSCRIPTION`);
         break;
       case status.ACTIVE:
         if (beneficiaryId != null) {
-          group.groupMembers.set(beneficiaryId, subscriptionType.FREE);
+          group.groupMembers[beneficiaryId] = subscriptionType.FREE;
         }
-        group.groupMembers.set(userId, subscriptionType.PREM);
+        group.groupMembers[userId] = subscriptionType.PREM;
+        functions.logger.info(`ACTIVE SUBSCRIPTION`);
         break;
     }
     await this.unitOfWork.Repositories.groupsRepository.update(group);

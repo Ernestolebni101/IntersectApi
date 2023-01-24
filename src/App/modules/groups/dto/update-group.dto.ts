@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { subscriptionType } from '../../admon/catalogs/states/entities/create-state.entities';
 import { CreateGroupDto } from './create-group.dto';
 
 /**

@@ -1,7 +1,5 @@
 import { Collection } from 'fireorm';
 import { Time } from '../../../../Utility/utility-time-zone';
-import { subscriptionType } from '../../admon/catalogs/states/entities/create-state.entities';
-
 @Collection('interGroups')
 export class Group {
   public id: string;
@@ -24,8 +22,5 @@ export class Group {
   public groupSettings: Array<Record<string, unknown>> = new Array<
     Record<string, unknown>
   >();
-  public groupMembers: Map<string, subscriptionType> = new Map<
-    string,
-    subscriptionType
-  >();
+  public groupMembers: Record<string, number> = {};
 }

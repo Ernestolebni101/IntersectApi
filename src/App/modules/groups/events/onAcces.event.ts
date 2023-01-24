@@ -44,7 +44,7 @@ export class OnAccesGroup {
           this.applicant.token,
           this.group.groupName,
           '',
-          this.observeString(1),
+          this.observeString(0),
           new DataModel(null, this.groupNotification),
         ),
       );
@@ -54,7 +54,7 @@ export class OnAccesGroup {
             this.owner.token,
             this.group.groupName,
             '',
-            this.observeString(0),
+            this.observeString(1),
             new DataModel(null, this.groupNotification),
           ),
         ));

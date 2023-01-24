@@ -112,13 +112,13 @@ export class GroupsService {
     const group = await this.groupsRepository.getById(id);
     const joinedUsers = await Promise.all(
       Object.keys(group.groupMembers).map(async (uid) => {
-        const { id, nickName, profilePic, onlineStatus } =
+        const { nickName, profilePic, onlineStatus } =
           await this.Iuser.getUserbyId(uid);
         const joinT =
-          group.groupMembers.get(uid) == subscriptionType.FREE
+          group.groupMembers[uid] == subscriptionType.FREE
             ? joinType.FREE
             : joinType.PRE;
-        return new UserJoined(id, nickName, profilePic, joinT, onlineStatus);
+        return new UserJoined(uid, nickName, profilePic, joinT, onlineStatus);
       }),
     );
     return joinedUsers;

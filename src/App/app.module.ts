@@ -64,7 +64,6 @@ import { AppService } from './app.service';
     GroupsModule,
     MessagesModule,
     ChatsModule,
-    IntegrationModule,
     AuthModule,
     AdmonModule,
   ],
@@ -92,7 +91,6 @@ export class AppModule implements NestModule {
         MessagesController,
         MultimediaController,
         ChatsController,
-        IntegrationController,
         WaitingListController,
       );
   }

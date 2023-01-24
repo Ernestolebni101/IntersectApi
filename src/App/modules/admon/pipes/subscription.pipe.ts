@@ -21,9 +21,9 @@ export class SubscriptionPipe implements PipeTransform {
       detail.amount = 200;
       detail.subscriptionId = value.subscriptionId;
       detail.subscriptionStatus = status.ACTIVE;
-      detail.subscriptionType = subscriptionType.PREM;
+      detail.subscriptionType = Number(detail.subscriptionType);
       detail.beneficiaryId = null;
-      detail.rawContent = File.base64ToImage(detail.voucherUrl);
+      // detail.rawContent = File.base64ToImage(detail.voucherUrl);
       detail.voucherUrl = '';
       detail.applyBeneficiary = !joinHistory.includes(detail.groupId);
       return (detail.subscriptionDetailId = uuid());

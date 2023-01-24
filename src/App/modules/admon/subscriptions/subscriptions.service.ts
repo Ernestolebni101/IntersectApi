@@ -49,16 +49,6 @@ export class SubscriptionService {
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
-    payload.subscriptionDetail = await Promise.all(
-      payload.subscriptionDetail.map(async (detail) => {
-        detail.voucherUrl = await File.submitFile(
-          detail.rawContent,
-          await this.unitOfWork.getBucket(),
-        );
-        delete detail.rawContent;
-        return detail;
-      }),
-    );
     const subscriptionResult = await this.Isub.newSuscription(payload);
     subscriptionResult.subscriptionDetail.forEach(async (detail) => {
       await this.Igroup.updateGroup(
@@ -182,3 +172,13 @@ export class SubscriptionService {
   }
   //#endregion
 }
+// payload.subscriptionDetail = await Promise.all(
+//   payload.subscriptionDetail.map(async (detail) => {
+//     detail.voucherUrl = await File.submitFile(
+//       detail.rawContent,
+//       await this.unitOfWork.getBucket(),
+//     );
+//     delete detail.rawContent;
+//     return detail;
+//   }),
+// );

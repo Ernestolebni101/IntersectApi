@@ -29,7 +29,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   await app.init();
-  await app.listen(process.env.PORT || 5001);
+  await app.listen(process.env.PORT || 8080);
   return app.get(FunctionsManagerService);
 }
 const fManager: Promise<FunctionsManagerService> = bootstrap();
@@ -63,17 +63,17 @@ export const onMessageGroups = functions.firestore
     await (await fManager).onMessageMultimedia(snap);
   });
 
-export const onCreateSubscription = functions.firestore
+export const onNewSubscription = functions.firestore
   .document('SuscriptionDetails/{id}')
   .onCreate(async (snap, ctx) => {
     console.log(ctx.eventType);
-    await (await fManager).onCreateSubscription(snap);
+    await (await fManager).onCreateSubscription(snap.data());
   });
 
 export const onUpdateSubscriptions = functions.firestore
   .document('SuscriptionDetails/{id}')
   .onUpdate(async (snap, ctx) => {
     console.log(ctx.eventType);
-    await (await fManager).onUpdateSubscription(snap);
+    await (await fManager).onUpdateSubscription(snap.after.data());
   });
-//#endregion
+//#endregion firebase deploy --only functions:onNewSubscription

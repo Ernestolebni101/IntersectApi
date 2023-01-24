@@ -1,7 +1,5 @@
-import {
-  ISubscription,
-} from 'src/App/shared/utils/query.interface';
-import {status} from '../../catalogs/states/entities/create-state.entities';
+import { ISubscription } from 'src/App/shared/utils/query.interface';
+import { status } from '../../catalogs/states/entities/create-state.entities';
 import {
   Subscription,
   SubscriptionDetail,
