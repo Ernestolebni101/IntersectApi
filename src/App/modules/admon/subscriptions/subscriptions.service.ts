@@ -84,6 +84,7 @@ export class SubscriptionService {
     if (subscriptionDetail == null || subscriptionDetail.beneficiaryId != null)
       throw new NotFoundException();
     subscriptionDetail.beneficiaryId = payload.userId;
+    subscriptionDetail.applyBeneficiary = false;
     await this.Idetail.modifyData(
       plainToInstance(SubscriptionDetail, subscriptionDetail),
     );

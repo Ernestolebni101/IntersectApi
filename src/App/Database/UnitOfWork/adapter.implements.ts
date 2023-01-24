@@ -13,9 +13,7 @@ import { ChatRepository } from 'src/App/modules/chats/repository/chat-repository
 import * as fireorm from 'fireorm';
 import { SubscriptionDetailRepository } from 'src/App/modules/admon/subscriptions/repository/subscription-detail.repository';
 import { BillingPeriodRepository } from 'src/App/modules/admon/catalogs/billing-period/repository/period.repository';
-import { SubRepository } from 'src/App/modules/admon/subscriptions/repository/subrepository';
-import { Generic } from 'src/App/modules/admon/subscriptions/repository/gener';
-
+import { SubHeadRepository } from 'src/App/modules/admon/subscriptions/repository/sub-head.repository';
 @Injectable({ scope: Scope.DEFAULT })
 export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
   public _transaction: firebase.firestore.WriteBatch;
@@ -31,8 +29,7 @@ export class UnitOfWorkAdapter implements IUnitOfWorkAdapter {
       new ChatRepository(),
       new SubscriptionDetailRepository(db),
       new BillingPeriodRepository(db),
-      new SubRepository(db),
-      new Generic(db),
+      new SubHeadRepository(db),
     );
   }
   public commitChanges = async (): Promise<void> => {
