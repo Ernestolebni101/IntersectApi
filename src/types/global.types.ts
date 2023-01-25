@@ -19,3 +19,12 @@ export function getValue<T>(result: PromiseSettled<T>): T {
     throw result.reason;
   }
 }
+
+// const currentDate = moment();
+// const beginDate: number = currentDate.startOf('month').valueOf();
+// const endDate: number = moment('2023-03-01').add(6, 'days').valueOf();
+// const date = Time.daysBetween({
+//   startDate: new Date(beginDate),
+//   endDate: new Date(endDate),
+// });
+// console.log(date);

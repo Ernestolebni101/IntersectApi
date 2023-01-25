@@ -9,11 +9,8 @@ import { Logger } from 'nestjs-pino';
 import * as sessions from 'express-session';
 import * as passport from 'passport';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import { getDetail } from './App/modules/admon/subscriptions/dtos/create-subscription.dto';
-import { plainToInstance } from 'class-transformer';
-import { Descriptor, status, SubscriptionDetail } from './App/modules/admon';
-import { Subscription } from './App/modules/admon/subscriptions/dtos/read-subscriptions.dto';
-import { subscriptionType } from './App/modules/admon/catalogs/states/entities/create-state.entities';
+import * as moment from 'moment';
+import { Time } from './Utility/utility-time-zone';
 //#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -83,35 +80,35 @@ export const onUpdateSubscriptions = functions.firestore
   });
 //#endregion firebase deploy --only functions:onNewSubscription
 //#region pipe
-const pipeMembers = async (groupId: string): Promise<void> => {
-  const unitOfWork = (await fManager).unitOfWork;
-  const group = await unitOfWork.Repositories.groupsRepository.getById(groupId);
-  const subList = await unitOfWork.Repositories.subDetailRepo.getByParam(
-    plainToInstance(getDetail, {
-      value: groupId,
-      fieldName: 'groupId',
-      status: status.ACTIVE,
-    }),
-  );
-  const subHash = Descriptor.toHashMap(
-    subList.flatMap((sub) => sub.subscription),
-    'userId',
-  ) as Record<string, Subscription>;
-  const detailHash = Descriptor.toHashMap(subList, 'subscriptionId') as Record<
-    string,
-    SubscriptionDetail
-  >;
-  group.users
-    .filter((uid) => uid != group.author)
-    .forEach((uid) => {
-      const member = subHash[uid];
-      if (member != undefined) {
-        const detail = detailHash[member.subscriptionId];
-        group.groupMembers[member.userId] = detail.subscriptionType;
-      } else {
-        group.groupMembers[uid] = subscriptionType.FREE;
-      }
-    });
-  await unitOfWork.Repositories.groupsRepository.update(group);
-};
+// const pipeMembers = async (groupId: string): Promise<void> => {
+//   const unitOfWork = (await fManager).unitOfWork;
+//   const group = await unitOfWork.Repositories.groupsRepository.getById(groupId);
+//   const subList = await unitOfWork.Repositories.subDetailRepo.getByParam(
+//     plainToInstance(getDetail, {
+//       value: groupId,
+//       fieldName: 'groupId',
+//       status: status.ACTIVE,
+//     }),
+//   );
+//   const subHash = Descriptor.toHashMap(
+//     subList.flatMap((sub) => sub.subscription),
+//     'userId',
+//   ) as Record<string, Subscription>;
+//   const detailHash = Descriptor.toHashMap(subList, 'subscriptionId') as Record<
+//     string,
+//     SubscriptionDetail
+//   >;
+//   group.users
+//     .filter((uid) => uid != group.author)
+//     .forEach((uid) => {
+//       const member = subHash[uid];
+//       if (member != undefined) {
+//         const detail = detailHash[member.subscriptionId];
+//         group.groupMembers[member.userId] = detail.subscriptionType;
+//       } else {
+//         group.groupMembers[uid] = subscriptionType.FREE;
+//       }
+//     });
+//   await unitOfWork.Repositories.groupsRepository.update(group);
+// };
 //#endregion
