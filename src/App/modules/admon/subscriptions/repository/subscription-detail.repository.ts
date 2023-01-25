@@ -30,9 +30,12 @@ export class SubscriptionDetailRepository
     if (param.status) query = query.where('status', '==', param.status);
     const foundDocs = await query.get();
     if (foundDocs.empty) return null;
-    return foundDocs.docs.map((doc) =>
-      plainToInstance(SubscriptionDetail, doc.data()),
-    );
+    return await Promise.all(foundDocs.docs.map(async (doc) => {
+      const sub = plainToInstance(SubscriptionDetail, doc.data());
+      sub.subscription = plainToInstance(Subscription,(await this.sub.doc(sub.subscriptionId).get()).data());
+      return sub;
+    },
+    ));
   }
   public async getById<TParam extends IParam>(
     payload: TParam,

@@ -22,7 +22,7 @@ export class FunctionsManagerService {
   constructor(
     @Inject(FIREBASE_APP_CLIENT) private readonly app: firebaseClient,
     private readonly config: ConfigService,
-    private readonly unitOfWork: UnitOfWorkAdapter,
+    public readonly unitOfWork: UnitOfWorkAdapter,
   ) {
     this.db = this.app.firestore();
     this.storage = this.app
