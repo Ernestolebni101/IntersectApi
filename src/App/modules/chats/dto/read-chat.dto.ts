@@ -8,14 +8,17 @@ export class ChatDto {
   public user: Array<ChatUserDto> = new Array<ChatUserDto>();
   public modifiedDate: string = Time.formatAMPM(new Date());
   public lastMessage: string;
+  public flag: number;
   public static Factory(
     id: string,
+    flag: number,
     messages: Array<Message>,
     userRaw: Array<ChatUserDto>,
   ): ChatDto {
     const model = new ChatDto();
     model.id = id;
     model.user = userRaw;
+    model.flag = flag;
     if (messages.length === 0) {
       model.lastMessage = 'Aún no hay mensajes';
       model.modifiedDate = Time.getCustomDate(new Date());

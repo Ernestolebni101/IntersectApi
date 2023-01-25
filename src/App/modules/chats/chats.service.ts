@@ -63,6 +63,7 @@ export class ChatsService {
           asynAcc.push(
             ChatDto.Factory(
               chatItem.id,
+              chatItem.flag,
               await this.messageRepository.getByGroups(chatItem.id),
               array,
             ),
