@@ -105,16 +105,13 @@ const pipeMembers = async (groupId: string): Promise<void> => {
     .filter((uid) => uid != group.author)
     .forEach((uid) => {
       const member = subHash[uid];
-      if(member != undefined){
+      if (member != undefined) {
         const detail = detailHash[member.subscriptionId];
         group.groupMembers[member.userId] = detail.subscriptionType;
-      }
-      else{
+      } else {
         group.groupMembers[uid] = subscriptionType.FREE;
       }
     });
   await unitOfWork.Repositories.groupsRepository.update(group);
 };
 //#endregion
-
-pipeMembers('TqdsJY76c94HIzyj3F73');
