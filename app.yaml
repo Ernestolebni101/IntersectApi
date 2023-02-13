@@ -1,7 +1,7 @@
 runtime: nodejs16
 env: standard
 instance_class: B1
-service: intersect
+service: intersect  
 env_variables:
   DB_URL     :   "https://intersectiondb-751e5.firebaseio.com"
   BUCKET_URL :   "gs://intersectiondb-751e5.appspot.com/"

@@ -3,19 +3,21 @@ import {
   Post,
   Body,
   Param,
-  Request,
-  Response,
   UseInterceptors,
-  Req,
   Delete,
   UploadedFiles,
-  Res,
+  Get,
+  Request as Req,
+  Response as Res,
+  NotImplementedException,
 } from '@nestjs/common';
 import { MessagesService } from '../services/messages.service';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { success, error } from '../../../../common/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { Response, Request } from 'express';
+import { Query } from '@nestjs/common/decorators';
 
 @ApiTags('Módulo de Mensajes')
 @Controller('messages/v1/')
@@ -44,14 +46,24 @@ export class MessagesController {
   }
 
   @Delete(':id')
-  async deleteMessage(
-    @Request() req,
-    @Response() res,
-    @Param('id') id: string,
-  ) {
+  async deleteMessage(@Req() req, @Res() res, @Param('id') id: string) {
     await this.messagesService
       .DeleteMessages(id)
       .then((data) => success(req, res, data, 200))
       .catch((e) => error(req, res, 'unexpected Error', e));
+  }
+
+  @Get()
+  async getMessagesByParams(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('groupId') groupId: string,
+    @Query('timestamp') timestamp: number,
+  ) {
+    const summary = await this.messagesService.findMessages(
+      groupId,
+      +timestamp,
+    );
+    return success(req, res, summary, 200);
   }
 }

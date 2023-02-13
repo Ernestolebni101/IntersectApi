@@ -9,6 +9,10 @@ export class Time {
     const strTime = hours + ':' + shortMin + ' ' + ampm;
     return strTime;
   }
+  public static getDayValue(timeStamp: number) {
+    const date = new Date(timeStamp);
+    return date.getDate() + date.getMonth() + 1;
+  }
   public static daysBetween({
     startDate = new Date(),
     endDate = new Date(),

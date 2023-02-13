@@ -37,3 +37,7 @@ export class newMessageDto {
   public timeDecorator: number;
   public messageDate: string;
 }
+
+export class MessageSummaryDto {
+  constructor(public id: string, public messageContent: string) {}
+}

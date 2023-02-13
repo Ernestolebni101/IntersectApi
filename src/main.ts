@@ -112,3 +112,13 @@ export const onUpdateSubscriptions = functions.firestore
 //   await unitOfWork.Repositories.groupsRepository.update(group);
 // };
 //#endregion
+
+const date = moment('2023-02-02');
+console.log(date.startOf('months').valueOf());
+console.log(date.add(5, 'days').endOf('months').valueOf());
+console.log(
+  Time.daysBetween({
+    startDate: new Date(date.startOf('month').valueOf()),
+    endDate: new Date(date.add(5, 'days').endOf('month').valueOf()),
+  }),
+);

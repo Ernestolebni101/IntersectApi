@@ -1,12 +1,10 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { plainToClass } from 'fireorm/node_modules/class-transformer';
 import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
 import { UserDto } from '../../users/dto/read-user.dto';
 import { IUserRepository } from '../../users/repository/user.repository';
 import { CreateMessageDto } from '../dto/create-message.dto';
-import { MessageDto, newMessageDto } from '../dto/read-message.dto';
+import { newMessageDto } from '../dto/read-message.dto';
 import { IMessageRepository } from '../repository/message.repository';
-import { Message } from '../entities/message.entity';
 import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IChatRepository } from '../../chats/repository/chat-repository';
@@ -15,7 +13,8 @@ import {
   ChatMessageCreated,
   GroupMessageCreated,
 } from '../events/message.events';
-
+import { Time } from 'src/Utility/utility-time-zone';
+import * as iconv from 'iconv-lite';
 @Injectable()
 export class MessagesService {
   private userRepository: IUserRepository;
@@ -38,18 +37,22 @@ export class MessagesService {
    * @param group es el parametro que se utiliza para buscar los mensajes
    * @returns Una promesa de lista de mensajes de transferencia de datos
    */
-  public findMessages = async (group: string): Promise<MessageDto[]> => {
-    const messages = await this.messageRepository.getByGroups(group);
-    const uids = messages.flatMap((c) => c.messageFrom);
-    const messageDto = messages.map((m: Message) =>
-      plainToClass(MessageDto, m),
+  public findMessages = async (
+    group: string,
+    timeStamp: number,
+  ): Promise<string[]> => {
+    const messages = (await this.messageRepository.getByGroups(group)).map(
+      (mss) => ({
+        ...mss,
+        day: Time.getDayValue(mss.timeDecorator),
+      }),
     );
-    let user: UserDto = new UserDto();
-    for (const uid of uids) {
-      user = await this.userRepository.getUserbyId(uid);
-      messageDto.forEach((x) => (x.messageFrom = user));
-    }
-    return messageDto;
+    return messages
+      .filter(
+        (m) =>
+          m.day == Time.getDayValue(timeStamp) && m.messageType == 'common',
+      )
+      .map((m) => m.messageContent);
   };
 
   /**
