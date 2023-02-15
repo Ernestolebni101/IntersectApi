@@ -8,9 +8,9 @@ import { FunctionsManagerService } from './App/Database/firebase/functionManager
 import { Logger } from 'nestjs-pino';
 import * as sessions from 'express-session';
 import * as passport from 'passport';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import * as moment from 'moment';
-import { Time } from './Utility/utility-time-zone';
+import { ValidationPipe } from '@nestjs/common';
+// import * as moment from 'moment';
+// import { Time } from './Utility/utility-time-zone';
 //#region bootStrap
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -111,14 +111,13 @@ export const onUpdateSubscriptions = functions.firestore
 //     });
 //   await unitOfWork.Repositories.groupsRepository.update(group);
 // };
+// const date = moment('2023-02-02');
+// console.log(date.startOf('months').valueOf());
+// console.log(date.add(5, 'days').endOf('months').valueOf());
+// console.log(
+//   Time.daysBetween({
+//     startDate: new Date(date.startOf('month').valueOf()),
+//     endDate: new Date(date.add(5, 'days').endOf('month').valueOf()),
+//   }),
+// );
 //#endregion
-
-const date = moment('2023-02-02');
-console.log(date.startOf('months').valueOf());
-console.log(date.add(5, 'days').endOf('months').valueOf());
-console.log(
-  Time.daysBetween({
-    startDate: new Date(date.startOf('month').valueOf()),
-    endDate: new Date(date.add(5, 'days').endOf('month').valueOf()),
-  }),
-);

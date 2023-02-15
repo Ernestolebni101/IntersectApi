@@ -13,7 +13,7 @@ export class BillingPeriodDto implements IReadable {
     startDate: Time.getCustomDate(new Date(this.startDate), 'long'),
     endDate: Time.getCustomDate(new Date(this.endDate), 'long'),
     restDays: Time.daysBetween({
-      startDate: new Date(this.startDate),
+      startDate: new Date(),
       endDate: new Date(this.endDate),
     }),
   });

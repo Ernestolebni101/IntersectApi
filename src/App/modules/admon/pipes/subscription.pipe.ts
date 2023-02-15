@@ -4,7 +4,6 @@ import { File } from 'src/Utility/utility-createFile';
 import { v4 as uuid } from 'uuid';
 import { status } from '..';
 import { IUserRepository } from '../../users';
-import { subscriptionType } from '../catalogs/states/entities/create-state.entities';
 import { createSubscriptionDto } from '../subscriptions/dtos/create-subscription.dto';
 @Injectable()
 export class SubscriptionPipe implements PipeTransform {

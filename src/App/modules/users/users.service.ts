@@ -62,11 +62,18 @@ export class UsersService {
 
   public userSearch = async (searchParam: string) => {
     const users = await this.findAllAsync();
-    return users.filter(
-      (user) =>
-        user.firstName.includes(searchParam) ||
-        user.lastName.includes(searchParam) ||
-        user.nickName.includes(searchParam),
-    );
+    const filterUsers = users.filter((user) => {
+      const { nickName, firstName, lastName } = user;
+      return (
+        nickName.toLowerCase().includes(searchParam) ||
+        firstName.toLowerCase().includes(searchParam) ||
+        lastName.toLowerCase().includes(searchParam)
+      );
+    });
+    return filterUsers;
   };
 }
+// regEx.test(nickName.toLowerCase()) ||
+// regEx.test(firstName.toLowerCase()) ||
+// regEx.test(lastName.toLowerCase())
+// const regEx = new RegExp(`([${searchParam}])\\1{1,3}`);

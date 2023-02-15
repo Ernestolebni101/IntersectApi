@@ -21,7 +21,8 @@ export class Time {
     const startTimestamp = startDate.getTime();
     const endTimestamp = endDate.getTime();
     const difference = endTimestamp - startTimestamp;
-    return Math.floor(difference / millisecondsPerDay);
+    const floor = Math.floor(difference / millisecondsPerDay);
+    return floor;
   }
   public static getNextMonth(): Date {
     const now = new Date();

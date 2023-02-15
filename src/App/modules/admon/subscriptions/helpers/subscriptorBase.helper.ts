@@ -28,11 +28,12 @@ export class SubscriptorBase {
           userArgs,
           subHead.userId,
         );
-        return {
+        const data = {
           subscriptionId: subHead.subscriptionId,
           joinDate: Time.getCustomDate(new Date(subHead.createdDate), 'long'),
           transactionDetail,
         };
+        return data;
       }),
     );
     return userWithSubscription;

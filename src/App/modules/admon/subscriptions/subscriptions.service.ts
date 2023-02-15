@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { File } from '../../../../Utility/utility-createFile';
 import { plainToInstance } from 'class-transformer';
 import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implements';
 import { MemberOpt, UpdateGroupDto } from '../../groups/dto/update-group.dto';
@@ -8,21 +7,19 @@ import { IGroupsRepository } from '../../groups/repository/groups.repository';
 import { IUserRepository } from '../../users/repository/user.repository';
 import {
   createSubscriptionDto,
-  BillingIdentifierDto,
   ICatalog,
   status,
   ICatalogRepository,
   BillingPeriodDto,
-  SubscriptionDetailRepository,
 } from '../index';
 import { Descriptor } from './utils/descriptor.utils';
 import { Group } from '../../groups/entities/group.entity';
 import { GroupSubscriptors } from './helpers/groupSubscriptors.helper';
 import { UserSubscriptions } from './helpers/userSubscriptions.helper';
-import { Cron } from '@nestjs/schedule';
-import { CronExpression } from '@nestjs/schedule/dist';
-import { scheduler } from './helpers/scheduler-details.helpers';
-import { updateDetialDto } from './dtos/update-subscription.dto';
+import {
+  updateDetialDto,
+  updateSubscriptionDetailDto,
+} from './dtos/update-subscription.dto';
 import {
   IAbstractRepository,
   ISubscription,
@@ -34,7 +31,7 @@ export class SubscriptionService {
   private readonly Igroup: IGroupsRepository;
   private readonly Iuser: IUserRepository;
   private readonly Isub: ISubscription;
-  private readonly Idetail: IAbstractRepository<SubscriptionDetailRepository>;
+  private readonly Idetail: IAbstractRepository<SubscriptionDetail>;
   private readonly Iperiod: ICatalogRepository<BillingPeriodDto>;
   constructor(
     private readonly unitOfWork: UnitOfWorkAdapter,
@@ -44,8 +41,10 @@ export class SubscriptionService {
     this.Iuser = this.unitOfWork.Repositories.userRepository;
     this.Iperiod = this.unitOfWork.Repositories.billingRepo;
     this.Isub = this.unitOfWork.Repositories.subRepo;
+    this.Idetail = this.unitOfWork.Repositories.subDetailRepo;
   }
-  //#region Write Opera tions
+
+  //#region Write Operations
   public async newSuscription(
     payload: createSubscriptionDto,
   ): Promise<createSubscriptionDto> {
@@ -90,6 +89,11 @@ export class SubscriptionService {
     );
     return await this.Igroup.getById(subscriptionDetail.groupId);
   }
+  public modifySubscription = async (
+    payload: updateSubscriptionDetailDto,
+  ): Promise<void> => {
+    await this.Idetail.modifyData(payload);
+  };
   //#endregion
 
   //#region //* Read Operation
@@ -143,42 +147,4 @@ export class SubscriptionService {
     return subscriptions;
   }
   //#endregion
-  //#region Cron Jobs
-  //   //** deactivate subscriptions */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
-    name: 'deactivateSubscription',
-    timeZone: 'America/Managua',
-  })
-  public async Scheduler() {
-    const period = await this.Iperiod.getByParam(
-      plainToInstance(BillingIdentifierDto, { isActive: true }),
-    );
-    const restDays = period.FormatedDates()['restDays'];
-    const subscriptionDetails = await this.Isub.getSubscriptionsDetail(
-      'billingPeriodId',
-      period.periodId,
-    );
-    subscriptionDetails.forEach(async (sub) => {
-      try {
-        const setStatus =
-          scheduler[Number(restDays) < -3 ? '-3' : JSON.stringify(restDays)];
-        sub.subscriptionStatus = setStatus;
-        // await this.Isub.modifySubscriptions(sub);
-      } catch (error) {
-        //         //TODO: Inadmisible no controlar cualquier excepcion
-        console.error(error);
-      }
-    });
-  }
-  //#endregion
 }
-// payload.subscriptionDetail = await Promise.all(
-//   payload.subscriptionDetail.map(async (detail) => {
-//     detail.voucherUrl = await File.submitFile(
-//       detail.rawContent,
-//       await this.unitOfWork.getBucket(),
-//     );
-//     delete detail.rawContent;
-//     return detail;
-//   }),
-// );

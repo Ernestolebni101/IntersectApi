@@ -14,7 +14,6 @@ import {
   GroupMessageCreated,
 } from '../events/message.events';
 import { Time } from 'src/Utility/utility-time-zone';
-import * as iconv from 'iconv-lite';
 @Injectable()
 export class MessagesService {
   private userRepository: IUserRepository;
