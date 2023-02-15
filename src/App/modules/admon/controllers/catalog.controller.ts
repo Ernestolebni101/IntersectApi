@@ -18,8 +18,8 @@ import { UnitOfWorkAdapter } from '../../../Database/UnitOfWork/adapter.implemen
 export class CatalogController {
   constructor(private readonly unitOfwork: UnitOfWorkAdapter) {}
   //#region  Periods
-  // @hasRoles(roles.ADMIN, roles.SA)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles(roles.ADMIN, roles.SA)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('billing-period')
   public async NewPeriod(
     @Req() req: Request,

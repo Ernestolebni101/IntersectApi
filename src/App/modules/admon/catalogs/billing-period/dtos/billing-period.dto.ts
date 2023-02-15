@@ -5,7 +5,7 @@ export class createBillingPeriodDto implements ICatalog {
     public periodName: string,
     public isActive: boolean,
     public startDate: number,
-    public endDate: number,
+    public bf: number,
   ) {}
   public reflectData = (): unknown => this;
 }
